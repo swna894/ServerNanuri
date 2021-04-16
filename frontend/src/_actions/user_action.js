@@ -3,7 +3,10 @@ import { LOGIN_USER, SIGNUP_USER, AUTH_USER } from "./types";
 export function loginUser(dataToSubmit) {
   const request = axios
     .post("/api/signin", dataToSubmit)
-    .then((response) => response.data);
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log("Problem submitting New Post", error);
+    });
 
   return {
     type: LOGIN_USER,
