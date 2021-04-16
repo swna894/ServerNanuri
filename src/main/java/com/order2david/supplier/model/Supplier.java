@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.order2david.Product.model.Product;
 import com.order2david.model.Address;
 //import com.order2david.order.model.Order;
+import com.order2david.order.model.Order;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,9 +59,9 @@ public class Supplier {
 	@Embedded
 	private Address address;
     
-//	@JsonManagedReference(value="supplier-abbr")
-//	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-//	private List<Order> orders = new ArrayList<Order>();
+	@JsonManagedReference(value="supplier-abbr")
+	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+	private List<Order> orders = new ArrayList<Order>();
 	
     @JsonManagedReference
 	@OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
