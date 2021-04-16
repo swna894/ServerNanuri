@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import axios from "axios";
 
 function LandingPage() {
-  // useEffect(() => {
-  //   axios.get("/api/suppliers").then((response) => {
-  //     console.log(response);
-  //   });
-  // }, []);
+  useEffect(() => {
+    axios.get("/api/shops").then((response) => {
+      console.log(response);
+    });
+  }, []);
 
   return (
     <div
