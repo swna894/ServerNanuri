@@ -35,6 +35,9 @@ import com.order2david.shop.repository.ShopRepository;
 @RequestMapping("/api")
 public class AuthController {
 	
+	//private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+		
 	@Autowired
 	ShopRepository shopRepository;
 	
@@ -56,9 +59,11 @@ public class AuthController {
     
     @PostMapping("/signin")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
+        //logger.info("api/signin =" + loginDto);
+        
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-
+  
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
 

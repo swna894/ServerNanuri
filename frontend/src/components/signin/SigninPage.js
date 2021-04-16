@@ -21,13 +21,12 @@ function SignPagePage(props) {
   };
 
   const onClickSingin = (event) => {
-    // console.log("email", Email);
-    // console.log("pasword", Password);
-
     let body = {
       email: Email,
       password: Password,
     };
+
+    //console.log("signi", body);
 
     if (Email && Password)
       dispatch(loginUser(body)).then((response) => {
