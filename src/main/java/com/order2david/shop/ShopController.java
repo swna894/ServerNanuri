@@ -1,6 +1,7 @@
-package com.newVista.shop;
+package com.order2david.shop;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.newVista.shop.model.Shop;
-import com.newVista.shop.repository.ShopRepository;
+import com.order2david.shop.model.IsShow;
+import com.order2david.shop.model.Shop;
+import com.order2david.shop.repository.ShopJdbcRepository;
+import com.order2david.shop.repository.ShopRepository;
 
 
 @RestController
@@ -26,8 +29,8 @@ public class ShopController {
 	@Autowired
 	ShopRepository shopRepository;
 	
-	//@Autowired
-	//ShopJdbcRepository shopJdbcRepository;
+	@Autowired
+	ShopJdbcRepository shopJdbcRepository;
 	
 	@PostConstruct
 	public void init() {
@@ -52,17 +55,17 @@ public class ShopController {
 	
 	@PutMapping("/shops")
 	public List<Shop> putAll(@RequestBody List<Shop> shops) {
-		//shopJdbcRepository.postColumns(shops);	
+		shopJdbcRepository.postColumns(shops);	
 		return shopRepository.saveAll(shops);
 	}
 
 	@GetMapping("/shops")
 	public List<Shop> findAll() {
-		//Map<String, List<IsShow>> maps = shopJdbcRepository.findAllAbbrs();
+		Map<String, List<IsShow>> maps = shopJdbcRepository.findAllAbbrs();
 		List<Shop> shopEntities = shopRepository.findAllByOrderByCompanyAsc();
-		//shopEntities.stream().forEach(item -> { 
-		//	          item.setIsShow(maps.get(item.getCompany()));
-		//});
+		shopEntities.stream().forEach(item -> { 
+			          item.setIsShow(maps.get(item.getCompany()));
+		});
 		return shopEntities;
 	}
 
