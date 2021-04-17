@@ -64,8 +64,8 @@ function SignPagePage(props) {
         justify="center"
         align="middle"
         style={{
-          height: "calc(100vh - 65px)",
-         }}
+          height: "100vh",
+        }}
       >
         <Col>
           <Card className="login-form-card">
@@ -135,9 +135,10 @@ function SignPagePage(props) {
       </Row>
       <Header
         style={{
-          position: "sticky",
+          position: "absolute",
           zIndex: 1,
           width: "100%",
+          bottom: "0",
         }}
       >
         <h2 style={{ color: "#fff" }}>
