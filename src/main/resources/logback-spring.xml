@@ -31,14 +31,14 @@
         </rollingPolicy>
     </appender>
     
-   <logger name="com.ever.java" level="INFO">
+<!--    <logger name="com.ever.java" level="INFO">
         <appender-ref ref="STDOUT" />
-    </logger> 
+    </logger>  -->
     <logger name="com.ever.java" level="INFO">
         <appender-ref ref="DAILY_ROLLING_FILE_APPENDER" />
     </logger> 
     <root level="INFO">
-        <!-- <appender-ref ref="STDOUT" /> -->
+        <appender-ref ref="STDOUT" /> 
         <appender-ref ref="DAILY_ROLLING_FILE_APPENDER" />
     </root>
 </configuration>

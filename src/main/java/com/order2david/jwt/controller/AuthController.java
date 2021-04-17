@@ -60,24 +60,32 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
         //logger.info("api/signin =" + loginDto);
-        
-        UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
-  
-        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+    	TokenDto tokenDto = new TokenDto();
+    	try{
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword());
+      
+            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.createToken(authentication);
+            String jwt = tokenProvider.createToken(authentication);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        TokenDto tokenDto = new TokenDto();
-        tokenDto.setLoginSuccess(true);
-        tokenDto.setToken(jwt);
-        tokenDto.setShop(userService.getMyUserWithAuthorities().get());
-        
-        return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
+            tokenDto.setLoginSuccess(true);
+            tokenDto.setToken(jwt);
+            tokenDto.setShop(userService.getMyUserWithAuthorities().get());
+            
+            return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
+    	}catch (Exception e){
+             tokenDto.setLoginSuccess(false);
+    	     e.printStackTrace(); //오류 출력(방법은 여러가지)
+    	     //throw e; //최상위 클래스가 아니라면 무조건 던져주자
+    	     return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);	    
+    	}finally{
+
+    	} 
     }
     
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

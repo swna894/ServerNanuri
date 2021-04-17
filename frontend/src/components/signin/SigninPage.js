@@ -28,14 +28,19 @@ function SignPagePage(props) {
 
     //console.log("signi", body);
 
-    if (Email && Password)
-      dispatch(loginUser(body)).then((response) => {
-        if (response.payload.loginSuccess) {
-          props.history.push("/");
-        } else {
+    if (Email && Password && Password.length > 3) {
+      dispatch(loginUser(body))
+        .then((response) => {
+          if (response.payload.loginSuccess) {
+            props.history.push("/");
+          } else {
+            alert("Error !!");
+          }
+        })
+        .catch((error) => {
           alert("Error !!");
-        }
-      });
+        });
+    }
   };
 
   const onSubmitSingin = (event) => {
@@ -75,6 +80,11 @@ function SignPagePage(props) {
               name="password"
               rules={[
                 { required: true, message: "Please input your Password!" },
+                {
+                  required: true,
+                  min: 3,
+                  message: "Password must be minimum 3 characters.",
+                },
               ]}
             >
               <Input
