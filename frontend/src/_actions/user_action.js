@@ -1,6 +1,7 @@
 import axios from "axios";
 import { LOGIN_USER, SIGNUP_USER, AUTH_USER } from "./types";
-export function loginUser(dataToSubmit) {
+
+export function signinUser(dataToSubmit) {
   const request = axios
     .post("/api/signin", dataToSubmit)
     .then((response) => response.data)
@@ -26,9 +27,7 @@ export function signupUser(datatosubmit) {
 }
 
 export function auth() {
-  const request = axios
-    .get("/api/users/auth")
-    .then((response) => response.data);
+  const request = axios.get("/api/auth").then((response) => response.data);
 
   return {
     type: AUTH_USER,

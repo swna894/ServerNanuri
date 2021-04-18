@@ -33,14 +33,6 @@ public class UserService {
         Roles authority = Roles.builder()
                 .roleName("ROLE_USER")
                 .build();
-
-//        Shop shop = Shop.builder()
-//                .username(userDto.getUsername())
-//                .password(passwordEncoder.encode(userDto.getPassword()))
-//                .nickname(userDto.getNickname())
-//                .authorities(Collections.singleton(authority))
-//                .activated(true)
-//                .build();
         
         Shop shop = new Shop();
         shop.setPassword(passwordEncoder.encode(userDto.getPassword()));

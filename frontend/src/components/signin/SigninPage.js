@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { loginUser } from "../../_actions/user_action";
+import { signinUser } from "../../_actions/user_action";
+import { withRouter } from 'react-router-dom';
+/* import { footer } from "../views/footer/Footer"; */
 import { Layout } from "antd";
 import "./SignInPage.css";
 
@@ -30,10 +32,10 @@ function SignPagePage(props) {
     //console.log("signi", body);
 
     if (Email && Password && Password.length > 3) {
-      dispatch(loginUser(body))
+      dispatch(signinUser(body))
         .then((response) => {
           if (response.payload.loginSuccess) {
-            props.history.push("/");
+            props.history.push("/order");
           } else {
             alert("Error !!");
           }
@@ -133,6 +135,7 @@ function SignPagePage(props) {
           </Card>
         </Col>
       </Row>
+      {/* <footer/> */}
       <Header
         style={{
           position: "absolute",
@@ -149,4 +152,4 @@ function SignPagePage(props) {
   );
 }
 
-export default SignPagePage;
+export default withRouter(SignPagePage);

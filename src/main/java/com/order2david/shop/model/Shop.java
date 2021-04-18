@@ -77,6 +77,7 @@ public class Shop {
 	private String comment;
 	private String password;
 	private String pass;
+	//private String token;
 	@Column(columnDefinition = "boolean default true")
 	private  Boolean showing;
 	//@Column(columnDefinition = "varchar(16) default '")

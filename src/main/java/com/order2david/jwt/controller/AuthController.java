@@ -6,6 +6,8 @@ import java.util.Set;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +38,7 @@ import com.order2david.shop.repository.ShopRepository;
 @RequestMapping("/api")
 public class AuthController {
 	
-	//private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 		
 	@Autowired
@@ -58,8 +61,8 @@ public class AuthController {
     }
     
     @PostMapping("/signin")
-    public ResponseEntity<TokenDto> authorize(@Valid @RequestBody LoginDto loginDto) {
-        //logger.info("api/signin =" + loginDto);
+    public ResponseEntity<TokenDto> signin(@Valid @RequestBody LoginDto loginDto) {
+
     	TokenDto tokenDto = new TokenDto();
     	try{
             UsernamePasswordAuthenticationToken authenticationToken =
@@ -70,12 +73,16 @@ public class AuthController {
 
             String jwt = tokenProvider.createToken(authentication);
 
+            Shop shop = userService.getMyUserWithAuthorities().get();
+            //shop.setToken(jwt);
+            //shopRepository.save(shop);
+            
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
             tokenDto.setLoginSuccess(true);
-            tokenDto.setToken(jwt);
-            tokenDto.setShop(userService.getMyUserWithAuthorities().get());
+            tokenDto.setToken(jwt);     
+            tokenDto.setShop(shop);
             
             return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
     	}catch (Exception e){
@@ -108,5 +115,31 @@ public class AuthController {
     	shop.setAddress(address);
     	
     	return shopRepository.save(shop);    
+    }
+    
+    @GetMapping("/auth")
+    public ResponseEntity<TokenDto> auth() {
+    	TokenDto tokenDto = new TokenDto();
+    	try{
+            Shop shop = userService.getMyUserWithAuthorities().get();
+            System.err.println(shop);
+            System.err.println(shop.getRoles());
+            logger.info("/api/auth" + shop);
+            tokenDto.setIsAuth(true);
+            tokenDto.setLoginSuccess(true);    
+            tokenDto.setShop(shop);
+            
+            return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
+    	}catch (Exception e){
+             tokenDto.setLoginSuccess(false);
+             tokenDto.setIsAuth(false);
+             tokenDto.setShop(null);
+             System.err.println(e.getMessage());
+    	     //e.printStackTrace(); //오류 출력(방법은 여러가지)
+    	     //throw e; //최상위 클래스가 아니라면 무조건 던져주자
+    	     return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);	    
+    	}finally{
+
+    	} 
     }
 }
