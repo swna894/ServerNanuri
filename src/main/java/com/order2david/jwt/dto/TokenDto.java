@@ -10,8 +10,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TokenDto {
-
-	private Boolean loginSuccess;
 	private Boolean isAuth;
 	private Boolean isAdmin;
     private String token;

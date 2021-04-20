@@ -1,24 +1,19 @@
 import React from "react";
 import { Layout } from "antd";
 
-function footer() {
+export default function OrderHeader() {
   const { Header } = Layout;
   return (
     <div>
       <Header
         style={{
-          position: "absolute",
+          position: "fixed",
           zIndex: 1,
           width: "100%",
-          bottom: "0",
         }}
       >
-        <h2 style={{ color: "#fff" }}>
-          Enquiry ? Please Contact : David Na 027-652-1111
-        </h2>
+        <h2 style={{ color: "#fff" }}>Welcome to David Na's Ordering System</h2>
       </Header>
     </div>
   );
 }
-
-export default footer;

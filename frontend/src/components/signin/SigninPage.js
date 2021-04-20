@@ -4,8 +4,7 @@ import { Form, Input, Button, Checkbox, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { signinUser } from "../../_actions/user_action";
-import { withRouter } from 'react-router-dom';
-/* import { footer } from "../views/footer/Footer"; */
+import { withRouter } from "react-router-dom";
 import { Layout } from "antd";
 import "./SignInPage.css";
 
@@ -14,6 +13,12 @@ function SignPagePage(props) {
   const { Header } = Layout;
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
+  const [form] = Form.useForm();
+
+  const resetSignin = () => {
+    setEmail("");
+    setPassword("");
+  };
 
   const onChangeEmail = (event) => {
     setEmail(event.currentTarget.value);
@@ -29,18 +34,20 @@ function SignPagePage(props) {
       password: Password,
     };
 
-    //console.log("signi", body);
-
     if (Email && Password && Password.length > 3) {
       dispatch(signinUser(body))
         .then((response) => {
-          if (response.payload.loginSuccess) {
+          if (response.payload.isAuth) {
+            let token = response.payload.token;
+            localStorage.setItem("jwtToken", token);
             props.history.push("/order");
           } else {
-            alert("Error !!");
+            form.resetFields();
+            alert("input Error !!");
           }
         })
         .catch((error) => {
+          form.resetFields();
           alert("Error !!");
         });
     }
@@ -72,9 +79,10 @@ function SignPagePage(props) {
         <Col>
           <Card className="login-form-card">
             <Form
+              form={form}
               name="normal_login"
               className="login-form"
-              initialValues={{ remember: true }}
+              initialValues={{ remember: false }}
               onSubmit={onSubmitSingin}
             >
               <Form.Item
@@ -135,7 +143,6 @@ function SignPagePage(props) {
           </Card>
         </Col>
       </Row>
-      {/* <footer/> */}
       <Header
         style={{
           position: "absolute",
