@@ -15,11 +15,6 @@ function SignPagePage(props) {
   const [Password, setPassword] = useState("");
   const [form] = Form.useForm();
 
-  const resetSignin = () => {
-    setEmail("");
-    setPassword("");
-  };
-
   const onChangeEmail = (event) => {
     setEmail(event.currentTarget.value);
   };
@@ -39,6 +34,7 @@ function SignPagePage(props) {
         .then((response) => {
           if (response.payload.isAuth) {
             let token = response.payload.token;
+            console.log(token);
             localStorage.setItem("jwtToken", token);
             props.history.push("/order");
           } else {

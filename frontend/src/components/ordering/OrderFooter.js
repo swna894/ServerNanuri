@@ -1,11 +1,19 @@
 import React from "react";
-import { Layout } from "antd";
+import { Layout, Pagination } from "antd";
+import "./OrderPage.css";
 
-export default function OrderFooter() {
-  const { Header } = Layout;
+ function OrderFooter() {
+  const { Footer } = Layout;
+
+  function onChange(pageNumber, pageSize) {
+    console.log("Page: ", pageNumber);
+    console.log("pageSize: ", pageSize);
+  }
+
   return (
     <div>
-      <Header
+      <Footer
+        className="styles.custom"
         style={{
           position: "absolute",
           zIndex: 1,
@@ -13,10 +21,21 @@ export default function OrderFooter() {
           bottom: "0",
         }}
       >
-        <h2 style={{ color: "#fff" }}>
-          Enquiry ? Please Contact : David Na 027-652-1111
-        </h2>
-      </Header>
+        <Pagination
+          style={{ float: "right" }}
+          defaultPageSize={16}
+          pageSizeOptions={[16, 24, 36, 60]}
+          showSizeChanger
+          howSizeChanger={true}
+          showQuickJumper
+          defaultCurrent={1}
+          total={500}
+          onChange={onChange}
+          showTotal={(total) => `Total ${total} items`}
+        />
+      </Footer>
     </div>
   );
 }
+
+export default OrderFooter;
