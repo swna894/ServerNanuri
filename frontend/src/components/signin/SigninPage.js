@@ -34,7 +34,6 @@ function SignPagePage(props) {
         .then((response) => {
           if (response.payload.isAuth) {
             let token = response.payload.token;
-            console.log(token);
             localStorage.setItem("jwtToken", token);
             props.history.push("/order");
           } else {

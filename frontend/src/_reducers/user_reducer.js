@@ -1,8 +1,8 @@
-import { LOGIN_USER, SIGNUP_USER, AUTH_USER } from "../_actions/types";
+import { SIGNIN_USER, SIGNUP_USER, AUTH_USER } from "../service/types";
 
-export default function reducers(state = {}, action) {
+export default function reducerUser(state = {}, action) {
   switch (action.type) {
-    case LOGIN_USER:
+    case SIGNIN_USER:
       return { ...state, loginShop: action.payload };
 
     case SIGNUP_USER:

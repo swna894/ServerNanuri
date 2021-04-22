@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LOGIN_USER, SIGNUP_USER, AUTH_USER } from "./types";
+import { SIGNIN_USER, SIGNUP_USER, AUTH_USER } from "../service/types";
 
 export function signinUser(dataToSubmit) {
   const request = axios
@@ -10,7 +10,7 @@ export function signinUser(dataToSubmit) {
     });
 
   return {
-    type: LOGIN_USER,
+    type: SIGNIN_USER,
     payload: request,
   };
 }

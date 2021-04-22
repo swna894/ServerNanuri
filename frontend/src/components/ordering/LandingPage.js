@@ -1,14 +1,14 @@
 import React from "react";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
-//import axios from "axios";
+//import axios from 'axios';
 
 function LandingPage() {
-  // useEffect(() => {
-  //   axios.get("/api/shops").then((response) => {
-  //     console.log(response);
-  //   });
-  // }, []);
+  //  useEffect(() => {
+  //    axios.get("/api/suppliers").then((response) => {
+  //      console.log(response.data);
+  //    });
+  //  }, []);
 
   return (
     <div>
