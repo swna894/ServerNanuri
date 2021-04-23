@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Select, Space } from "antd";
 import { actionChangeSupplier } from "../../_actions/supplier_action";
+import { getCategoriesAction } from "../../_actions/product_action";
+import { withRouter } from "react-router-dom";
 
 import "./OrderPage.css";
 
@@ -10,6 +12,8 @@ function OrderHeader() {
   const { Option } = Select;
   const suppliers = useSelector((state) => state.supplier.suppliers);
   const headTitle = useSelector((state) => state.supplier.supplier);
+  const categories = useSelector((state) => state.product.category);
+
   const dispatch = useDispatch();
   const formRef = React.useRef();
 
@@ -17,6 +21,9 @@ function OrderHeader() {
   const [category, setCategory] = useState("Selet category");
 
   useEffect(() => {
+    let parm = { params: { company: headTitle } };
+    dispatch(getCategoriesAction(parm));
+    
     //console.log("company.company " + JSON.stringify(suppliers));
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
     document.title = `David's Na Order System`;
@@ -26,6 +33,9 @@ function OrderHeader() {
     setTitle(value);
     setCategory("Selet category");
     dispatch(actionChangeSupplier(value));
+    let parm = { params: { company: value } };
+    dispatch(getCategoriesAction(parm));
+    //console.log("categories = " + JSON.stringify(categories));
     //console.log(`selected ${value}`);
   }
 
@@ -40,6 +50,12 @@ function OrderHeader() {
     </Option>
   ));
 
+  const listCategoryOptions = categories === undefined ? [] : categories.map((item) => (
+    <Option key={item.id} value={item.category}>
+      {item.category}
+    </Option>
+  ));
+
   return (
     <div>
       <Header
@@ -51,7 +67,6 @@ function OrderHeader() {
       >
         <Space>
           <h2 style={{ display: "inline", color: "#fff" }}>{headTitle}</h2>
-
           <Select
             ref={formRef}
             name="supplier"
@@ -63,7 +78,6 @@ function OrderHeader() {
           >
             {listSelectOptions}
           </Select>
-
           <Select
             showSearch
             style={{ width: 200 }}
@@ -72,12 +86,7 @@ function OrderHeader() {
             placeholder="Selet category"
             optionFilterProp="children"
           >
-            <Option value="1">Not Identified</Option>
-            <Option value="Closed">Closed</Option>
-            <Option value="Communicated">Communicated</Option>
-            <Option value="Identified">Identified</Option>
-            <Option value="Resolved">Resolved</Option>
-            <Option value="Cancelled">Cancelled</Option>
+            {listCategoryOptions}
           </Select>
         </Space>
       </Header>
@@ -85,4 +94,4 @@ function OrderHeader() {
   );
 }
 
-export default OrderHeader;
+export default withRouter(OrderHeader);

@@ -12,6 +12,7 @@ function LandingPage() {
   useEffect(() => {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
+
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
