@@ -128,11 +128,11 @@ public class Order {
         this.shop = shop;
         //shop.getOrders().add(this);
     }
-    
-    public void setSupplier(Supplier supplier) {
-        this.supplier = supplier;
-        supplier.getOrders().add(this);
-    }
+  //0423
+//    public void setSupplier(Supplier supplier) {
+//        this.supplier = supplier;
+//        supplier.getOrders().add(this);
+//    }
 	
 //	public String genInvoice() {
 //		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");

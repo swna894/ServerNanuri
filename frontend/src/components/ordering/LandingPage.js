@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
-//import axios from 'axios';
+import {
+  actionGetSuppliers,
+  actionGetSupplier,
+} from "../../_actions/supplier_action";
 
 function LandingPage() {
-  //  useEffect(() => {
-  //    axios.get("/api/suppliers").then((response) => {
-  //      console.log(response.data);
-  //    });
-  //  }, []);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(actionGetSupplier());
+    dispatch(actionGetSuppliers());
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div>

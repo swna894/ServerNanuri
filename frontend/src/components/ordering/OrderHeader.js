@@ -1,40 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { getSuppliers } from "../../_actions/supplier_action";
-
+import { useSelector, useDispatch } from "react-redux";
 import { Layout, Select, Space } from "antd";
+import { actionChangeSupplier } from "../../_actions/supplier_action";
 
 import "./OrderPage.css";
 
 function OrderHeader() {
+  const { Header } = Layout;
+  const { Option } = Select;
   const suppliers = useSelector((state) => state.supplier.suppliers);
+  const headTitle = useSelector((state) => state.supplier.supplier);
   const dispatch = useDispatch();
   const formRef = React.useRef();
 
-  const { Header } = Layout;
-  const { Option } = Select;
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("Selet category");
 
-  const [title, setTitle] = useState("David");
-  const [supplier, setSupplier] = useState();
-
-  useEffect((props) => {
-    dispatch(getSuppliers());
-
-    console.log("suppliers " + suppliers);
+  useEffect(() => {
+    //console.log("company.company " + JSON.stringify(suppliers));
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
-    //document.title = `Order2david`;
+    document.title = `David's Na Order System`;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(value) {
-    setSupplier(value);
     setTitle(value);
-    console.log(`selected ${value}`);
+    setCategory("Selet category");
+    dispatch(actionChangeSupplier(value));
+    //console.log(`selected ${value}`);
   }
 
   function onChangeCategory(value) {
-    setTitle(supplier + " / " + value);
-
-    console.log(`selected ${value}`);
+    setCategory(value);
+    dispatch(actionChangeSupplier(title + " / " + value));
   }
 
   const listSelectOptions = suppliers.map((item) => (
@@ -52,9 +49,8 @@ function OrderHeader() {
           width: "100%",
         }}
       >
-        {" "}
         <Space>
-          <h2 style={{ display: "inline", color: "#fff" }}>{title}</h2>
+          <h2 style={{ display: "inline", color: "#fff" }}>{headTitle}</h2>
 
           <Select
             ref={formRef}
@@ -64,14 +60,6 @@ function OrderHeader() {
             style={{ width: 230 }}
             placeholder="Selet supplier"
             optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            filterSort={(optionA, optionB) =>
-              optionA.children
-                .toLowerCase()
-                .localeCompare(optionB.children.toLowerCase())
-            }
           >
             {listSelectOptions}
           </Select>
@@ -79,17 +67,10 @@ function OrderHeader() {
           <Select
             showSearch
             style={{ width: 200 }}
+            value={category}
             onChange={onChangeCategory}
-            placeholder="Selet supplier"
+            placeholder="Selet category"
             optionFilterProp="children"
-            filterOption={(input, option) =>
-              option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-            }
-            filterSort={(optionA, optionB) =>
-              optionA.children
-                .toLowerCase()
-                .localeCompare(optionB.children.toLowerCase())
-            }
           >
             <Option value="1">Not Identified</Option>
             <Option value="Closed">Closed</Option>

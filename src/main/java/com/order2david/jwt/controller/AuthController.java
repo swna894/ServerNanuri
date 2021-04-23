@@ -108,14 +108,17 @@ public class AuthController {
 
 	@GetMapping("/auth")
 	public ResponseEntity<TokenDto> auth() {
-		
+		TokenDto tokenDto;
 		try {
-			Shop shop = userService.getMyUserWithAuthorities().get();
-			TokenDto tokenDto = getTokenDto(shop, null);
-	
+			if (userService.getMyUserWithAuthorities().isPresent()) {
+				Shop shop = userService.getMyUserWithAuthorities().get();
+				tokenDto = getTokenDto(shop, null);
+			} else {
+				tokenDto = getTokenDto(null, null);		
+			}
 			return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
 		} catch (Exception e) {
-			TokenDto tokenDto = getTokenDto(null, null);
+			tokenDto = getTokenDto(null, null);
 			// System.err.println(e.getMessage());
 			e.printStackTrace(); // 오류 출력(방법은 여러가지)
 			// throw e; //최상위 클래스가 아니라면 무조건 던져주자
@@ -131,8 +134,8 @@ public class AuthController {
 			tokenDto.setIsAuth(true);
 			tokenDto.setToken(jwt);
 			tokenDto.setId(shop.getId());
-			System.err.println(shop.getRoles());
-			tokenDto.setIsAdmin(shop.getRoles().toString().contains("ROLE_USER") ? true : false);
+			//System.err.println(shop.getRoles());
+			tokenDto.setIsAdmin(shop.getRoles().contains(new Roles("ROLE_USER")) ? true : false);
 			tokenDto.setCompany(shop.getCompany());
 		} else {
 			tokenDto.setIsAuth(false);

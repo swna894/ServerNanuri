@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.Product.model.Product;
 import com.order2david.Product.repository.ProductRepository;
-import com.order2david.supplier.model.Supplier;
 import com.order2david.supplier.repository.SupplierRepository;
 
 @RestController
@@ -33,12 +32,12 @@ public class ProductController {
 	@Transactional
 	public List<Product> postAll(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
-		Supplier supplier = supplierRepository.findByAbbr(abbr);
+		//0423	Supplier supplier = supplierRepository.findByAbbr(abbr);
 		// supplier.getOrders().clear();
 		 productRepository.deleteAllByAbbr(abbr);
 
 	//	if (result > 0) {
-			products.forEach(item -> item.setSupplier(supplier));
+	//0423		products.forEach(item -> item.setSupplier(supplier));
 			products = productRepository.saveAll(products);
 	//	}
 		return null;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
@@ -14,6 +14,11 @@ function SignPagePage(props) {
   const [Email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
+    document.title = `David's Na Order System`;
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChangeEmail = (event) => {
     setEmail(event.currentTarget.value);

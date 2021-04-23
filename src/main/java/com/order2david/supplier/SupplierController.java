@@ -68,4 +68,9 @@ public class SupplierController {
 	public List<Supplier> findAll() {
 		return supplierRepository.findAllByOrderByCompanyAsc();
 	}
+	
+	@GetMapping("/supplier")
+	public Supplier find() {
+		return supplierRepository.findFirstByOrderByCompanyAsc();
+	}
 }

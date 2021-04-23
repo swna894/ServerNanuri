@@ -2,15 +2,11 @@ package com.order2david.Product.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -19,9 +15,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.order2david.exception.NotEnoughStockException;
-import com.order2david.supplier.model.Supplier;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -65,12 +59,12 @@ public class Product {
 	private int pack;
 	private boolean isShow;
 
-
+	// 0423
 	// == 연관 관계 == //
-	@JsonBackReference
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "SUPPLIER_ID")
-	private Supplier supplier; // 공급자 정보
+//	@JsonBackReference
+//	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	@JoinColumn(name = "SUPPLIER_ID")
+//	private Supplier supplier; // 공급자 정보
 	
 	
 	// ==Biz Method== //
@@ -78,11 +72,11 @@ public class Product {
 		this.stock += quantity;
 	}
 
-	
-	public void setSupplier(Supplier supplier) {
-		this.supplier = supplier;
-		supplier.getProducts().add(this);
-	}
+	// 0423
+//	public void setSupplier(Supplier supplier) {
+//		this.supplier = supplier;
+//		supplier.getProducts().add(this);
+//	}
 
 	public void removeStock(int quantity) {
 		int restStock = this.stock - quantity;
