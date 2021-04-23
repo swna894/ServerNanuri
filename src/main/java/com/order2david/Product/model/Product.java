@@ -93,5 +93,4 @@ public class Product {
 				+ price + ", stock=" + stock + ", pack=" + pack + "]\n\n";
 	}
 
-
 }

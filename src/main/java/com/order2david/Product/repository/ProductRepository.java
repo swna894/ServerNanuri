@@ -28,7 +28,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Product findByCodeAndAbbr(String code, String abbr);
 
+	List<Product> findByAbbr(String company);
 
-
-    
+	List<Product> findDistinctCategoryByAbbr(String company);
+ 
 }
