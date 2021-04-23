@@ -7,7 +7,7 @@ import { Layout, Select, Space } from "antd";
 import "./OrderPage.css";
 
 function OrderHeader() {
-  const suppliers = useSelector(state => state.supplier.suppliers);
+  const suppliers = useSelector((state) => state.supplier.suppliers);
   const dispatch = useDispatch();
   const formRef = React.useRef();
 
@@ -37,6 +37,12 @@ function OrderHeader() {
     console.log(`selected ${value}`);
   }
 
+  const listSelectOptions = suppliers.map((item) => (
+    <Option key={item.id} value={item.company}>
+      {item.company}
+    </Option>
+  ));
+
   return (
     <div>
       <Header
@@ -55,7 +61,7 @@ function OrderHeader() {
             name="supplier"
             showSearch
             onChange={onChangeSuppiler}
-            style={{ width: 200 }}
+            style={{ width: 230 }}
             placeholder="Selet supplier"
             optionFilterProp="children"
             filterOption={(input, option) =>
@@ -67,9 +73,7 @@ function OrderHeader() {
                 .localeCompare(optionB.children.toLowerCase())
             }
           >
-            <Option value="jack">Jack</Option>
-            <Option value="lucy">Lucy</Option>
-            <Option value="tom">Tom</Option>
+            {listSelectOptions}
           </Select>
 
           <Select
