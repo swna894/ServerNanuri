@@ -61,13 +61,20 @@ public class ProductController {
 		productRepository.deleteAll(items);
 	}
 
+	
+//	@GetMapping("/products")
+//	public List<Product> findProdutsByPagable() {
+//		return productRepository.findAllByOrderByCodeAsc();
+//	}
+	
 	@GetMapping("/products/category")
-	public List<Product> findProductsByCompany(@RequestParam String company) {
-		Supplier supplier = supplierRepository.findByCompany(company);
-		if(company.isEmpty()) {
-			supplier = supplierRepository.findFirstByOrderByCompanyAsc();
+	public List<Product> findProductsByCompany(@RequestParam String abbr) {
+		//Supplier supplier = supplierRepository.findByCompany(company);
+		if(abbr.isEmpty()) {
+			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
+			abbr = supplier.getAbbr();
 		}
-		List<Product> products = productRepository.findByAbbr(supplier.getAbbr());
+		List<Product> products = productRepository.findByAbbr(abbr);
 		List<Product> sortedProducts = products.stream()
 				.filter(item -> !item.getCategory().equals(""))
 				.filter(distinctByKey(p -> p.getCategory()))

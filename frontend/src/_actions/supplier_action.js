@@ -27,7 +27,7 @@ export const actionGetSupplier = () => {
     axios
       .get("/api/supplier")
       .then((response) => {
-        dispatch(getSupplierRequest(response.data.company));
+        dispatch(getSupplierRequest(response.data));
       })
       .catch((error) => {
         dispatch(getSuppliersFailusre(error.message));

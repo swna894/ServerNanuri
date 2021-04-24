@@ -23,8 +23,8 @@ import "./OrderPage.css";
       >
         <Pagination
           style={{ float: "right" }}
-          defaultPageSize={16}
-          pageSizeOptions={[16, 24, 36, 60]}
+          defaultPageSize={36}
+          pageSizeOptions={[16, 24, 36, 60, 100]}
           showSizeChanger
           howSizeChanger={true}
           showQuickJumper

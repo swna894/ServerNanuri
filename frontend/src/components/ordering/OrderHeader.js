@@ -11,7 +11,8 @@ function OrderHeader() {
   const { Header } = Layout;
   const { Option } = Select;
   const suppliers = useSelector((state) => state.supplier.suppliers);
-  const headTitle = useSelector((state) => state.supplier.supplier);
+  const supplier = useSelector((state) => state.supplier.supplier);
+  const headTitle = useSelector((state) => state.supplier.title);
   const categories = useSelector((state) => state.product.categories);
 
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ function OrderHeader() {
   const [category, setCategory] = useState("Selet category");
 
   useEffect(() => {
-    let parm = { params: { company: headTitle } };
+    let parm = { params: { abbr : headTitle } };
     dispatch(getCategoriesAction(parm));
 
     //console.log("company.company " + JSON.stringify(suppliers));
@@ -29,12 +30,13 @@ function OrderHeader() {
     document.title = `David's Na Order System`;
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function onChangeSuppiler(value) {
+  function onChangeSuppiler(value, searchValue) {
     setTitle(value);
     setCategory("Selet category");
-    dispatch(actionChangeSupplier(value));
-    let parm = { params: { company: value } };
+    dispatch(actionChangeSupplier(searchValue.children));
+    let parm = { params: { abbr : value } };
     dispatch(getCategoriesAction(parm));
+    console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log("categories = " + JSON.stringify(categories));
     //console.log(`selected ${value}`);
   }
@@ -45,7 +47,7 @@ function OrderHeader() {
   }
 
   const listSelectOptions = suppliers.map((item) => (
-    <Option key={item.id} value={item.company}>
+    <Option key={item.id} value={item.abbr}>
       {item.company}
     </Option>
   ));
@@ -74,7 +76,7 @@ function OrderHeader() {
     ) : (
       ""
     );
-    
+
   return (
     <div>
       <Header

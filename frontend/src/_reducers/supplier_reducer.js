@@ -9,6 +9,7 @@ import {
 const initialState = {
   suppliers: [],
   supplier: "",
+  title: "",
   error: "",
 };
 
@@ -20,10 +21,14 @@ const reducer = (state = initialState, action) => {
       };
 
     case GET_SUPPLIER_REQUEST:
-      return { ...state, supplier: action.payload };
+      return {
+        ...state,
+        title: action.payload.company,
+        supplier: action.payload.abbr,
+      };
 
     case CHANGE_SUPPLIER:
-      return { ...state, supplier: action.payload };
+      return { ...state, title: action.payload };
 
     case GET_SUPPLIERS_SUCCESS:
       return {
