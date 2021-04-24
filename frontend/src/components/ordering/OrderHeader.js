@@ -12,7 +12,7 @@ function OrderHeader() {
   const { Option } = Select;
   const suppliers = useSelector((state) => state.supplier.suppliers);
   const headTitle = useSelector((state) => state.supplier.supplier);
-  const categories = useSelector((state) => state.product.category);
+  const categories = useSelector((state) => state.product.categories);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -23,7 +23,7 @@ function OrderHeader() {
   useEffect(() => {
     let parm = { params: { company: headTitle } };
     dispatch(getCategoriesAction(parm));
-    
+
     //console.log("company.company " + JSON.stringify(suppliers));
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
     document.title = `David's Na Order System`;
@@ -50,12 +50,31 @@ function OrderHeader() {
     </Option>
   ));
 
-  const listCategoryOptions = categories === undefined ? [] : categories.map((item) => (
-    <Option key={item.id} value={item.category}>
-      {item.category}
-    </Option>
-  ));
+  const listCategoryOptions =
+    categories === undefined
+      ? []
+      : categories.map((item) => (
+          <Option key={item.id} value={item.category}>
+            {item.category}
+          </Option>
+        ));
 
+  const listCategorySelect =
+    categories.length > 0 ? (
+      <Select
+        showSearch
+        style={{ width: 200 }}
+        value={category}
+        onChange={onChangeCategory}
+        placeholder="Selet category"
+        optionFilterProp="children"
+      >
+        {listCategoryOptions}
+      </Select>
+    ) : (
+      ""
+    );
+    
   return (
     <div>
       <Header
@@ -78,16 +97,7 @@ function OrderHeader() {
           >
             {listSelectOptions}
           </Select>
-          <Select
-            showSearch
-            style={{ width: 200 }}
-            value={category}
-            onChange={onChangeCategory}
-            placeholder="Selet category"
-            optionFilterProp="children"
-          >
-            {listCategoryOptions}
-          </Select>
+          {listCategorySelect}
         </Space>
       </Header>
     </div>

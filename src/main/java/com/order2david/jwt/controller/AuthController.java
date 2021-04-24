@@ -61,7 +61,6 @@ public class AuthController {
 		try {
 			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
 					loginDto.getEmail(), loginDto.getPassword());
-
 			Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -76,7 +75,8 @@ public class AuthController {
 			return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
 		} catch (Exception e) {
 			TokenDto tokenDto = getTokenDto(null, null);
-			e.printStackTrace(); // 오류 출력(방법은 여러가지)
+			System.err.println(e.getMessage());
+			//e.printStackTrace(); // 오류 출력(방법은 여러가지)
 			// throw e; //최상위 클래스가 아니라면 무조건 던져주자
 			return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
 		} finally {
