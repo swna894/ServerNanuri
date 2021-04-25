@@ -11,8 +11,11 @@ import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,14 +65,28 @@ public class ProductController {
 	}
 
 	
-//	@GetMapping("/products")
-//	public List<Product> findProdutsByPagable() {
-//		return productRepository.findAllByOrderByCodeAsc();
-//	}
+	@GetMapping("/products/{abbr}/{category}" )
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
+			@PathVariable String category, Pageable pageable ) {	
+			System.err.println("1. abbr = " + abbr + " category = " + category +  " pageable = " + pageable );
+			Page<Product> page = productRepository.findByAbbrAndCategory(abbr, category, pageable);
+			System.err.println("1. " + page.getContent().size());
+		return page;
+
+	}
+	
+	@GetMapping("/products/{abbr}" )
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable ) {		
+			System.err.println("2. abbr = " + abbr +   " pageable = " + pageable );
+			Page<Product> page = productRepository.findByAbbr(abbr,  pageable); 
+			System.err.println("2. " + page.getContent().size());			
+		return page;
+	}
+	
+
 	
 	@GetMapping("/products/category")
 	public List<Product> findProductsByCompany(@RequestParam String abbr) {
-		//Supplier supplier = supplierRepository.findByCompany(company);
 		if(abbr.isEmpty()) {
 			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 			abbr = supplier.getAbbr();

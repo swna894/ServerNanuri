@@ -15,9 +15,9 @@ export function getCategoriesAction(params) {
   };
 }
 
-export function getProductsAction(params) {
+export function getProductsAction(abbr, category, params) {
   const request = axios
-    .get("/api/products/category", params)
+    .get(`/api/products/${abbr}/${category}`, params)
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
