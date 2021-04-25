@@ -77,7 +77,7 @@ function OrderHeader() {
         ));
 
   const listCategorySelect =
-    categories.length > 0 ? (
+    categories && categories.length > 0 ? (
       <Select
         showSearch
         style={{ width: 200 }}

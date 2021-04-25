@@ -23,15 +23,18 @@ function LandingPage() {
   const orderLists =
     products &&
     products.map((item, index) => (
-      <Col span={6} key={index}>
+      <Col apan={6} key={index}>
         <Card
-          style={{ height: 400 }}
+          raised
+          style={{ height: "400px", width: "458px" }}
           cover={
             <img
               style={{
                 bordered: true,
-                height: "250px",
+                height: "auto",
+                maxHeight: "250px",
                 width: "auto",
+                maxWidth: "350px",
                 textAlign: "center",
                 margin: "10px auto",
               }}
@@ -40,13 +43,12 @@ function LandingPage() {
             />
           }
         >
-          {item.code}
-          {"      "}
+          [ {item.code} ]{""}
           {item.description}
           <p>$ {item.price}</p>
           <p>{item.stock}</p>
-          <p>- </p>
-          <p>. </p>
+          <p style={{ color: "#fff" }}>- </p>
+          <p style={{ color: "#fff" }}>- </p>
         </Card>
       </Col>
     ));
