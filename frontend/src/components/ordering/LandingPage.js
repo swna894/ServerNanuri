@@ -1,33 +1,69 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
+import { Card, Row, Col } from "antd";
+
 import {
   actionGetSuppliers,
   actionGetSupplier,
 } from "../../_actions/supplier_action";
+import { getProductsInitAction } from "../../_actions/product_action";
 
 function LandingPage() {
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.product.products.content);
   useEffect(() => {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
-
+    dispatch(getProductsInitAction());
+    console.log(products);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const orderLists =
+    products &&
+    products.map((item, index) => (
+      <Col span={6} key={index}>
+        <Card
+          style={{ height: 400 }}
+          cover={
+            <img
+              style={{
+                bordered: true,
+                height: "250px",
+                width: "auto",
+                textAlign: "center",
+                margin: "10px auto",
+              }}
+              alt={item.code}
+              src={`/images/${item.abbr}/${item.code}.jpg`}
+            />
+          }
+        >
+          {item.code}
+          {"      "}
+          {item.description}
+          <p>$ {item.price}</p>
+          <p>{item.stock}</p>
+          <p>- </p>
+          <p>. </p>
+        </Card>
+      </Col>
+    ));
 
   return (
     <div>
       <OrderHeader />
       <div
+        className={products}
         style={{
           display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           width: "100%",
-          height: "100vh",
+          //height: "100vh",
+          padding: "80px 10px 10px 10px",
         }}
       >
-        <h2>시작 페이지</h2>
+        <Row gutter={[16, 16]}>{orderLists}</Row>
       </div>
       <OrderFooter />
     </div>

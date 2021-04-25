@@ -17,6 +17,8 @@ function OrderHeader() {
   //const supplier = useSelector((state) => state.supplier.supplier);
   const headTitle = useSelector((state) => state.supplier.title);
   const categories = useSelector((state) => state.product.categories);
+  const page = useSelector((state) => state.product.products.number);
+  const size = useSelector((state) => state.product.products.size);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -27,6 +29,9 @@ function OrderHeader() {
   useEffect(() => {
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
     document.title = `David's Na Order System`;
+    window.addEventListener("keydown", (event) => {
+      console.log("keydown = " + event.key);
+    });
     let parm = { params: { abbr: headTitle } };
     dispatch(getCategoriesAction(parm));
     //console.log("company.company " + JSON.stringify(suppliers));
@@ -38,8 +43,7 @@ function OrderHeader() {
     dispatch(actionChangeSupplier(searchValue.children));
     let parm = { params: { abbr: value } };
     dispatch(getCategoriesAction(parm));
-    const size = 36;
-    pageProducts(value, "", 0, size);
+    pageProducts(value, "", page, size);
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
@@ -47,16 +51,14 @@ function OrderHeader() {
   function onChangeCategory(value) {
     setCategory(value);
     dispatch(actionChangeSupplier(title + " / " + value));
-    //let param = { params: { page: 0, size: 36 } };
-    //dispatch(getProductsAction(title, value, param));
-    const size = 36;
-    pageProducts(title, value, 0, size);
+    pageProducts(title, value, page, size);
   }
 
-  const pageProducts = (value, category, page, size) => {
+  const pageProducts = (abbr, category, page = 0, size = 36) => {
     let param = { params: { page: page, size: size, sort: "seq" } };
-    console.log(param);
-    dispatch(getProductsAction(value, category, param));
+    //console.log("abbr = " + abbr );
+    //console.log(param);
+    dispatch(getProductsAction(abbr, category, param));
   };
 
   const listSelectOptions = suppliers.map((item) => (

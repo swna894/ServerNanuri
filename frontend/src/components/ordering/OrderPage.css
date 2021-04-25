@@ -1,11 +1,11 @@
-.custom {
-  padding: 10 0 !important;
+.selectBoi > div > span {
+  color: rgb(104, 0, 179);
+  font-size: 19px !important;
+  font-weight: bolder;
+  right: 6px;
+  margin-top: -8px;
 }
 
-.selectBoi > div > span{
-    color: rgb(104, 0, 179);
-    font-size: 19px !important;
-    font-weight: bolder;
-    right: 6px;
-    margin-top: -8px;
+.products {
+  background-color: "#f0f0f0";
 }
