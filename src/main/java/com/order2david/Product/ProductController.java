@@ -71,25 +71,25 @@ public class ProductController {
 		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 		Pageable sortedBySeq = 
 				  PageRequest.of(0, 36, Sort.by("seq"));
-		Page<Product> page = productRepository.findByAbbr(supplier.getAbbr(), sortedBySeq);
+		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		return page ;
 	}
 	
 	@GetMapping("/products/{abbr}/{category}" )
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
 			@PathVariable String category, Pageable pageable ) {	
-			System.err.println("1. abbr = " + abbr + " category = " + category +  " pageable = " + pageable );
-			Page<Product> page = productRepository.findByAbbrAndCategory(abbr, category, pageable);
-			System.err.println("1. " + page.getContent().size());
+			//System.err.println("1. abbr = " + abbr + " category = " + category +  " pageable = " + pageable );
+			Page<Product> page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
+			//System.err.println("1. " + page.getContent().size());
 		return page;
 
 	}
 	
 	@GetMapping("/products/{abbr}" )
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable ) {		
-			System.err.println("2. abbr = " + abbr +   " pageable = " + pageable );
-			Page<Product> page = productRepository.findByAbbr(abbr,  pageable); 
-			System.err.println("2. " + page.getContent().size());			
+			//System.err.println("2. abbr = " + abbr +   " pageable = " + pageable );
+			Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable); 
+			//System.err.println("2. " + page.getContent().size());			
 		return page;
 	}
 	
@@ -103,6 +103,7 @@ public class ProductController {
 		}
 		List<Product> products = productRepository.findByAbbr(abbr);
 		List<Product> sortedProducts = products.stream()
+				.filter(item -> item.isShow())
 				.filter(item -> !item.getCategory().equals(""))
 				.filter(distinctByKey(p -> p.getCategory()))
 				.sorted(Comparator.comparing(Product::getCategory))
@@ -114,6 +115,7 @@ public class ProductController {
 	public List<Product> findCategories() {
 		List<Product> products = productRepository.findAll();
 		List<Product> sortedProducts = products.stream()
+				.filter(item -> item.isShow())
 				.filter(item -> !item.getCategory().equals(""))
 				.filter(distinctByKey(p -> p.getCategory()))
 				.sorted(Comparator.comparing(Product::getCategory))

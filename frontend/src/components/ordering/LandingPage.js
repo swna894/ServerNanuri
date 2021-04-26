@@ -10,6 +10,8 @@ import {
 } from "../../_actions/supplier_action";
 import { getProductsInitAction } from "../../_actions/product_action";
 
+
+
 function LandingPage() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products.content);
@@ -25,7 +27,6 @@ function LandingPage() {
     products.map((item, index) => (
       <Col apan={6} key={index}>
         <Card
-          raised
           style={{ height: "400px", width: "458px" }}
           cover={
             <img
@@ -67,6 +68,7 @@ function LandingPage() {
       >
         <Row gutter={[16, 16]}>{orderLists}</Row>
       </div>
+
       <OrderFooter />
     </div>
   );

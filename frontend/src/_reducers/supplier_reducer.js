@@ -3,6 +3,7 @@ import {
   GET_SUPPLIERS_REQUEST,
   GET_SUPPLIERS_SUCCESS,
   GET_SUPPLIERS_FAILUAR,
+  CHANGE_TITLE,
   CHANGE_SUPPLIER,
 } from "../service/types";
 
@@ -27,8 +28,11 @@ const reducer = (state = initialState, action) => {
         supplier: action.payload.abbr,
       };
 
-    case CHANGE_SUPPLIER:
+    case CHANGE_TITLE:
       return { ...state, title: action.payload };
+
+    case CHANGE_SUPPLIER:
+      return { ...state, supplier: action.payload };
 
     case GET_SUPPLIERS_SUCCESS:
       return {

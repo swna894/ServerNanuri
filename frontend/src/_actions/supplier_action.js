@@ -4,6 +4,7 @@ import {
   // GET_SUPPLIERS_REQUEST,
   GET_SUPPLIERS_SUCCESS,
   GET_SUPPLIERS_FAILUAR,
+  CHANGE_TITLE,
   CHANGE_SUPPLIER,
 } from "../service/types";
 
@@ -37,7 +38,13 @@ export const actionGetSupplier = () => {
 
 export const actionChangeSupplier = (supplier) => {
   return (dispatch) => {
-    dispatch(changeSupplieRequest(supplier));
+    dispatch(changeSupplierRequest(supplier));
+  };
+};
+
+export const actionChangeTitle = (title) => {
+  return (dispatch) => {
+    dispatch(changeTitleRequest(title));
   };
 };
 
@@ -47,10 +54,17 @@ export const actionChangeSupplier = (supplier) => {
 //   };
 // };
 
-const changeSupplieRequest = (supplier) => {
+const changeSupplierRequest = (supplier) => {
   return {
     type: CHANGE_SUPPLIER,
     payload: supplier,
+  };
+};
+
+const changeTitleRequest = (title) => {
+  return {
+    type: CHANGE_TITLE,
+    payload: title,
   };
 };
 

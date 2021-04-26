@@ -2,8 +2,11 @@ import {
   GET_CATEGORYS_REQUEST,
   GET_PRODUCTS_REQUEST,
   GET_PRODUCTS_INIT,
+
 } from "../service/types";
+
 import axios from "axios";
+
 
 export function getCategoriesAction(params) {
   const request = axios

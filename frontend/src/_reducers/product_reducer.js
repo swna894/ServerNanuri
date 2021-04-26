@@ -20,6 +20,7 @@ export default function reducerProduct(state = initialState, action) {
     case GET_PRODUCTS_INIT:
       return { ...state, products: action.payload };
 
+
     default:
       return state;
   }

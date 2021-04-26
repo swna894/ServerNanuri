@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Select, Space } from "antd";
-import { actionChangeSupplier } from "../../_actions/supplier_action";
+import {
+  actionChangeTitle,
+  actionChangeSupplier,
+} from "../../_actions/supplier_action";
 import {
   getCategoriesAction,
   getProductsAction,
@@ -37,20 +40,24 @@ function OrderHeader() {
     //console.log("company.company " + JSON.stringify(suppliers));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function onChangeSuppiler(value, searchValue) {
-    setTitle(value);
+  function onChangeSuppiler(supplier, searchValue) {
+    setTitle(supplier);
     setCategory("Selet category");
-    dispatch(actionChangeSupplier(searchValue.children));
-    let parm = { params: { abbr: value } };
+
+    dispatch(actionChangeTitle(searchValue.children));
+    dispatch(actionChangeSupplier(supplier));
+    let parm = { params: { abbr: supplier } };
     dispatch(getCategoriesAction(parm));
-    pageProducts(value, "", page, size);
+    pageProducts(supplier, "", 0, size);
+    
+    
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
 
   function onChangeCategory(value) {
     setCategory(value);
-    dispatch(actionChangeSupplier(title + " / " + value));
+    dispatch(actionChangeTitle(title + " / " + value));
     pageProducts(title, value, page, size);
   }
 
@@ -59,6 +66,7 @@ function OrderHeader() {
     //console.log("abbr = " + abbr );
     //console.log(param);
     dispatch(getProductsAction(abbr, category, param));
+    document.documentElement.scrollTop = 0;
   };
 
   const listSelectOptions = suppliers.map((item) => (
