@@ -5,6 +5,7 @@ import {
   GET_SUPPLIERS_FAILUAR,
   CHANGE_TITLE,
   CHANGE_SUPPLIER,
+  CHANGE_CATEGORY,
 } from "../service/types";
 
 const initialState = {
@@ -33,6 +34,9 @@ const reducer = (state = initialState, action) => {
 
     case CHANGE_SUPPLIER:
       return { ...state, supplier: action.payload };
+
+    case CHANGE_CATEGORY:
+      return { ...state, category: action.payload };
 
     case GET_SUPPLIERS_SUCCESS:
       return {

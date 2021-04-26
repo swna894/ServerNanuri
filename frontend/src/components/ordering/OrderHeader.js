@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Select, Space } from "antd";
 import {
+  actionChangeCategory,
   actionChangeTitle,
   actionChangeSupplier,
 } from "../../_actions/supplier_action";
@@ -50,15 +51,15 @@ function OrderHeader() {
     dispatch(getCategoriesAction(parm));
     pageProducts(supplier, "", 0, size);
     
-    
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
 
-  function onChangeCategory(value) {
-    setCategory(value);
-    dispatch(actionChangeTitle(title + " / " + value));
-    pageProducts(title, value, page, size);
+  function onChangeCategory(category) {
+    setCategory(category);
+    dispatch(actionChangeCategory(category));
+    dispatch(actionChangeTitle(title + " / " + category));
+    pageProducts(title, category, page, size);
   }
 
   const pageProducts = (abbr, category, page = 0, size = 36) => {

@@ -6,6 +6,7 @@ import {
   GET_SUPPLIERS_FAILUAR,
   CHANGE_TITLE,
   CHANGE_SUPPLIER,
+  CHANGE_CATEGORY,
 } from "../service/types";
 
 export const actionGetSuppliers = () => {
@@ -36,6 +37,12 @@ export const actionGetSupplier = () => {
   };
 };
 
+export const actionChangeCategory = (supplier) => {
+  return (dispatch) => {
+    dispatch(changeCategoryRequest(supplier));
+  };
+};
+
 export const actionChangeSupplier = (supplier) => {
   return (dispatch) => {
     dispatch(changeSupplierRequest(supplier));
@@ -53,6 +60,13 @@ export const actionChangeTitle = (title) => {
 //     type: GET_SUPPLIERS_REQUEST,
 //   };
 // };
+
+const changeCategoryRequest = (category) => {
+  return {
+    type: CHANGE_CATEGORY,
+    payload: category,
+  };
+};
 
 const changeSupplierRequest = (supplier) => {
   return {

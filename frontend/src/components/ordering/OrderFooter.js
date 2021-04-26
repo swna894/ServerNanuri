@@ -18,6 +18,7 @@ const style = {
 function OrderFooter() {
   const supplier = useSelector((state) => state.supplier.supplier);
   const current = useSelector((state) => state.product.products.number);
+  const category = useSelector((state) => state.supplier.category);
   //const categories = useSelector((state) => state.product.categories);
   const { Footer } = Layout;
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ function OrderFooter() {
     };
     //console.log("abbr = " + supplier);
     console.log(supplier);
-    dispatch(getProductsAction(supplier, "", param));
+    dispatch(getProductsAction(supplier, category, param));
     document.documentElement.scrollTop = 0;
     //console.log("Page: ", pageNumber-1);
     //console.log("pageSize: ", pageSize);
@@ -53,7 +54,7 @@ function OrderFooter() {
           <div style={style}>UP</div>
         </BackTop>
         <Pagination
-          current = {current + 1}
+          current={current + 1}
           defaultPageSize={36}
           pageSizeOptions={[16, 24, 36, 60, 100]}
           showSizeChanger
