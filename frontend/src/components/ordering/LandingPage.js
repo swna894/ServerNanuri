@@ -2,15 +2,18 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
-import { Card, Row, Col, BackTop } from "antd";
+import { Card, Row, Col, BackTop, Button, Input } from "antd";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 
 import {
   actionGetSuppliers,
   actionGetSupplier,
 } from "../../_actions/supplier_action";
 import { getProductsInitAction } from "../../_actions/product_action";
+import newProduct from "../../images/new.png";
+import discount from "../../images/discount.png";
 
-const style = {
+const backTopstyle = {
   height: 40,
   width: 40,
   lineHeight: "40px",
@@ -20,12 +23,14 @@ const style = {
   textAlign: "center",
   fontSize: 14,
   position: "absolute",
-  top: "-20px", left: "70px",
+  top: "-70px",
+  left: "70px",
 };
 
 function LandingPage() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products.content);
+
   useEffect(() => {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
@@ -33,6 +38,53 @@ function LandingPage() {
     console.log(products);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const isSecial = true;
+  const isNew = true;
+
+  const descriptionStyle = {
+    overflow: "hidden",
+    fontSize: "16px",
+    marginBottom: "7px",
+  };
+
+  const priceStyle = {
+    overflow: "hidden",
+    fontSize: "18px",
+    marginBottom: "7px",
+    fontWeight: "bold",
+  };
+  const specialPriceStyle = isSecial
+    ? {
+        textDecoration: "line-through",
+        overflow: "hidden",
+        fontSize: "16px",
+        marginBottom: "7px",
+        fontWeight: "bold",
+        display: "inline",
+        color: "red",
+      }
+    : { display: "none" };
+
+  const specialSpaceStyle = isSecial
+    ? {
+        display: "inline",
+      }
+    : { display: "none" };
+
+  const specialStyle = isSecial
+    ? { position: "absolute", top: "220px", left: "25px" }
+    : { display: "none" };
+
+  const newStyle = isNew
+    ? { position: "absolute", top: "220px", right: "25px" }
+    : { display: "none" };
+
+  const buttonStyle = {
+    display: "inline",
+    position: "absolute",
+    top: "340px",
+    right: "-90px",
+  };
   const orderLists =
     products &&
     products.map((item, index) => (
@@ -56,12 +108,29 @@ function LandingPage() {
             />
           }
         >
-          [ {item.code} ]{""}
-          {item.description}
-          <p>$ {item.price}</p>
-          <p>{item.stock}</p>
+          <div style={newStyle}>
+            <img src={newProduct} alt="special"></img>
+          </div>
+          <div style={specialStyle}>
+            <img src={discount} alt="special"></img>
+          </div>
+
+          <p style={descriptionStyle}>
+            [ {item.code} ] &nbsp;
+            {item.description}
+          </p>
+          <span style={specialPriceStyle}>${item.price}</span>
+          <spam style={specialSpaceStyle}>&nbsp;&nbsp;</spam>
+          <span style={priceStyle}>${item.price} </span>
+          <span>&nbsp;/&nbsp;Pack : {item.pack}</span>
           <p style={{ color: "#fff" }}>- </p>
           <p style={{ color: "#fff" }}>- </p>
+
+          <div style={buttonStyle}>
+            <Button type="primary" icon={<MinusOutlined />}></Button>
+            <Input style={{ width: "20%" }}></Input>
+            <Button type="primary" icon={<PlusOutlined />}></Button>
+          </div>
         </Card>
       </Col>
     ));
@@ -76,12 +145,13 @@ function LandingPage() {
           width: "100%",
           //height: "100vh",
           padding: "80px 10px 10px 10px",
+          backgroundColor: "#f0f0f0",
         }}
       >
         <Row gutter={[16, 16]}>{orderLists}</Row>
       </div>
       <BackTop>
-        <div style={style}>UP</div>
+        <div style={backTopstyle}>UP</div>
       </BackTop>
       <OrderFooter />
     </div>
