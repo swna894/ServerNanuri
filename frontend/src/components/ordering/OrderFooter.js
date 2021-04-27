@@ -1,19 +1,8 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Layout, Pagination, BackTop } from "antd";
+import { Layout, Pagination } from "antd";
 import { getProductsAction } from "../../_actions/product_action";
 import "./OrderPage.css";
-
-const style = {
-  height: 40,
-  width: 40,
-  lineHeight: "40px",
-  borderRadius: 4,
-  backgroundColor: "#1088e9",
-  color: "#fff",
-  textAlign: "center",
-  fontSize: 14,
-};
 
 function OrderFooter() {
   const supplier = useSelector((state) => state.supplier.supplier);
@@ -31,8 +20,10 @@ function OrderFooter() {
       params: { page: pageNumber - 1, size: pageSize, sort: "seq" },
     };
     //console.log("abbr = " + supplier);
-    console.log(supplier);
-    dispatch(getProductsAction(supplier, category, param));
+    console.log(category);
+    category
+      ? dispatch(getProductsAction(supplier, category, param))
+      : dispatch(getProductsAction(supplier, "", param));
     document.documentElement.scrollTop = 0;
     //console.log("Page: ", pageNumber-1);
     //console.log("pageSize: ", pageSize);
@@ -50,9 +41,6 @@ function OrderFooter() {
           textAlign: "right",
         }}
       >
-        <BackTop>
-          <div style={style}>UP</div>
-        </BackTop>
         <Pagination
           current={current + 1}
           defaultPageSize={36}

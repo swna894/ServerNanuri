@@ -47,6 +47,7 @@ function OrderHeader() {
 
     dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(supplier));
+    dispatch(actionChangeCategory(''));
     let parm = { params: { abbr: supplier } };
     dispatch(getCategoriesAction(parm));
     pageProducts(supplier, "", 0, size);

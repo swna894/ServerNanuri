@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
-import { Card, Row, Col } from "antd";
+import { Card, Row, Col, BackTop } from "antd";
 
 import {
   actionGetSuppliers,
@@ -10,7 +10,18 @@ import {
 } from "../../_actions/supplier_action";
 import { getProductsInitAction } from "../../_actions/product_action";
 
-
+const style = {
+  height: 40,
+  width: 40,
+  lineHeight: "40px",
+  borderRadius: 4,
+  backgroundColor: "#1088e9",
+  color: "#fff",
+  textAlign: "center",
+  fontSize: 14,
+  position: "absolute",
+  top: "-20px", left: "70px",
+};
 
 function LandingPage() {
   const dispatch = useDispatch();
@@ -32,10 +43,11 @@ function LandingPage() {
             <img
               style={{
                 bordered: true,
-                height: "auto",
+                //height: "auto",
+                minHeight: "250px",
                 maxHeight: "250px",
                 width: "auto",
-                maxWidth: "350px",
+                maxWidth: "300px",
                 textAlign: "center",
                 margin: "10px auto",
               }}
@@ -68,7 +80,9 @@ function LandingPage() {
       >
         <Row gutter={[16, 16]}>{orderLists}</Row>
       </div>
-
+      <BackTop>
+        <div style={style}>UP</div>
+      </BackTop>
       <OrderFooter />
     </div>
   );
