@@ -8,12 +8,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+
 
 import com.order2david.exception.NotEnoughStockException;
 
@@ -58,6 +60,12 @@ public class Product {
 	private int stock; // 재고수량
 	private int pack;
 	private boolean isShow;
+	
+	@Transient
+	private int qty;
+	@Transient
+	private String orderedDate;
+	
 
 	// 0423
 	// == 연관 관계 == //

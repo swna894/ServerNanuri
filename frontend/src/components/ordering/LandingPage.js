@@ -4,7 +4,6 @@ import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
 import { Card, Row, Col, BackTop, Button, Input } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
-
 import {
   actionGetSuppliers,
   actionGetSupplier,
@@ -27,6 +26,8 @@ const backTopstyle = {
   left: "70px",
 };
 
+const onChangeQtyHandler = () => {};
+
 function LandingPage() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products.content);
@@ -35,7 +36,6 @@ function LandingPage() {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
     dispatch(getProductsInitAction());
-    console.log(products);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isSecial = true;
@@ -45,6 +45,13 @@ function LandingPage() {
     overflow: "hidden",
     fontSize: "16px",
     marginBottom: "7px",
+  };
+
+  const inputQtyStyle = {
+    width: "20%",
+    fontSize: "14px",
+    textAlign: "center",
+    fontWeight: "bold",
   };
 
   const priceStyle = {
@@ -66,15 +73,11 @@ function LandingPage() {
     : { display: "none" };
 
   const specialSpaceStyle = isSecial
-    ? {
-        display: "inline",
-      }
+    ? { display: "inline" }
     : { display: "none" };
-
   const specialStyle = isSecial
     ? { position: "absolute", top: "220px", left: "25px" }
     : { display: "none" };
-
   const newStyle = isNew
     ? { position: "absolute", top: "220px", right: "25px" }
     : { display: "none" };
@@ -120,15 +123,20 @@ function LandingPage() {
             {item.description}
           </p>
           <span style={specialPriceStyle}>${item.price}</span>
-          <spam style={specialSpaceStyle}>&nbsp;&nbsp;</spam>
+          <span style={specialSpaceStyle}>&nbsp;&nbsp;</span>
           <span style={priceStyle}>${item.price} </span>
-          <span>&nbsp;/&nbsp;Pack : {item.pack}</span>
+          <span>&nbsp;&nbsp;&nbsp;Packing : {item.pack}</span>
+          <p style={{ color: "#1835D0" }}>2001-02-02</p>
           <p style={{ color: "#fff" }}>- </p>
           <p style={{ color: "#fff" }}>- </p>
 
           <div style={buttonStyle}>
             <Button type="primary" icon={<MinusOutlined />}></Button>
-            <Input style={{ width: "20%" }}></Input>
+            <Input
+              style={inputQtyStyle}
+              value={item.qty}
+              onChange={onChangeQtyHandler}
+            ></Input>
             <Button type="primary" icon={<PlusOutlined />}></Button>
           </div>
         </Card>
