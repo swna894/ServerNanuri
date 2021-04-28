@@ -39,6 +39,7 @@ function OrderFooter() {
           paddingTop: 10,
           paddingBottom: 10,
           textAlign: "right",
+          backgroundColor: "#bfbfbf",
         }}
       >
         <Pagination

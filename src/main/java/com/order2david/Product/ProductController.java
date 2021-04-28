@@ -85,6 +85,12 @@ public class ProductController {
 
 	}
 	
+	@GetMapping("/products/abbr/{abbr}" )
+	public List<Product> findByAbbr(@PathVariable String abbr) {		
+			List<Product> products = productRepository.findByAbbrOrderByCodeAsc(abbr); 			
+		return products;
+	}
+	
 	@GetMapping("/products/{abbr}" )
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable ) {		
 			//System.err.println("2. abbr = " + abbr +   " pageable = " + pageable );
@@ -92,7 +98,6 @@ public class ProductController {
 			//System.err.println("2. " + page.getContent().size());			
 		return page;
 	}
-	
 
 	
 	@GetMapping("/products/category")

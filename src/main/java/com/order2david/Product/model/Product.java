@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -57,9 +58,14 @@ public class Product {
 	private String category;
 	private String imagePath;
 	private double price; // 가격
+	private double specialPrice;
 	private int stock; // 재고수량
 	private int pack;
 	private boolean isShow;
+	private boolean isSpecial;
+	private boolean isNew;
+	@Lob
+	private byte[] image;
 	
 	@Transient
 	private int qty;

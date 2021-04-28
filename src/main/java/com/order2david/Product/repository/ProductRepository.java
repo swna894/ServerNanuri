@@ -32,6 +32,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	List<Product> findByAbbr(String company);
 
+	List<Product> findByAbbrOrderByCodeAsc(String company);
+	
 	List<Product> findDistinctCategoryByAbbr(String company);
 
 	Page<Product> findByAbbrAndCategory(String abbr, String category, Pageable pageable);
@@ -41,5 +43,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<Product> findByAbbrAndCategoryAndIsShow(String abbr, String category, boolean b, Pageable pageable);
 
 	Page<Product> findByAbbrAndIsShow(String abbr, boolean b, Pageable pageable);
+
 
 }

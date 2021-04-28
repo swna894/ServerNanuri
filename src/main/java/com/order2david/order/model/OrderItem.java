@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -64,16 +63,16 @@ public class OrderItem {
 	private Order order; // 주문
 
 	//@JsonBackReference
-	@OneToOne
-	@JoinColumn(name = "PRODUCT_ID")
-	private Product product; // 주문 상품
+//	@OneToOne
+//	@JoinColumn(name = "PRODUCT_ID")
+//	private Product product; // 주문 상품
 	
 	
 	// ==생성 메서드== //
 	public OrderItem createOrderItem(Product product, double price, int count) {
 
 		OrderItem orderItem = new OrderItem();
-		orderItem.setProduct(product);
+		//orderItem.setProduct(product);
 		orderItem.setPrice(price);
 		orderItem.setCount(count);
 		amount = getTotalPrice();
@@ -84,9 +83,9 @@ public class OrderItem {
 
 	// ==비즈니스 로직==//
 	/** 주문 취소 */
-	public void cancel() {
-		getProduct().addStock(count);
-	}
+//	public void cancel() {
+//		getProduct().addStock(count);
+//	}
 
 	// ==조회 로직==//
 	/** 주문상품 전체 가격 조회 */
@@ -96,7 +95,7 @@ public class OrderItem {
 
 	@Override
 	public String toString() {
-		return "OrderItem [id=" + id + ", order=" + order + ", product=" + product + ", invoice=" + invoice + ", code="
+		return "OrderItem [id=" + id + ", order=" + order + ", invoice=" + invoice + ", code="
 				+ code + ", price=" + price + ", amount=" + amount + ", count=" + count + ", created=" + created
 				+ ", updated=" + updated + "]\n\n";
 	}

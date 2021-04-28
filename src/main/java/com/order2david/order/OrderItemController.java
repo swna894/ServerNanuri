@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.order2david.Product.model.Product;
 import com.order2david.Product.repository.ProductRepository;
 import com.order2david.order.model.Order;
 import com.order2david.order.model.OrderItem;
@@ -48,13 +47,13 @@ public class OrderItemController {
 		 
 		 for (OrderItem orderItem : orderItems) {
 			String invoice = orderItem.getInvoice();
-			String abbr = invoice.substring(0, 4);
+			//String abbr = invoice.substring(0, 4);
 			Order order = orderRepository.findByInvoice(invoice);
 		
-			Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), abbr);
+			//Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), abbr);
 			order.getOrderItems().add(orderItem);
 			orderItem.setOrder(order);
-			orderItem.setProduct(product);
+			//orderItem.setProduct(product);
 			//System.err.println(orderItem);
 		}
 		 return orderItemRepository.saveAll(orderItems);

@@ -9,15 +9,20 @@ import Reducer from "./service/rootReducer";
 import App from "./App";
 import "./index.css";
 import "antd/dist/antd.css";
-import authToken from "./utils/authTolen";
+import axios from "axios";
 
 const createStoreWithMiddleware = applyMiddleware(
   promiseMiddleware,
   Reduxthunk
 )(createStore);
 
+//console.log("localStorage.jwtToken" + localStorage.jwtToken);
 if (localStorage.jwtToken) {
-    authToken(localStorage.jwtToken);
+  axios.defaults.headers.common[
+    "Authorization"
+  ] = `Bearer ${localStorage.jwtToken}`;
+} else {
+  delete axios.defaults.headers.common["Authorization"];
 }
 
 ReactDOM.render(

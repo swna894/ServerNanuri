@@ -30,7 +30,9 @@ const onChangeQtyHandler = () => {};
 
 function LandingPage() {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.product.products.content);
+  const products = useSelector((state) =>
+    state.product.products.content ? state.product.products.content : []
+  );
 
   useEffect(() => {
     dispatch(actionGetSupplier());
@@ -39,7 +41,6 @@ function LandingPage() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const isSecial = true;
-  const isNew = true;
 
   const descriptionStyle = {
     overflow: "hidden",
@@ -60,27 +61,22 @@ function LandingPage() {
     marginBottom: "7px",
     fontWeight: "bold",
   };
-  const specialPriceStyle = isSecial
-    ? {
-        textDecoration: "line-through",
-        overflow: "hidden",
-        fontSize: "16px",
-        marginBottom: "7px",
-        fontWeight: "bold",
-        display: "inline",
-        color: "red",
-      }
-    : { display: "none" };
+  const specialPriceStyle = {
+    textDecoration: "line-through",
+    overflow: "hidden",
+    fontSize: "16px",
+    marginBottom: "7px",
+    fontWeight: "bold",
+    display: "inline",
+    color: "red",
+  };
 
   const specialSpaceStyle = isSecial
     ? { display: "inline" }
     : { display: "none" };
-  const specialStyle = isSecial
-    ? { position: "absolute", top: "220px", left: "25px" }
-    : { display: "none" };
-  const newStyle = isNew
-    ? { position: "absolute", top: "220px", right: "25px" }
-    : { display: "none" };
+  const specialStyle = { position: "absolute", top: "20px", left: "25px" };
+  const newStyle = { position: "absolute", top: "220px", left: "25px" };
+  const hiddenStyle = { display: "none" };
 
   const buttonStyle = {
     display: "inline",
@@ -88,6 +84,7 @@ function LandingPage() {
     top: "340px",
     right: "-90px",
   };
+
   const orderLists =
     products &&
     products.map((item, index) => (
@@ -107,29 +104,35 @@ function LandingPage() {
                 margin: "10px auto",
               }}
               alt={item.code}
-              src={`/images/${item.abbr}/${item.code}.jpg`}
+              //              src={`/images/${item.abbr}/${item.code}.jpg`}
+
+              src={"data:image/jpg;base64," + item.image}
             />
           }
         >
-          <div style={newStyle}>
+          <div style={item.new ? newStyle : hiddenStyle}>
             <img src={newProduct} alt="special"></img>
           </div>
-          <div style={specialStyle}>
+          <div style={item.special ? specialStyle : hiddenStyle}>
             <img src={discount} alt="special"></img>
           </div>
-
           <p style={descriptionStyle}>
             [ {item.code} ] &nbsp;
             {item.description}
           </p>
-          <span style={specialPriceStyle}>${item.price}</span>
-          <span style={specialSpaceStyle}>&nbsp;&nbsp;</span>
-          <span style={priceStyle}>${item.price} </span>
+          <span style={item.special ? priceStyle : { display: "none" }}>
+            ${item.specialPrice}
+          </span>
+          <span style={item.special ? specialSpaceStyle : { display: "none" }}>
+            &nbsp;&nbsp;
+          </span>
+          <span style={item.special ? specialPriceStyle : priceStyle}>
+            ${item.price}
+          </span>
           <span>&nbsp;&nbsp;&nbsp;Packing : {item.pack}</span>
           <p style={{ color: "#1835D0" }}>2001-02-02</p>
-          <p style={{ color: "#fff" }}>- </p>
-          <p style={{ color: "#fff" }}>- </p>
-
+          <p style={{ color: "#fff" }}>&nbsp; </p>
+          <p style={{ color: "#fff" }}>&nbsp; </p>
           <div style={buttonStyle}>
             <Button type="primary" icon={<MinusOutlined />}></Button>
             <Input

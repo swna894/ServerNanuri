@@ -11,6 +11,7 @@ import {
 
 export const actionGetSuppliers = () => {
   return (dispatch) => {
+    
     //dispatch(getSuppliersRequest());
     axios
       .get("/api/suppliers")
