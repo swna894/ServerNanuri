@@ -2,6 +2,9 @@ import {
   GET_CATEGORYS_REQUEST,
   GET_PRODUCTS_REQUEST,
   GET_PRODUCTS_INIT,
+  ORDER_INCREMENT,
+  ORDER_DECREMENT,
+  ORDER_CHANGE_INPUT,
 } from "../service/types";
 import axios from "axios";
 //import authToken from "../utils/authToken";
@@ -11,7 +14,7 @@ export function getCategoriesAction(params) {
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${localStorage.jwtToken}`;
-  } 
+  }
   const request = axios
     .get("/api/products/category", params)
     .then((response) => response.data)
@@ -49,7 +52,7 @@ export function getProductsInitAction() {
     axios.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${localStorage.jwtToken}`;
-  } 
+  }
   const request = axios
     .get(`/api/products/init`)
     .then((response) => response.data)
@@ -60,5 +63,35 @@ export function getProductsInitAction() {
   return {
     type: GET_PRODUCTS_INIT,
     payload: request,
+  };
+}
+
+export function changeIncremant(products, param) {
+  const contenst = {content:products};
+  return {
+    type: ORDER_INCREMENT,
+    payload: contenst,
+  };
+} 
+
+export function changeInput(products, param) {
+  const contenst = { content: products };
+  return {
+    type: ORDER_CHANGE_INPUT,
+    payload: contenst,
+  };
+} 
+
+export function changeDecremant(products, param) {
+  // const request = axios
+  //   .post("/api/order/decremant", param)
+  //   .then((response) => response.data)
+  //   .catch((error) => {
+  //     console.log("Problem !!! Get Categoies", error);
+  //   });
+  const contenst = { content: products };
+  return {
+    type: ORDER_DECREMENT,
+    payload: contenst,
   };
 }

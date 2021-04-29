@@ -12,6 +12,7 @@ import {
   getProductsInitAction,
   changeIncremant,
   changeDecremant,
+  changeInput,
 } from "../../_actions/product_action";
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
@@ -28,10 +29,6 @@ const backTopstyle = {
   position: "absolute",
   top: "-70px",
   left: "70px",
-};
-
-const onChangeQtyHandler = (code, pack) => {
-  console.log("input code = " + code + " pack = " + pack);
 };
 
 function LandingPage() {
@@ -65,6 +62,15 @@ function LandingPage() {
     );
     dispatch(changeDecremant(goods, param));
   };
+
+   const onChangeQtyHandler = (code, qty) => {
+     const param = { abbr: abbr, code: code, id: comapny.id, qty: qty };
+     const goods = products.map((item) =>
+       item.code === code ? { ...item, qty: qty } : item
+     );
+     console.log("input  = " + JSON.stringify(param));
+     dispatch(changeInput(goods, param));
+   };
 
   const descriptionStyle = {
     overflow: "hidden",
@@ -108,6 +114,12 @@ function LandingPage() {
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
   const newStyle = { position: "absolute", top: "220px", left: "25px" };
   const hiddenStyle = { display: "none" };
+  const cardNormalStyle = { height: "400px", width: "458px" };
+  const cardOrderStyle = {
+    height: "400px",
+    width: "458px",
+    backgroundColor: "#ffd6e7",
+  };
 
   const buttonStyle = {
     display: "inline",
@@ -121,7 +133,7 @@ function LandingPage() {
     products.map((item, index) => (
       <Col apan={6} key={index}>
         <Card
-          style={{ height: "400px", width: "458px" }}
+          style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
             <img
               style={imageStyel}
@@ -166,7 +178,7 @@ function LandingPage() {
             <Input
               style={inputQtyStyle}
               value={item.qty}
-              onChange={() => onChangeQtyHandler(item.code)}
+              onChange={(e) => onChangeQtyHandler(item.code, e.target.value)}
             ></Input>
             <Button
               type="primary"
