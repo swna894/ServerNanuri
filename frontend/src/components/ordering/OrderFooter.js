@@ -28,20 +28,18 @@ function OrderFooter() {
     //console.log("Page: ", pageNumber-1);
     //console.log("pageSize: ", pageSize);
   }
-
-  return (
-    <div>
-      <Footer
-        style={{
-          position: "fixed",
+const footerStyel = {
+             position: "fixed",
           width: "100%",
           bottom: "0",
           paddingTop: 10,
           paddingBottom: 10,
           textAlign: "right",
           backgroundColor: "#bfbfbf",
-        }}
-      >
+  };
+  return (
+    <div>
+      <Footer style={footerStyel}>
         <Pagination
           current={current + 1}
           defaultPageSize={36}

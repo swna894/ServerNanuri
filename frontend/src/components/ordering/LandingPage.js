@@ -8,7 +8,11 @@ import {
   actionGetSuppliers,
   actionGetSupplier,
 } from "../../_actions/supplier_action";
-import { getProductsInitAction } from "../../_actions/product_action";
+import {
+  getProductsInitAction,
+  changeIncremant,
+  changeDecremant,
+} from "../../_actions/product_action";
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
 
@@ -26,13 +30,17 @@ const backTopstyle = {
   left: "70px",
 };
 
-const onChangeQtyHandler = () => {};
+const onChangeQtyHandler = (code, pack) => {
+  console.log("input code = " + code + " pack = " + pack);
+};
 
 function LandingPage() {
   const dispatch = useDispatch();
   const products = useSelector((state) =>
     state.product.products.content ? state.product.products.content : []
   );
+  const abbr = useSelector((state) => state.supplier.supplier);
+  const comapny = useSelector((state) => state.user.userData);
 
   useEffect(() => {
     dispatch(actionGetSupplier());
@@ -40,7 +48,23 @@ function LandingPage() {
     dispatch(getProductsInitAction());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const isSecial = true;
+  const onClickIncrease = (code) => {
+    const param = { abbr: abbr, code: code, id: comapny.id };
+    const goods = products.map((item) =>
+      item.code === code ? { ...item, qty: item.qty + item.pack } : item
+    );
+    dispatch(changeIncremant(goods, param));
+  };
+
+  const onClickDecrease = (code) => {
+    const param = { abbr: abbr, code: code, id: comapny.id };
+    const goods = products.map((item) =>
+      item.code === code
+        ? { ...item, qty: item.qty - item.pack > 0 ? item.qty - item.pack : 0 }
+        : item
+    );
+    dispatch(changeDecremant(goods, param));
+  };
 
   const descriptionStyle = {
     overflow: "hidden",
@@ -71,9 +95,16 @@ function LandingPage() {
     color: "red",
   };
 
-  const specialSpaceStyle = isSecial
-    ? { display: "inline" }
-    : { display: "none" };
+  const imageStyel = {
+    bordered: true,
+    //height: "auto",
+    minHeight: "250px",
+    maxHeight: "250px",
+    width: "auto",
+    maxWidth: "300px",
+    textAlign: "center",
+    margin: "10px auto",
+  };
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
   const newStyle = { position: "absolute", top: "220px", left: "25px" };
   const hiddenStyle = { display: "none" };
@@ -93,19 +124,9 @@ function LandingPage() {
           style={{ height: "400px", width: "458px" }}
           cover={
             <img
-              style={{
-                bordered: true,
-                //height: "auto",
-                minHeight: "250px",
-                maxHeight: "250px",
-                width: "auto",
-                maxWidth: "300px",
-                textAlign: "center",
-                margin: "10px auto",
-              }}
+              style={imageStyel}
               alt={item.code}
-              //              src={`/images/${item.abbr}/${item.code}.jpg`}
-
+              // src={`/images/${item.abbr}/${item.code}.jpg`}
               src={"data:image/jpg;base64," + item.image}
             />
           }
@@ -123,7 +144,9 @@ function LandingPage() {
           <span style={item.special ? priceStyle : { display: "none" }}>
             ${item.specialPrice}
           </span>
-          <span style={item.special ? specialSpaceStyle : { display: "none" }}>
+          <span
+            style={item.special ? { display: "inline" } : { display: "none" }}
+          >
             &nbsp;&nbsp;
           </span>
           <span style={item.special ? specialPriceStyle : priceStyle}>
@@ -134,13 +157,22 @@ function LandingPage() {
           <p style={{ color: "#fff" }}>&nbsp; </p>
           <p style={{ color: "#fff" }}>&nbsp; </p>
           <div style={buttonStyle}>
-            <Button type="primary" icon={<MinusOutlined />}></Button>
+            <Button
+              type="primary"
+              icon={<MinusOutlined />}
+              onClick={() => onClickDecrease(item.code, item.pack)}
+            ></Button>
+
             <Input
               style={inputQtyStyle}
               value={item.qty}
-              onChange={onChangeQtyHandler}
+              onChange={() => onChangeQtyHandler(item.code)}
             ></Input>
-            <Button type="primary" icon={<PlusOutlined />}></Button>
+            <Button
+              type="primary"
+              icon={<PlusOutlined />}
+              onClick={() => onClickIncrease(item.code)}
+            ></Button>
           </div>
         </Card>
       </Col>
