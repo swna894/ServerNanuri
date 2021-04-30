@@ -4,7 +4,6 @@ import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
 import { Card, Row, Col, BackTop, Button, Input } from "antd";
 import {
-  ConsoleSqlOutlined,
   MinusOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
@@ -156,10 +155,10 @@ function LandingPage() {
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
   const newStyle = { position: "absolute", top: "220px", left: "25px" };
   const hiddenStyle = { display: "none" };
-  const cardNormalStyle = { height: "400px", width: "458px" };
+  const cardNormalStyle = { height: "400px" };
   const cardOrderStyle = {
     height: "400px",
-    width: "458px",
+   
     backgroundColor: "#ffd6e7",
   };
 
@@ -173,15 +172,15 @@ function LandingPage() {
   const orderLists =
     content &&
     content.map((item, index) => (
-      <Col apan={6} key={index}>
+      <Col xl={6} lg={8} md={12} sm={24} xs={24} key={index}>
         <Card
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
             <img
               style={imageStyel}
               alt={item.code}
-              src={`/images/${item.abbr}/${item.code}.jpg`}
-              //src={"data:image/jpg;base64," + item.image}
+              //src={`/images/${item.abbr}/${item.code}.jpg`}
+              src={"data:image/jpg;base64," + item.image}
             />
           }
         >
