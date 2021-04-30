@@ -47,11 +47,11 @@ function OrderHeader() {
 
     dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(supplier));
-    dispatch(actionChangeCategory(''));
+    dispatch(actionChangeCategory(""));
     let parm = { params: { abbr: supplier } };
     dispatch(getCategoriesAction(parm));
     pageProducts(supplier, "", 0, size);
-    
+
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
@@ -113,18 +113,22 @@ function OrderHeader() {
       >
         <Space>
           <h2 style={{ display: "inline", color: "#fff" }}>{headTitle}</h2>
-          <Select
-            ref={formRef}
-            name="supplier"
-            showSearch
-            onChange={onChangeSuppiler}
-            style={{ width: 230 }}
-            placeholder="Selet supplier"
-            optionFilterProp="children"
-          >
-            {listSelectOptions}
-          </Select>
-          {listCategorySelect}
+          <div className="mobileHidden">
+            <Space>
+              <Select
+                ref={formRef}
+                name="supplier"
+                showSearch
+                onChange={onChangeSuppiler}
+                style={{ width: 230 }}
+                placeholder="Selet supplier"
+                optionFilterProp="children"
+              >
+                {listSelectOptions}
+              </Select>
+              {listCategorySelect}
+            </Space>
+          </div>
         </Space>
       </Header>
     </div>

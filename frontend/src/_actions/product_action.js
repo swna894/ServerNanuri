@@ -66,30 +66,30 @@ export function getProductsInitAction() {
   };
 }
 
-export function changeIncremant(products, param) {
-  const contenst = {content:products};
+export function changeIncremant(products, pageable, param) {
+  const contenst = {content:products, ...pageable};
   return {
     type: ORDER_INCREMENT,
     payload: contenst,
   };
 } 
 
-export function changeInput(products, param) {
-  const contenst = { content: products };
+export function changeInput(products, pageable, param) {
+  const contenst = { content: products, ...pageable };
   return {
     type: ORDER_CHANGE_INPUT,
     payload: contenst,
   };
 } 
 
-export function changeDecremant(products, param) {
+export function changeDecremant(products, pageable, param) {
   // const request = axios
   //   .post("/api/order/decremant", param)
   //   .then((response) => response.data)
   //   .catch((error) => {
   //     console.log("Problem !!! Get Categoies", error);
   //   });
-  const contenst = { content: products };
+  const contenst = { content: products, ...pageable };
   return {
     type: ORDER_DECREMENT,
     payload: contenst,

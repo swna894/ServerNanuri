@@ -3,7 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
 import { Card, Row, Col, BackTop, Button, Input } from "antd";
-import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  ConsoleSqlOutlined,
+  MinusOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
+
 import {
   actionGetSuppliers,
   actionGetSupplier,
@@ -17,6 +23,20 @@ import {
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
 
+const backMobileTopstyle = {
+  height: 40,
+  width: 40,
+  lineHeight: "40px",
+  borderRadius: 4,
+  backgroundColor: "#1088e9",
+  color: "#fff",
+  textAlign: "center",
+  fontSize: 14,
+  position: "absolute",
+  top: "-54px",
+  left: "30px",
+};
+
 const backTopstyle = {
   height: 40,
   width: 40,
@@ -27,15 +47,22 @@ const backTopstyle = {
   textAlign: "center",
   fontSize: 14,
   position: "absolute",
-  top: "-70px",
+  top: "-55px",
   left: "70px",
 };
 
 function LandingPage() {
   const dispatch = useDispatch();
-  const products = useSelector((state) =>
+  const content = useSelector((state) =>
     state.product.products.content ? state.product.products.content : []
   );
+  const products = useSelector((state) => state.product.products);
+  const totalElements = useSelector(
+    (state) => state.product.products.totalElements
+  );
+  const size = useSelector((state) => state.product.products.size);
+  const number = useSelector((state) => state.product.products.number);
+
   const abbr = useSelector((state) => state.supplier.supplier);
   const comapny = useSelector((state) => state.user.userData);
 
@@ -47,30 +74,45 @@ function LandingPage() {
 
   const onClickIncrease = (code) => {
     const param = { abbr: abbr, code: code, id: comapny.id };
-    const goods = products.map((item) =>
+    const goods = products.content.map((item) =>
       item.code === code ? { ...item, qty: item.qty + item.pack } : item
     );
-    dispatch(changeIncremant(goods, param));
+    const pageable = {
+      totalElements: totalElements,
+      size: size,
+      number: number,
+    };
+    dispatch(changeIncremant(goods, pageable, param));
   };
 
   const onClickDecrease = (code) => {
     const param = { abbr: abbr, code: code, id: comapny.id };
-    const goods = products.map((item) =>
+    const goods = content.map((item) =>
       item.code === code
         ? { ...item, qty: item.qty - item.pack > 0 ? item.qty - item.pack : 0 }
         : item
     );
-    dispatch(changeDecremant(goods, param));
+      const pageable = {
+        totalElements: totalElements,
+        size: size,
+        number: number,
+      };
+
+    dispatch(changeDecremant(goods, pageable, param));
   };
 
-   const onChangeQtyHandler = (code, qty) => {
-     const param = { abbr: abbr, code: code, id: comapny.id, qty: qty };
-     const goods = products.map((item) =>
-       item.code === code ? { ...item, qty: qty } : item
-     );
-     console.log("input  = " + JSON.stringify(param));
-     dispatch(changeInput(goods, param));
-   };
+  const onChangeInputHandler = (code, qty) => {
+    const param = { abbr: abbr, code: code, id: comapny.id, qty: qty };
+    const goods = content.map((item) =>
+      item.code === code ? { ...item, qty: qty } : item
+    );
+       const pageable = {
+         totalElements: totalElements,
+         size: size,
+         number: number,
+       };
+    dispatch(changeInput(goods, pageable, param));
+  };
 
   const descriptionStyle = {
     overflow: "hidden",
@@ -129,8 +171,8 @@ function LandingPage() {
   };
 
   const orderLists =
-    products &&
-    products.map((item, index) => (
+    content &&
+    content.map((item, index) => (
       <Col apan={6} key={index}>
         <Card
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
@@ -138,8 +180,8 @@ function LandingPage() {
             <img
               style={imageStyel}
               alt={item.code}
-              // src={`/images/${item.abbr}/${item.code}.jpg`}
-              src={"data:image/jpg;base64," + item.image}
+              src={`/images/${item.abbr}/${item.code}.jpg`}
+              //src={"data:image/jpg;base64," + item.image}
             />
           }
         >
@@ -178,7 +220,7 @@ function LandingPage() {
             <Input
               style={inputQtyStyle}
               value={item.qty}
-              onChange={(e) => onChangeQtyHandler(item.code, e.target.value)}
+              onChange={(e) => onChangeInputHandler(item.code, e.target.value)}
             ></Input>
             <Button
               type="primary"
@@ -190,11 +232,11 @@ function LandingPage() {
       </Col>
     ));
 
+  const [width] = useWindowWidthAndHeight();
   return (
     <div>
       <OrderHeader />
       <div
-        className={products}
         style={{
           display: "flex",
           width: "100%",
@@ -206,7 +248,7 @@ function LandingPage() {
         <Row gutter={[16, 16]}>{orderLists}</Row>
       </div>
       <BackTop>
-        <div style={backTopstyle}>UP</div>
+        <div style={width > 850 ? backTopstyle : backMobileTopstyle}>UP</div>
       </BackTop>
       <OrderFooter />
     </div>
