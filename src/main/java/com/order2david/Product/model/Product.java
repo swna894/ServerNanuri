@@ -17,9 +17,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-
-import com.order2david.exception.NotEnoughStockException;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -94,9 +91,9 @@ public class Product {
 
 	public void removeStock(int quantity) {
 		int restStock = this.stock - quantity;
-		if (restStock < 0) {
-			throw new NotEnoughStockException("need more stock");
-		}
+		//if (restStock < 0) {
+		//	throw new NotEnoughStockException("need more stock");
+		//}
 		this.stock = restStock;
 	}
 

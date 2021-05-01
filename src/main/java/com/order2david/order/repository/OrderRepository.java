@@ -1,5 +1,7 @@
 package com.order2david.order.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.order2david.order.model.Order;
@@ -8,7 +10,7 @@ import com.order2david.order.model.Order;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-	Order findByInvoice(String invoice);
+	Optional<Order> findByInvoice(String invoice);
 
     
 }

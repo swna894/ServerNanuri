@@ -18,7 +18,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.order2david.Product.model.Product;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -54,7 +53,7 @@ public class OrderItem {
 	private String description;
 	private double price; // 주문 가격
 	private double amount;
-	private int count; // 주문 수량
+	private int qty; // 주문 수량
 	
 	// ==연관 관계== //
 	@JsonBackReference
@@ -67,19 +66,31 @@ public class OrderItem {
 //	@JoinColumn(name = "PRODUCT_ID")
 //	private Product product; // 주문 상품
 	
+	public OrderItem() {
+		super();
+	}
+	
+	public OrderItem(Cart cart) {
+		this.code = cart.getCode();
+		this.qty = cart.getQty();
+		this.price = cart.getPrice();
+		this.description = cart.getDecription();
+		this.invoice = cart.getInvoice();
+		this.amount = getTotalPrice();	
+	}
 	
 	// ==생성 메서드== //
-	public OrderItem createOrderItem(Product product, double price, int count) {
-
-		OrderItem orderItem = new OrderItem();
-		//orderItem.setProduct(product);
-		orderItem.setPrice(price);
-		orderItem.setCount(count);
-		amount = getTotalPrice();
-		product.removeStock(count);
-		
-		return orderItem;
-	}
+//	public OrderItem createOrderItem(Product product, double price, int count) {
+//
+//		OrderItem orderItem = new OrderItem();
+//		//orderItem.setProduct(product);
+//		orderItem.setPrice(price);
+//		orderItem.setCount(count);
+//		amount = getTotalPrice();
+//		product.removeStock(count);
+//		
+//		return orderItem;
+//	}
 
 	// ==비즈니스 로직==//
 	/** 주문 취소 */
@@ -90,14 +101,17 @@ public class OrderItem {
 	// ==조회 로직==//
 	/** 주문상품 전체 가격 조회 */
 	public double getTotalPrice() {
-		return this.price * this.count;
+		this.amount = Double.valueOf(String.format("%.2f", this.qty * this.price));
+		return amount;
 	}
 
 	@Override
 	public String toString() {
 		return "OrderItem [id=" + id + ", order=" + order + ", invoice=" + invoice + ", code="
-				+ code + ", price=" + price + ", amount=" + amount + ", count=" + count + ", created=" + created
+				+ code + ", price=" + price + ", amount=" + amount + ", qty=" + qty + ", created=" + created
 				+ ", updated=" + updated + "]\n\n";
 	}
+
+
 
 }

@@ -12,6 +12,6 @@ public class TokenDto {
 	private Boolean isAuth;
 	private Boolean isAdmin;
     private String token;
-    private Long id;
+    private String id;
     private String company;
 }

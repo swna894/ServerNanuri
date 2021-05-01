@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  Button,
-  Layout,
-  Select,
-  Space,
-  Input,
-  Drawer,
-} from "antd";
+import { Button, Layout, Select, Space, Input, Drawer } from "antd";
 import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import Icon, { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
@@ -123,7 +116,6 @@ function OrderHeader() {
       ""
     );
 
-    
   const showDrawer = () => {
     setVisible(true);
   };
@@ -161,17 +153,17 @@ function OrderHeader() {
               </Select>
               {listCategorySelect}
             </Space>
-            <Space style={{ float: "right", color: "#fff" }}>
+            <Space style={{ float: "right", color: "#fff", marginTop: "3px" }}>
               <Search
                 placeholder="input search text"
                 allowClear
                 onSearch={onSearch}
-                style={{ width: 300, margin: "16px  0" }}
+                style={{ width: 300, margin: "18px  0" }}
               />
               <Button style={buttonStyle}>NEW</Button>
               <Button style={buttonStyle}>SPECIAL</Button>
               <Button style={buttonStyle}>
-                <ShoppingCartOutlined/>
+                <ShoppingCartOutlined />
                 CART
               </Button>
               <Button style={buttonStyle}>SIGNOUT</Button>
@@ -219,7 +211,7 @@ function OrderHeader() {
                 <Button style={{ width: "100%" }}>NEW</Button>
                 <Button style={{ width: "100%" }}>SPECIAL</Button>
                 <Button style={{ width: "100%" }}>
-                  <ShoppingCartOutlined/>
+                  <ShoppingCartOutlined />
                   CART
                 </Button>
                 <Button style={{ width: "100%" }}>LOGOUT</Button>
@@ -279,7 +271,7 @@ function OrderHeader() {
                 <Button style={{ width: "100%" }}>NEW</Button>
                 <Button style={{ width: "100%" }}>SPECIAL</Button>
                 <Button style={{ width: "100%" }}>
-                  <ShoppingCartOutlined/>
+                  <ShoppingCartOutlined />
                   CART
                 </Button>
                 <Button style={{ width: "100%" }}>LOGOUT</Button>

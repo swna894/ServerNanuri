@@ -133,7 +133,7 @@ public class AuthController {
 		if (shop != null) {
 			tokenDto.setIsAuth(true);
 			tokenDto.setToken(jwt);
-			tokenDto.setId(shop.getId());
+			tokenDto.setId(shop.getAbbr());
 			//System.err.println(shop.getRoles());
 			tokenDto.setIsAdmin(shop.getRoles().contains(new Roles("ROLE_USER")) ? true : false);
 			tokenDto.setCompany(shop.getCompany());

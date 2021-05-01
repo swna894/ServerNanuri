@@ -1,8 +1,10 @@
 package com.order2david.Product;
 
+import java.security.Principal;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -27,6 +29,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.Product.model.Product;
 import com.order2david.Product.repository.ProductRepository;
+import com.order2david.order.model.Order;
+import com.order2david.order.model.OrderItem;
+import com.order2david.order.repository.OrderRepository;
+import com.order2david.shop.ShopController;
+import com.order2david.shop.model.Shop;
+import com.order2david.shop.repository.ShopRepository;
 import com.order2david.supplier.model.Supplier;
 import com.order2david.supplier.repository.SupplierRepository;
 
@@ -39,6 +47,12 @@ public class ProductController {
 	@Autowired
 	ProductRepository productRepository;
 
+	@Autowired
+	OrderRepository orderRepository;
+	
+	@Autowired
+	ShopRepository shopRepository;
+	
 	@Autowired
 	SupplierRepository supplierRepository;
 
@@ -75,24 +89,48 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/init")
-	public Page<Product> getInit() {
+	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 		Pageable sortedBySeq = 
 				  PageRequest.of(0, 36, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
+		updateCartQty(page, principal);
 		return page ;
 	}
 	
 	@GetMapping("/products/{abbr}/{category}" )
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
-			@PathVariable String category, Pageable pageable ) {	
-			//System.err.println("1. abbr = " + abbr + " category = " + category +  " pageable = " + pageable );
+			@PathVariable String category, Pageable pageable, Principal principal ) {	
 			Page<Product> page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
-			//System.err.println("1. " + page.getContent().size());
-		return page;
+			updateCartQty(page, principal);
+			return page;
 
 	}
 	
+	private Page<Product> updateCartQty(Page<Product> page, Principal principal) {
+		List<Product> products = page.getContent();	
+		Optional<Order> cart = getCarts(principal, products.get(0).getAbbr());
+		
+		if(cart.isPresent()) {
+			List<OrderItem> orderItems = cart.get().getOrderItems(); 
+			for (Product product : products) {
+				for (OrderItem orderItem : orderItems) {
+					if(product.getCode().equals(orderItem.getCode())) {
+						product.setQty(orderItem.getQty());
+						break;
+					}
+				}
+			}
+		}
+		return page;
+	}
+	
+	private Optional<Order> getCarts(Principal principal, String abbr) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		String invoice = abbr+shop.getAbbr()+"_CART";
+		return orderRepository.findByInvoice(invoice);
+	}
+
 	@GetMapping("/products/abbr/{abbr}" )
 	public List<Product> findByAbbr(@PathVariable String abbr) {		
 			List<Product> products = productRepository.findByAbbrOrderByCodeAsc(abbr); 			
@@ -100,11 +138,10 @@ public class ProductController {
 	}
 	
 	@GetMapping("/products/{abbr}" )
-	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable ) {		
-			//System.err.println("2. abbr = " + abbr +   " pageable = " + pageable );
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable, Principal principal ) {		
 			Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable); 
-			//System.err.println("2. " + page.getContent().size());			
-		return page;
+			updateCartQty(page, principal);
+			return page;
 	}
 
 	

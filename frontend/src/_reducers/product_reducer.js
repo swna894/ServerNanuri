@@ -2,9 +2,7 @@ import {
   GET_CATEGORYS_REQUEST,
   GET_PRODUCTS_REQUEST,
   GET_PRODUCTS_INIT,
-  ORDER_INCREMENT,
-  ORDER_DECREMENT,
-  ORDER_CHANGE_INPUT,
+  CHANGE_CART,
 } from "../service/types";
 
 const initialState = {
@@ -23,13 +21,7 @@ export default function reducerProduct(state = initialState, action) {
     case GET_PRODUCTS_INIT:
       return { ...state, products: action.payload };
 
-    case ORDER_INCREMENT:
-      return { ...state, products: action.payload };
-
-    case ORDER_DECREMENT:
-      return { ...state, products: action.payload };
-
-    case ORDER_CHANGE_INPUT:
+    case CHANGE_CART:
       return { ...state, products: action.payload };
 
     default:

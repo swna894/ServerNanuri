@@ -12,9 +12,7 @@ import {
 } from "../../_actions/supplier_action";
 import {
   getProductsInitAction,
-  changeIncremant,
-  changeDecremant,
-  changeInput,
+  changeCart,
 } from "../../_actions/product_action";
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
@@ -68,28 +66,41 @@ function LandingPage() {
     dispatch(getProductsInitAction());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onClickIncrease = (code) => {
-    const param = { abbr: abbr, code: code, id: comapny.id };
+  const onClickIncrease = (code, pack, qty) => {
+    const param = {
+      abbr: abbr,
+      code: code,
+      id: comapny.id,
+      qty: parseInt(pack) + parseInt(qty),
+    };
     const goods = products.content.map((item) =>
-      item.code === code ? { ...item, qty: parseInt(item.qty) + item.pack } : item
+      item.code === code
+        ? { ...item, qty: parseInt(item.qty) + item.pack }
+        : item
     );
     const pageable = {
       totalElements: totalElements,
       size: size,
       number: number,
     };
-    dispatch(changeIncremant(goods, pageable, param));
+    dispatch(changeCart(goods, pageable, param));
   };
 
-  const onClickDecrease = (code) => {
-    const param = { abbr: abbr, code: code, id: comapny.id };
+  const onClickDecrease = (code, pack, qty) => {
+    const count = parseInt(qty) - parseInt(pack);
+    const param = {
+      abbr: abbr,
+      code: code,
+      id: comapny.id,
+      qty: count > 0 ? count : 0,
+    };
     const goods = content.map((item) =>
       item.code === code
         ? {
             ...item,
             qty:
-              parseInt(item.qty) - item.pack > 0
-                ? parseInt(item.qty) - item.pack
+              (parseInt(item.qty) - item.pack) > 0
+                ? (parseInt(item.qty) - item.pack)
                 : 0,
           }
         : item
@@ -100,7 +111,7 @@ function LandingPage() {
       number: number,
     };
 
-    dispatch(changeDecremant(goods, pageable, param));
+    dispatch(changeCart(goods, pageable, param));
   };
 
   const onChangeInputHandler = (code, qty) => {
@@ -113,7 +124,7 @@ function LandingPage() {
       size: size,
       number: number,
     };
-    dispatch(changeInput(goods, pageable, param));
+    dispatch(changeCart(goods, pageable, param));
   };
 
   const descriptionStyle = {
@@ -162,7 +173,7 @@ function LandingPage() {
   const cardOrderStyle = {
     height: "400px",
     width: "458px",
-    backgroundColor: "#ffd6e7",
+    backgroundColor: "#e6f7ff",
   };
 
   const buttonStyle = {
@@ -217,7 +228,7 @@ function LandingPage() {
               <Button
                 type="primary"
                 icon={<MinusOutlined />}
-                onClick={() => onClickDecrease(item.code, item.pack)}
+                onClick={() => onClickDecrease(item.code, item.pack, item.qty)}
               ></Button>
 
               <Input
@@ -230,7 +241,7 @@ function LandingPage() {
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => onClickIncrease(item.code)}
+                onClick={() => onClickIncrease(item.code, item.pack, item.qty)}
               ></Button>
             </div>
           </div>
