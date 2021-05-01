@@ -29,7 +29,13 @@ import lombok.ToString;
 @Setter
 @Getter
 @Entity
-@Table(name = "ORDER_ITEM")
+@Table(name = "ORDER_ITEM"
+//	uniqueConstraints={
+//        @UniqueConstraint(
+//            columnNames={"code", "invoice"}
+//        )
+//    }	
+)
 public class OrderItem {
 
 	@Id

@@ -32,7 +32,6 @@ import com.order2david.Product.repository.ProductRepository;
 import com.order2david.order.model.Order;
 import com.order2david.order.model.OrderItem;
 import com.order2david.order.repository.OrderRepository;
-import com.order2david.shop.ShopController;
 import com.order2david.shop.model.Shop;
 import com.order2david.shop.repository.ShopRepository;
 import com.order2david.supplier.model.Supplier;

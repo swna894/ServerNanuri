@@ -2,6 +2,7 @@ package com.order2david.order;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,25 @@ public class OrderController {
 		return orderRepository.save(order);
 	}
 
+	@PutMapping("orders/confirm")
+	public Order putConfirm(@RequestBody Order order) {		
+		String invoice = genInvoice(order);
+		order.setInvoice(invoice);
+		order.setStatus(OrderType.ORDER);
+		return orderRepository.save(order);
+
+	}
+	
+	public String genInvoice(Order order) {
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("_MMddHHmmss");
+		String formatDateTime = LocalDateTime.now().format(formatter);
+		String invoice = order.getInvoice();
+		String prefix = invoice.substring(0, invoice.indexOf("_"));
+
+		return prefix + formatDateTime;
+	}
+	
 	@GetMapping("orders/f")
 	public List<Order> findAllByParm(@RequestParam Map<String, String> paramater) {
 		OrderType status = OrderType.valueOf(paramater.get("status"));
@@ -148,6 +168,10 @@ public class OrderController {
 		// orderRepository.deleteAll(items);
 	}
 
+	@PostMapping("order/copycart")
+	public Order postCopyCart(@RequestBody Order order) {	
+		return orderRepository.save(order);
+	}
 	/*
 	 * -. order에 cart가 있는지 확인한다.
 	 *   1. 있음
@@ -160,6 +184,9 @@ public class OrderController {
 		String abbr = cart.getAbbr();
 		String invoice = abbr + cart.getId() + "_CART"; 
 	
+		Shop shop = shopRepository.findByAbbr(String.valueOf(cart.getId()));
+		Supplier supplier = supplierRepository.findByAbbr(cart.getAbbr());
+		
 		Product product = productRepository.findByCodeAndAbbr(cart.getCode(), abbr);
 		product.removeStock(cart.getQty());
 		
@@ -168,28 +195,19 @@ public class OrderController {
 		cart.setInvoice(invoice);
 	
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
-		
-		if(!orderOptional.isPresent() && cart.getQty() != 0) {
-			Shop shop = shopRepository.findByAbbr(String.valueOf(cart.getId()));
-			Supplier supplier = supplierRepository.findByAbbr(cart.getAbbr());
-				
-			Order order = new Order();
-			order.setShop(shop);
-			order.setSupplier(supplier);
+		Order order = null;
+		if(!orderOptional.isPresent() && cart.getQty() != 0) {	
+			order = new Order();
+
 			order.setShopAbbr(abbr);
 			order.setStatus(OrderType.CART);
 			order.setInvoice(invoice);
 			order.addOrderItem(new OrderItem(cart));
-			order.setOrderDate(LocalDateTime.now());
-			
-			orderRepository.save(order);
-			productRepository.save(product);
-			
+			order.setOrderDate(LocalDateTime.now());	
 		} else {
 			if(product != null) {
-				product.removeStock(cart.getQty());
-				
-				Order order = orderOptional.get();
+				product.removeStock(cart.getQty());			
+				order = orderOptional.get();
 				order.setOrderDate(LocalDateTime.now());
 				if(cart.getQty() == 0) {
 					order.removeOrderItem(cart);
@@ -197,11 +215,18 @@ public class OrderController {
 					if(!order.updateOrderItem(cart)) {
 						order.addOrderItem(new OrderItem(cart));
 					}
-				}
-				orderRepository.save(order);
-				productRepository.save(product);
+				}		
 			}
 		}
+		order.setShop(shop);
+		order.setSupplier(supplier);
+		order.setAmount(order.getAmount());
+		if(order.getAmount() == null) {
+			order.setAmount(order.getAmount());
+			System.err.println("amount null ============================================");
+		}
+		orderRepository.save(order);
+		productRepository.save(product);
 		return null;
 	}
 }
