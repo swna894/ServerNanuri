@@ -10,7 +10,7 @@ import {
 } from "antd";
 import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
-import { MenuOutlined } from "@ant-design/icons";
+import Icon, { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 
 import {
   actionChangeCategory,
@@ -52,6 +52,7 @@ function OrderHeader() {
       console.log("keydown = " + event.key);
     });
     let parm = { params: { abbr: headTitle } };
+
     dispatch(getCategoriesAction(parm));
     //console.log("company.company " + JSON.stringify(suppliers));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -61,7 +62,7 @@ function OrderHeader() {
   };
 
   function onChangeSuppiler(supplier, searchValue) {
-    setTitle(searchValue.children);
+    setTitle(supplier);
     setAbbr(supplier);
     setCategory("Selet category");
 
@@ -169,7 +170,10 @@ function OrderHeader() {
               />
               <Button style={buttonStyle}>NEW</Button>
               <Button style={buttonStyle}>SPECIAL</Button>
-              <Button style={buttonStyle}>CART</Button>
+              <Button style={buttonStyle}>
+                <ShoppingCartOutlined/>
+                CART
+              </Button>
               <Button style={buttonStyle}>SIGNOUT</Button>
             </Space>
           </div>
@@ -214,7 +218,10 @@ function OrderHeader() {
                 />
                 <Button style={{ width: "100%" }}>NEW</Button>
                 <Button style={{ width: "100%" }}>SPECIAL</Button>
-                <Button style={{ width: "100%" }}>CART</Button>
+                <Button style={{ width: "100%" }}>
+                  <ShoppingCartOutlined/>
+                  CART
+                </Button>
                 <Button style={{ width: "100%" }}>LOGOUT</Button>
               </div>
             </Drawer>
@@ -271,7 +278,10 @@ function OrderHeader() {
                 />
                 <Button style={{ width: "100%" }}>NEW</Button>
                 <Button style={{ width: "100%" }}>SPECIAL</Button>
-                <Button style={{ width: "100%" }}>CART</Button>
+                <Button style={{ width: "100%" }}>
+                  <ShoppingCartOutlined/>
+                  CART
+                </Button>
                 <Button style={{ width: "100%" }}>LOGOUT</Button>
               </div>
             </Drawer>

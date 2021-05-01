@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
 import { Card, Row, Col, BackTop, Button, Input } from "antd";
-import {
-  MinusOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 
 import {
@@ -74,7 +71,7 @@ function LandingPage() {
   const onClickIncrease = (code) => {
     const param = { abbr: abbr, code: code, id: comapny.id };
     const goods = products.content.map((item) =>
-      item.code === code ? { ...item, qty: item.qty + item.pack } : item
+      item.code === code ? { ...item, qty: parseInt(item.qty) + item.pack } : item
     );
     const pageable = {
       totalElements: totalElements,
@@ -88,14 +85,20 @@ function LandingPage() {
     const param = { abbr: abbr, code: code, id: comapny.id };
     const goods = content.map((item) =>
       item.code === code
-        ? { ...item, qty: item.qty - item.pack > 0 ? item.qty - item.pack : 0 }
+        ? {
+            ...item,
+            qty:
+              parseInt(item.qty) - item.pack > 0
+                ? parseInt(item.qty) - item.pack
+                : 0,
+          }
         : item
     );
-      const pageable = {
-        totalElements: totalElements,
-        size: size,
-        number: number,
-      };
+    const pageable = {
+      totalElements: totalElements,
+      size: size,
+      number: number,
+    };
 
     dispatch(changeDecremant(goods, pageable, param));
   };
@@ -105,11 +108,11 @@ function LandingPage() {
     const goods = content.map((item) =>
       item.code === code ? { ...item, qty: qty } : item
     );
-       const pageable = {
-         totalElements: totalElements,
-         size: size,
-         number: number,
-       };
+    const pageable = {
+      totalElements: totalElements,
+      size: size,
+      number: number,
+    };
     dispatch(changeInput(goods, pageable, param));
   };
 
@@ -155,7 +158,7 @@ function LandingPage() {
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
   const newStyle = { position: "absolute", top: "220px", left: "25px" };
   const hiddenStyle = { display: "none" };
-  const cardNormalStyle = { height: "400px", width: "458px" };  // 458px
+  const cardNormalStyle = { height: "400px", width: "458px" }; // 458px
   const cardOrderStyle = {
     height: "400px",
     width: "458px",
@@ -184,7 +187,7 @@ function LandingPage() {
             />
           }
         >
-          <div style={{width:"100%"}}>
+          <div style={{ width: "100%" }}>
             <div style={item.new ? newStyle : hiddenStyle}>
               <img src={newProduct} alt="special"></img>
             </div>
@@ -206,7 +209,7 @@ function LandingPage() {
             <span style={item.special ? specialPriceStyle : priceStyle}>
               ${item.price}
             </span>
-            <span>&nbsp;&nbsp;&nbsp;Packing : {item.pack}</span>
+            <span>&nbsp;&nbsp;&nbsp;Packing Q'ty : {item.pack}</span>
             <p style={{ color: "#1835D0" }}>2001-02-02</p>
             <p style={{ color: "#fff" }}>&nbsp; </p>
             <p style={{ color: "#fff" }}>&nbsp; </p>
