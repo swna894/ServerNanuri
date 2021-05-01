@@ -90,10 +90,16 @@ public class OrderController {
 	}
 
 	@PutMapping("orders/confirm")
-	public Order putConfirm(@RequestBody Order order) {		
+	public Order putConfirm(@RequestBody Order order) {
+		Supplier supplier = supplierRepository.findByAbbr(order.getShopAbbr());
+		String shopAbbr = order.getInvoice().substring(4, order.getInvoice().indexOf("_"));
+		Shop shop = shopRepository.findByAbbr(shopAbbr);
 		String invoice = genInvoice(order);
 		order.setInvoice(invoice);
 		order.setStatus(OrderType.ORDER);
+		order.setSupplier(supplier);
+		order.setShop(shop);
+	
 		return orderRepository.save(order);
 
 	}
@@ -189,8 +195,12 @@ public class OrderController {
 		
 		Product product = productRepository.findByCodeAndAbbr(cart.getCode(), abbr);
 		product.removeStock(cart.getQty());
-		
-		cart.setPrice(product.getPrice());
+		// 특판 제품에 대한 가격 설정
+		if(product.isSpecial()) {
+		    cart.setPrice(product.getSpecialPrice());
+		} else {
+			cart.setPrice(product.getPrice());
+		}
 		cart.setDecription(product.getDescription());
 		cart.setInvoice(invoice);
 	
@@ -219,12 +229,11 @@ public class OrderController {
 			}
 		}
 		order.setShop(shop);
-		order.setSupplier(supplier);
-		order.setAmount(order.getAmount());
-		if(order.getAmount() == null) {
-			order.setAmount(order.getAmount());
-			System.err.println("amount null ============================================");
+		if(supplier == null ) {	
+			System.err.println("supplier null =============");
 		}
+		order.setSupplier(supplier);
+		order.setAmount(order.getTotalPrice());
 		orderRepository.save(order);
 		productRepository.save(product);
 		return null;
