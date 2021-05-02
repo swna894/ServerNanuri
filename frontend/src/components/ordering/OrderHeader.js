@@ -115,7 +115,7 @@ function OrderHeader() {
       showSearch
       value={supplier}
       onChange={onChangeSuppiler}
-      style={width > 1400 ? supplierStyle : persentStyle}
+      style={width > 800 ? supplierStyle : persentStyle}
       placeholder="Selet supplier"
       optionFilterProp="children"
     >
@@ -127,7 +127,7 @@ function OrderHeader() {
     categories && categories.length > 0 ? (
       <Select
         showSearch
-        style={width > 1400 ? categoryStyle : persentStyle}
+        style={width > 800 ? categoryStyle : persentStyle}
         value={category}
         onChange={onChangeCategory}
         placeholder="Selet category"

@@ -28,7 +28,7 @@ const backMobileTopstyle = {
   fontSize: 14,
   position: "absolute",
   top: "-54px",
-  left: "30px",
+  left: "45px",
 };
 
 const backTopstyle = {
@@ -169,10 +169,14 @@ function LandingPage() {
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
   const newStyle = { position: "absolute", top: "220px", left: "25px" };
   const hiddenStyle = { display: "none" };
-  const cardNormalStyle = { height: "400px", width: "458px" }; // 458px
+  const cardNormalStyle = {
+    height: "400px",
+    width: "450px",
+    borderStyle: "groove",
+  }; // 458px
   const cardOrderStyle = {
     height: "400px",
-    width: "458px",
+    width: "450px",
     backgroundColor: "#e6f7ff",
     borderStyle: "groove",
   };
@@ -181,13 +185,14 @@ function LandingPage() {
     display: "inline",
     position: "absolute",
     top: "340px",
-    right: "-90px",
+    right: "-98px",
   };
 
+  // <Col xxl={6} xl={8} lg={12} md={12} sm={24} xs={24} key={index}></Col>
   const orderLists =
     content &&
     content.map((item, index) => (
-      <Col xxl={6} xl={8} lg={12} md={12} sm={24} xs={24} key={index}>
+      <Col  key={index}>
         <Card
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
@@ -221,7 +226,8 @@ function LandingPage() {
             <span style={item.special ? specialPriceStyle : priceStyle}>
               ${item.price}
             </span>
-            <span>&nbsp;&nbsp;&nbsp;Packing Q'ty : {item.pack}</span>
+            <span>&nbsp;&nbsp;&nbsp;PACKING : {item.pack}</span>
+            <span>&nbsp;&nbsp;&nbsp;STOCK : {item.stock}</span>
             <p style={{ color: "#1835D0" }}>2001-02-02</p>
             <p style={{ color: "#fff" }}>&nbsp; </p>
             <p style={{ color: "#fff" }}>&nbsp; </p>
@@ -261,6 +267,7 @@ function LandingPage() {
           //height: "100vh",
           padding: "80px 10px 10px 10px",
           backgroundColor: "#f0f0f0",
+          paddingLeft : "28px"
         }}
       >
         <Row gutter={[16, 16]}>{orderLists}</Row>
