@@ -59,7 +59,7 @@ function OrderHeader() {
     let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
     pageProducts(abbr, "", 0, size);
-  onClose();
+    onClose();
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
@@ -69,6 +69,14 @@ function OrderHeader() {
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, page, size);
+    onClose();
+  }
+
+  function onChangeButton(category) {
+    setCategory(category);
+    dispatch(actionChangeCategory(category));
+    dispatch(actionChangeTitle(supplier + " / " + category));
+    pageProducts(abbr, category, 0, size);
     onClose();
   }
 
@@ -95,11 +103,11 @@ function OrderHeader() {
           </Option>
         ));
 
-        
   const buttonStyle = { width: "100px" };
   const persentStyle = { width: "100%" };
   const supplierStyle = { width: "230px" };
   const categoryStyle = { width: "200px" };
+
   const listSupplierSelect = (
     <Select
       ref={formRef}
@@ -114,8 +122,6 @@ function OrderHeader() {
       {listSelectOptions}
     </Select>
   );
-
-  
 
   const listCategorySelect =
     categories && categories.length > 0 ? (
@@ -132,14 +138,6 @@ function OrderHeader() {
     ) : (
       ""
     );
-
-
-  const cartButton = (
-    <Button style={width > 1400 ? buttonStyle : persentStyle}>
-      <ShoppingCartOutlined />
-      CART
-    </Button>
-  );
 
   const signoutButton = (
     <Button style={width > 1400 ? buttonStyle : persentStyle}>SIGNOUT</Button>
@@ -168,17 +166,33 @@ function OrderHeader() {
     console.log("value = " + value);
   };
 
+  const onClickCart = () => {
+    onChangeButton("CART");
+    onClose();
+    document.documentElement.scrollTop = 0;
+  };
+
   const onClickNew = () => {
-    onChangeCategory("new");
+    onChangeButton("NEW");
     onClose();
     document.documentElement.scrollTop = 0;
   };
 
   const onClickSpecial = () => {
-    onChangeCategory("special");
+    onChangeButton("SPECIAL");
     onClose();
     document.documentElement.scrollTop = 0;
   };
+
+  const cartButton = (
+    <Button
+      style={width > 1400 ? buttonStyle : persentStyle}
+      onClick={onClickCart}
+    >
+      <ShoppingCartOutlined />
+      CART
+    </Button>
+  );
 
   const isNewButton = isNew ? (
     <Button

@@ -6,7 +6,7 @@ import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import "./OrderPage.css";
 
 function OrderFooter() {
-  const supplier = useSelector((state) => state.supplier.supplier);
+  const abbr = useSelector((state) => state.supplier.abbr);
   const current = useSelector((state) => state.product.products.number);
   const category = useSelector((state) => state.supplier.category);
 
@@ -20,11 +20,9 @@ function OrderFooter() {
     let param = {
       params: { page: pageNumber - 1, size: pageSize, sort: "seq" },
     };
-    //console.log("abbr = " + supplier);
-    console.log(category);
     category
-      ? dispatch(getProductsAction(supplier, category, param))
-      : dispatch(getProductsAction(supplier, "", param));
+      ? dispatch(getProductsAction(abbr, category, param))
+      : dispatch(getProductsAction(abbr, "", param));
     document.documentElement.scrollTop = 0;
     //console.log("Page: ", pageNumber-1);
     //console.log("pageSize: ", pageSize);

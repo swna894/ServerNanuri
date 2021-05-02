@@ -1,6 +1,7 @@
 package com.order2david.Product;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -101,18 +103,41 @@ public class ProductController {
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
 			@PathVariable String category, Pageable pageable, Principal principal ) {	
 		Page<Product> page = null;
-		if(category.equals("new")) {
+		if(category.equals("NEW")) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
-		} else if(category.equals("special")) {
+		} else if(category.equals("SPECIAL")) {
 			page = productRepository.findByAbbrAndIsSpecialAndIsShow(abbr, true, true, pageable);
+		} else if(category.equals("CART")) {
+			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
+			page = convertProduct(orderItems);
 		} else {
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
 		}
 			updateCartQty(page, principal);
 			return page;
-
 	}
 	
+	private Page<Product> convertProduct(Page<OrderItem> orderItems) {
+		List<Product> products = new ArrayList<>();
+		for (OrderItem orderItem : orderItems) {
+			Product product 
+				= productRepository.findByCodeAndAbbr(orderItem.getCode(),orderItem.getInvoice().substring(0, 4));
+			    product.setQty(orderItem.getQty());
+			    products.add(product);
+		}	
+
+		return new PageImpl<Product>(products, orderItems.getPageable(), orderItems.getTotalElements());
+	}
+	
+	
+
+	private Page<OrderItem> cartRepostory(String abbr, Principal principal, Pageable pageable) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		String invoice = abbr + shop.getAbbr()+"_CART";
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("code"));
+		return orderRepository.findByInvoice(invoice, pageable);
+	}
+
 	private Page<Product> updateCartQty(Page<Product> page, Principal principal) {
 		List<Product> products = page.getContent();	
 		Optional<Order> cart = getCarts(principal, products.get(0).getAbbr());
@@ -133,7 +158,7 @@ public class ProductController {
 	
 	private Optional<Order> getCarts(Principal principal, String abbr) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
-		String invoice = abbr+shop.getAbbr()+"_CART";
+		String invoice = abbr + shop.getAbbr()+"_CART";
 		return orderRepository.findByInvoice(invoice);
 	}
 

@@ -57,7 +57,7 @@ function LandingPage() {
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
 
-  const abbr = useSelector((state) => state.supplier.supplier);
+  const abbr = useSelector((state) => state.supplier.abbr);
   const comapny = useSelector((state) => state.user.userData);
 
   useEffect(() => {
@@ -174,6 +174,7 @@ function LandingPage() {
     height: "400px",
     width: "458px",
     backgroundColor: "#e6f7ff",
+    borderStyle: "groove",
   };
 
   const buttonStyle = {
