@@ -24,13 +24,14 @@ function OrderHeader() {
 
   const [visible, setVisible] = useState(false);
   const [title, setTitle] = useState("");
-  const [abbr, setAbbr] = useState("");
   const [category, setCategory] = useState("Selet category");
   const [width] = useWindowWidthAndHeight();
 
   const suppliers = useSelector((state) => state.supplier.suppliers);
-  const supplier = useSelector((state) => state.supplier.supplier);
+  const abbr = useSelector((state) => state.supplier.abbr);
   const headTitle = useSelector((state) => state.supplier.title);
+  const isNew = useSelector((state) => state.supplier.isNew);
+  const isSpecial = useSelector((state) => state.supplier.isSpecial);
   const categories = useSelector((state) => state.product.categories);
   const page = useSelector((state) => state.product.products.number);
   const size = useSelector((state) => state.product.products.size);
@@ -38,6 +39,8 @@ function OrderHeader() {
   const dispatch = useDispatch();
   const formRef = React.useRef();
 
+  
+    
   useEffect(() => {
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
     document.title = `David's Na Order System`;
@@ -56,9 +59,7 @@ function OrderHeader() {
 
   function onChangeSuppiler(abbr, searchValue) {
     setTitle(abbr);
-    setAbbr(abbr);
     setCategory("Selet category");
-
     dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
     dispatch(actionChangeCategory(""));
@@ -74,7 +75,7 @@ function OrderHeader() {
     setCategory(category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(title + " / " + category));
-    pageProducts(supplier, category, page, size);
+    pageProducts(abbr, category, page, size);
   }
 
   const pageProducts = (abbr, category, page = 0, size = 36) => {
@@ -116,6 +117,7 @@ function OrderHeader() {
       ""
     );
 
+ 
   const showDrawer = () => {
     setVisible(true);
   };
@@ -129,14 +131,30 @@ function OrderHeader() {
 
   const onClickNew = () => {
     onChangeCategory("new");
-    //document.documentElement.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
   };
 
   const onClickSpecial = () => {
-    console.log("special");
     onChangeCategory("special");
-    //document.documentElement.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
   };
+
+   const isNewButton = isNew ? (
+     <Button style={buttonStyle} onClick={onClickNew}>
+       {" "}
+       NEW{" "}
+     </Button>
+   ) : (
+     ""
+   );
+   const isSpecialButton = isSpecial ? (
+     <Button style={buttonStyle} onClick={onClickSpecial}>
+       {" "}
+       SPECIAL{" "}
+     </Button>
+   ) : (
+     ""
+   );
 
   return (
     <div>
@@ -174,12 +192,8 @@ function OrderHeader() {
                 onSearch={onSearch}
                 style={{ width: 300, margin: "18px  0" }}
               />
-              <Button style={buttonStyle} onClick={onClickNew}>
-                NEW
-              </Button>
-              <Button style={buttonStyle} onClick={onClickSpecial}>
-                SPECIAL
-              </Button>
+              {isNewButton}
+              {isSpecialButton}
               <Button style={buttonStyle}>
                 <ShoppingCartOutlined />
                 CART
@@ -226,12 +240,8 @@ function OrderHeader() {
                   onSearch={(value) => onSearch(value)}
                   style={{ margin: "16px  0", width: "100%" }}
                 />
-                <Button style={{ width: "100%" }} onClick={onClickNew}>
-                  NEW
-                </Button>
-                <Button style={{ width: "100%" }} onClick={onClickSpecial}>
-                  SPECIAL
-                </Button>
+                {isNewButton}
+                {isSpecialButton}
                 <Button style={{ width: "100%" }}>
                   <ShoppingCartOutlined />
                   CART
@@ -290,12 +300,8 @@ function OrderHeader() {
                   onSearch={onSearch}
                   style={{ margin: "16px  0", width: "100%" }}
                 />
-                <Button style={{ width: "100%" }} onClick={onClickNew}>
-                  NEW
-                </Button>
-                <Button style={{ width: "100%" }} onClick={onClickSpecial}>
-                  SPECIAL
-                </Button>
+                {isNewButton}
+                {isSpecialButton}
                 <Button style={{ width: "100%" }}>
                   <ShoppingCartOutlined />
                   CART

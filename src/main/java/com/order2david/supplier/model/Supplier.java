@@ -46,6 +46,10 @@ public class Supplier {
 	private String phone;
 	private String email;
 	private String comment;
+	@Column(columnDefinition = "boolean default false")
+	private Boolean isNew;
+	@Column(columnDefinition = "boolean default false")
+	private Boolean isSpecial;
 
 	@Embedded
 	private Address address;
