@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Select, Space, Input, Drawer } from "antd";
 import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
-import Icon, { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 
 import {
   actionChangeCategory,
@@ -29,7 +29,7 @@ function OrderHeader() {
   const [width] = useWindowWidthAndHeight();
 
   const suppliers = useSelector((state) => state.supplier.suppliers);
-  //const supplier = useSelector((state) => state.supplier.supplier);
+  const supplier = useSelector((state) => state.supplier.supplier);
   const headTitle = useSelector((state) => state.supplier.title);
   const categories = useSelector((state) => state.product.categories);
   const page = useSelector((state) => state.product.products.number);
@@ -41,9 +41,9 @@ function OrderHeader() {
   useEffect(() => {
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
     document.title = `David's Na Order System`;
-    window.addEventListener("keydown", (event) => {
-      console.log("keydown = " + event.key);
-    });
+    // window.addEventListener("keydown", (event) => {
+    //   console.log("keydown = " + event.key);
+    // });
     let parm = { params: { abbr: headTitle } };
 
     dispatch(getCategoriesAction(parm));
@@ -54,17 +54,17 @@ function OrderHeader() {
     width: "100px",
   };
 
-  function onChangeSuppiler(supplier, searchValue) {
-    setTitle(supplier);
-    setAbbr(supplier);
+  function onChangeSuppiler(abbr, searchValue) {
+    setTitle(abbr);
+    setAbbr(abbr);
     setCategory("Selet category");
 
     dispatch(actionChangeTitle(searchValue.children));
-    dispatch(actionChangeSupplier(supplier));
+    dispatch(actionChangeSupplier(abbr));
     dispatch(actionChangeCategory(""));
-    let parm = { params: { abbr: supplier } };
+    let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
-    pageProducts(supplier, "", 0, size);
+    pageProducts(abbr, "", 0, size);
 
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
@@ -74,7 +74,7 @@ function OrderHeader() {
     setCategory(category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(title + " / " + category));
-    pageProducts(abbr, category, page, size);
+    pageProducts(supplier, category, page, size);
   }
 
   const pageProducts = (abbr, category, page = 0, size = 36) => {
@@ -123,7 +123,21 @@ function OrderHeader() {
     setVisible(false);
   };
 
-  const onSearch = () => {};
+  const onSearch = (value) => {
+    console.log("value = " + value);
+  };
+
+  const onClickNew = () => {
+    onChangeCategory("new");
+    //document.documentElement.scrollTop = 0;
+  };
+
+  const onClickSpecial = () => {
+    console.log("special");
+    onChangeCategory("special");
+    //document.documentElement.scrollTop = 0;
+  };
+
   return (
     <div>
       <Header
@@ -160,8 +174,12 @@ function OrderHeader() {
                 onSearch={onSearch}
                 style={{ width: 300, margin: "18px  0" }}
               />
-              <Button style={buttonStyle}>NEW</Button>
-              <Button style={buttonStyle}>SPECIAL</Button>
+              <Button style={buttonStyle} onClick={onClickNew}>
+                NEW
+              </Button>
+              <Button style={buttonStyle} onClick={onClickSpecial}>
+                SPECIAL
+              </Button>
               <Button style={buttonStyle}>
                 <ShoppingCartOutlined />
                 CART
@@ -205,11 +223,15 @@ function OrderHeader() {
                 <Search
                   placeholder="input search text"
                   allowClear
-                  onSearch={onSearch}
+                  onSearch={(value) => onSearch(value)}
                   style={{ margin: "16px  0", width: "100%" }}
                 />
-                <Button style={{ width: "100%" }}>NEW</Button>
-                <Button style={{ width: "100%" }}>SPECIAL</Button>
+                <Button style={{ width: "100%" }} onClick={onClickNew}>
+                  NEW
+                </Button>
+                <Button style={{ width: "100%" }} onClick={onClickSpecial}>
+                  SPECIAL
+                </Button>
                 <Button style={{ width: "100%" }}>
                   <ShoppingCartOutlined />
                   CART
@@ -268,8 +290,12 @@ function OrderHeader() {
                   onSearch={onSearch}
                   style={{ margin: "16px  0", width: "100%" }}
                 />
-                <Button style={{ width: "100%" }}>NEW</Button>
-                <Button style={{ width: "100%" }}>SPECIAL</Button>
+                <Button style={{ width: "100%" }} onClick={onClickNew}>
+                  NEW
+                </Button>
+                <Button style={{ width: "100%" }} onClick={onClickSpecial}>
+                  SPECIAL
+                </Button>
                 <Button style={{ width: "100%" }}>
                   <ShoppingCartOutlined />
                   CART

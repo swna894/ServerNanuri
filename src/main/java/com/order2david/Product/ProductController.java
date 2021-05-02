@@ -100,7 +100,14 @@ public class ProductController {
 	@GetMapping("/products/{abbr}/{category}" )
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
 			@PathVariable String category, Pageable pageable, Principal principal ) {	
-			Page<Product> page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
+		Page<Product> page = null;
+		if(category.equals("new")) {
+			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
+		} else if(category.equals("special")) {
+			page = productRepository.findByAbbrAndIsSpecialAndIsShow(abbr, true, true, pageable);
+		} else {
+			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
+		}
 			updateCartQty(page, principal);
 			return page;
 
@@ -133,11 +140,11 @@ public class ProductController {
 	@GetMapping("/products/abbr/{abbr}" )
 	public List<Product> findByAbbr(@PathVariable String abbr) {		
 			List<Product> products = productRepository.findByAbbrOrderByCodeAsc(abbr); 			
-		return products;
+			return products;
 	}
 	
 	@GetMapping("/products/{abbr}" )
-	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable, Principal principal ) {		
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable, Boolean newp, Principal principal ) {		
 			Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable); 
 			updateCartQty(page, principal);
 			return page;
