@@ -10,7 +10,7 @@ import {
 
 const initialState = {
   suppliers: [],
-  supplier: "",
+  abbr: "",
   title: "",
   error: "",
 };
@@ -26,14 +26,24 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         title: action.payload.company,
-        supplier: action.payload.abbr,
+        abbr: action.payload.abbr,
+        supplier: action.payload.company,
+        isNew: action.payload.isNew,
+        isSpecial: action.payload.isSpecial,
       };
 
     case CHANGE_TITLE:
       return { ...state, title: action.payload };
 
     case CHANGE_SUPPLIER:
-      return { ...state, supplier: action.payload };
+      return {
+        ...state,
+        title: action.payload.company,
+        abbr: action.payload.abbr,
+        supplier: action.payload.company,
+        isNew: action.payload.isNew,
+        isSpecial: action.payload.isSpecial,
+      };
 
     case CHANGE_CATEGORY:
       return { ...state, category: action.payload };
@@ -58,12 +68,3 @@ const reducer = (state = initialState, action) => {
 
 export default reducer;
 
-// export default function reducers(state = {}, action) {
-//   switch (action.type) {
-//     case GET_SUPPLIERS_REQUEST:
-//       return { ...state, suppliers: action.payload };
-
-//     default:
-//       return state;
-//   }
-// }

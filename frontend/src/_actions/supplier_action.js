@@ -69,10 +69,17 @@ const changeCategoryRequest = (category) => {
   };
 };
 
-const changeSupplierRequest = (supplier) => {
+const changeSupplierRequest = (abbr) => {
+   const request = axios
+     .get(`/api/supplier/${abbr}`)
+     .then((response) => response.data)
+     .catch((error) => {
+       console.log("Problem !!! Get Supplier", error);
+       //dispatch(getSuppliersFailusre(error.message));
+     });
   return {
     type: CHANGE_SUPPLIER,
-    payload: supplier,
+    payload: request,
   };
 };
 
@@ -104,16 +111,3 @@ const getSuppliersFailusre = (error) => {
   };
 };
 
-// export function getSupplier() {
-//   const request = axios
-//                     .get("/api/suppliers")
-//                     .then((response) => response.data)
-//                     .catch((error) => {
-//                       console.log("Problem submitting Supplier", error);
-//                     });
-
-//   return {
-//     type: GET_SUPPLIERS_REQUEST,
-//     payload: request,
-//   };
-//}

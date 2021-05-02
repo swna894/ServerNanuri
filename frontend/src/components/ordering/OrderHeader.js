@@ -23,12 +23,12 @@ function OrderHeader() {
   const { Search } = Input;
 
   const [visible, setVisible] = useState(false);
-  const [title, setTitle] = useState("");
   const [category, setCategory] = useState("Selet category");
   const [width] = useWindowWidthAndHeight();
 
   const suppliers = useSelector((state) => state.supplier.suppliers);
   const abbr = useSelector((state) => state.supplier.abbr);
+  const supplier = useSelector((state) => state.supplier.supplier);
   const headTitle = useSelector((state) => state.supplier.title);
   const isNew = useSelector((state) => state.supplier.isNew);
   const isSpecial = useSelector((state) => state.supplier.isSpecial);
@@ -39,8 +39,6 @@ function OrderHeader() {
   const dispatch = useDispatch();
   const formRef = React.useRef();
 
-  
-    
   useEffect(() => {
     // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
     document.title = `David's Na Order System`;
@@ -53,12 +51,7 @@ function OrderHeader() {
     //console.log("company.company " + JSON.stringify(suppliers));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const buttonStyle = {
-    width: "100px",
-  };
-
   function onChangeSuppiler(abbr, searchValue) {
-    setTitle(abbr);
     setCategory("Selet category");
     dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
@@ -66,7 +59,7 @@ function OrderHeader() {
     let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
     pageProducts(abbr, "", 0, size);
-
+  onClose();
     //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
@@ -74,8 +67,9 @@ function OrderHeader() {
   function onChangeCategory(category) {
     setCategory(category);
     dispatch(actionChangeCategory(category));
-    dispatch(actionChangeTitle(title + " / " + category));
+    dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, page, size);
+    onClose();
   }
 
   const pageProducts = (abbr, category, page = 0, size = 36) => {
@@ -101,11 +95,33 @@ function OrderHeader() {
           </Option>
         ));
 
+        
+  const buttonStyle = { width: "100px" };
+  const persentStyle = { width: "100%" };
+  const supplierStyle = { width: "230px" };
+  const categoryStyle = { width: "200px" };
+  const listSupplierSelect = (
+    <Select
+      ref={formRef}
+      name="supplier"
+      showSearch
+      value={supplier}
+      onChange={onChangeSuppiler}
+      style={width > 1400 ? supplierStyle : persentStyle}
+      placeholder="Selet supplier"
+      optionFilterProp="children"
+    >
+      {listSelectOptions}
+    </Select>
+  );
+
+  
+
   const listCategorySelect =
     categories && categories.length > 0 ? (
       <Select
         showSearch
-        style={{ width: 200 }}
+        style={width > 1400 ? categoryStyle : persentStyle}
         value={category}
         onChange={onChangeCategory}
         placeholder="Selet category"
@@ -117,7 +133,30 @@ function OrderHeader() {
       ""
     );
 
- 
+
+  const cartButton = (
+    <Button style={width > 1400 ? buttonStyle : persentStyle}>
+      <ShoppingCartOutlined />
+      CART
+    </Button>
+  );
+
+  const signoutButton = (
+    <Button style={width > 1400 ? buttonStyle : persentStyle}>SIGNOUT</Button>
+  );
+
+  const searchInput = (
+    <Search
+      placeholder="input search text"
+      allowClear
+      onSearch={(value) => onSearch(value)}
+      style={{ margin: "16px  0", width: "100%" }}
+    />
+  );
+
+  const headH2 = (
+    <h2 style={{ display: "inline-block", color: "#fff" }}>{headTitle}</h2>
+  );
   const showDrawer = () => {
     setVisible(true);
   };
@@ -131,30 +170,36 @@ function OrderHeader() {
 
   const onClickNew = () => {
     onChangeCategory("new");
+    onClose();
     document.documentElement.scrollTop = 0;
   };
 
   const onClickSpecial = () => {
     onChangeCategory("special");
+    onClose();
     document.documentElement.scrollTop = 0;
   };
 
-   const isNewButton = isNew ? (
-     <Button style={buttonStyle} onClick={onClickNew}>
-       {" "}
-       NEW{" "}
-     </Button>
-   ) : (
-     ""
-   );
-   const isSpecialButton = isSpecial ? (
-     <Button style={buttonStyle} onClick={onClickSpecial}>
-       {" "}
-       SPECIAL{" "}
-     </Button>
-   ) : (
-     ""
-   );
+  const isNewButton = isNew ? (
+    <Button
+      style={width > 1400 ? buttonStyle : persentStyle}
+      onClick={onClickNew}
+    >
+      NEW
+    </Button>
+  ) : (
+    ""
+  );
+  const isSpecialButton = isSpecial ? (
+    <Button
+      style={width > 1400 ? buttonStyle : persentStyle}
+      onClick={onClickSpecial}
+    >
+      SPECIAL
+    </Button>
+  ) : (
+    ""
+  );
 
   return (
     <div>
@@ -168,56 +213,23 @@ function OrderHeader() {
         {width > 1400 ? (
           <div>
             <Space>
-              <h2 style={{ display: "inline-block", color: "#fff" }}>
-                {headTitle}
-              </h2>
-              <Select
-                ref={formRef}
-                name="supplier"
-                showSearch
-                value={headTitle}
-                onChange={onChangeSuppiler}
-                style={{ width: 230 }}
-                placeholder="Selet supplier"
-                optionFilterProp="children"
-              >
-                {listSelectOptions}
-              </Select>
+              {headH2}
+              {listSupplierSelect}
               {listCategorySelect}
             </Space>
             <Space style={{ float: "right", color: "#fff", marginTop: "3px" }}>
-              <Search
-                placeholder="input search text"
-                allowClear
-                onSearch={onSearch}
-                style={{ width: 300, margin: "18px  0" }}
-              />
+              {searchInput}
               {isNewButton}
               {isSpecialButton}
-              <Button style={buttonStyle}>
-                <ShoppingCartOutlined />
-                CART
-              </Button>
-              <Button style={buttonStyle}>SIGNOUT</Button>
+              {cartButton}
+              {signoutButton}
             </Space>
           </div>
         ) : width > 800 ? (
           <div>
             <Space>
-              <h2 style={{ display: "inline-block", color: "#fff" }}>
-                {headTitle}
-              </h2>
-              <Select
-                ref={formRef}
-                name="supplier"
-                showSearch
-                onChange={onChangeSuppiler}
-                style={{ width: 230 }}
-                placeholder="Selet supplier"
-                optionFilterProp="children"
-              >
-                {listSelectOptions}
-              </Select>
+              {headH2}
+              {listSupplierSelect}
               {listCategorySelect}
             </Space>
             <Button
@@ -234,27 +246,17 @@ function OrderHeader() {
               visible={visible}
             >
               <div style={{ display: "block", color: "#fff" }}>
-                <Search
-                  placeholder="input search text"
-                  allowClear
-                  onSearch={(value) => onSearch(value)}
-                  style={{ margin: "16px  0", width: "100%" }}
-                />
+                {searchInput}
                 {isNewButton}
                 {isSpecialButton}
-                <Button style={{ width: "100%" }}>
-                  <ShoppingCartOutlined />
-                  CART
-                </Button>
-                <Button style={{ width: "100%" }}>LOGOUT</Button>
+                {cartButton}
+                {signoutButton}
               </div>
             </Drawer>
           </div>
         ) : (
           <div>
-            <h2 style={{ display: "inline-block", color: "#fff" }}>
-              {headTitle}
-            </h2>
+            {headH2}
             <Button
               type="primary"
               onClick={showDrawer}
@@ -269,44 +271,13 @@ function OrderHeader() {
               visible={visible}
             >
               <div style={{ display: "block", color: "#fff" }}>
-                <Select
-                  ref={formRef}
-                  name="supplier"
-                  showSearch
-                  onChange={onChangeSuppiler}
-                  style={{ width: "100%" }}
-                  placeholder="Selet supplier"
-                  optionFilterProp="children"
-                >
-                  {listSelectOptions}
-                </Select>
-                {categories && categories.length > 0 ? (
-                  <Select
-                    showSearch
-                    style={{ width: "100%" }}
-                    value={category}
-                    onChange={onChangeCategory}
-                    placeholder="Selet category"
-                    optionFilterProp="children"
-                  >
-                    {listCategoryOptions}
-                  </Select>
-                ) : (
-                  ""
-                )}
-                <Search
-                  placeholder="input search text"
-                  allowClear
-                  onSearch={onSearch}
-                  style={{ margin: "16px  0", width: "100%" }}
-                />
+                {listSupplierSelect}
+                {listCategorySelect}
+                {searchInput}
                 {isNewButton}
                 {isSpecialButton}
-                <Button style={{ width: "100%" }}>
-                  <ShoppingCartOutlined />
-                  CART
-                </Button>
-                <Button style={{ width: "100%" }}>LOGOUT</Button>
+                {cartButton}
+                {signoutButton}
               </div>
             </Drawer>
           </div>
