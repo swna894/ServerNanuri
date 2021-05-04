@@ -116,7 +116,9 @@ public class ProductController {
 		} else {
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
 		}
+		if(!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
+		}
 			return page;
 	}
 	

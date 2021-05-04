@@ -41,8 +41,8 @@ const backTopstyle = {
   textAlign: "center",
   fontSize: 14,
   position: "absolute",
-  top: "-55px",
-  left: "70px",
+  top: "-42px",
+  left: "90px",
 };
 
 function LandingPage() {
@@ -99,8 +99,8 @@ function LandingPage() {
         ? {
             ...item,
             qty:
-              (parseInt(item.qty) - item.pack) > 0
-                ? (parseInt(item.qty) - item.pack)
+              parseInt(item.qty) - item.pack > 0
+                ? parseInt(item.qty) - item.pack
                 : 0,
           }
         : item
@@ -129,8 +129,11 @@ function LandingPage() {
 
   const descriptionStyle = {
     overflow: "hidden",
-    fontSize: "16px",
+    fontSize: "20px",
     marginBottom: "7px",
+    marginLeft: "32px",
+    fontWeight: "bold",
+    fontStyle: "italic",
   };
 
   const inputQtyStyle = {
@@ -142,9 +145,9 @@ function LandingPage() {
 
   const priceStyle = {
     overflow: "hidden",
-    fontSize: "18px",
-    marginBottom: "7px",
+    fontSize: "22px",
     fontWeight: "bold",
+    marginLeft: "32px",
   };
   const specialPriceStyle = {
     textDecoration: "line-through",
@@ -184,16 +187,36 @@ function LandingPage() {
   const buttonStyle = {
     display: "inline",
     position: "absolute",
-    top: "340px",
-    right: "-98px",
+    top: "350px",
+    right: "-117px",
   };
 
+  const specDivStyle = {
+    display: "inline-flex",
+    float: "right",
+    marginRight: "40px",
+    paddingTop: "13px",
+  };
+
+    const specStyle = {
+      fontWeight: "bold",
+      fontStyle: "Georgia",
+    };
+
+  const labelStyle = {
+    fontWeight: "bold",
+    color: "#8c8c8c",
+    fontSize: "10px",
+    fontStyle: "italic",
+    paddingTop: "4px",
+  };
   // <Col xxl={6} xl={8} lg={12} md={12} sm={24} xs={24} key={index}></Col>
   const orderLists =
     content &&
     content.map((item, index) => (
-      <Col  key={index}>
+      <Col key={index}>
         <Card
+          bodyStyle={{ padding: "0" }}
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
             <img
@@ -211,10 +234,7 @@ function LandingPage() {
             <div style={item.special ? specialStyle : hiddenStyle}>
               <img src={discount} alt="special"></img>
             </div>
-            <p style={descriptionStyle}>
-              [ {item.code} ] &nbsp;
-              {item.description}
-            </p>
+            <p style={descriptionStyle}>{item.description}</p>
             <span style={item.special ? priceStyle : { display: "none" }}>
               ${item.specialPrice}
             </span>
@@ -226,11 +246,16 @@ function LandingPage() {
             <span style={item.special ? specialPriceStyle : priceStyle}>
               ${item.price}
             </span>
-            <span>&nbsp;&nbsp;&nbsp;PACKING : {item.pack}</span>
-            <span>&nbsp;&nbsp;&nbsp;STOCK : {item.stock}</span>
-            <p style={{ color: "#1835D0" }}>2001-02-02</p>
-            <p style={{ color: "#fff" }}>&nbsp; </p>
-            <p style={{ color: "#fff" }}>&nbsp; </p>
+            <div style={specDivStyle}>
+              <span style={labelStyle}>&nbsp;CODE :&nbsp;</span>
+              <span style={specStyle}> {item.code}</span> &nbsp;
+              <span style={labelStyle}>&nbsp;&nbsp;PACKING : &nbsp;</span>
+              <span style={specStyle}>{item.pack}</span>
+              <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
+              <span style={specStyle}>{item.stock}</span>
+            </div>
+            <p style={{ color: "#1835D0", marginLeft: "32px" }}>2001-02-02</p>
+            <p style={{ color: "#fff", margin: "40px" }}>&nbsp; </p>
             <div style={buttonStyle}>
               <Button
                 type="primary"
@@ -267,10 +292,14 @@ function LandingPage() {
           //height: "100vh",
           padding: "80px 10px 10px 10px",
           backgroundColor: "#f0f0f0",
-          paddingLeft : "28px"
         }}
       >
-        <Row gutter={[16, 16]}>{orderLists}</Row>
+        <Row
+          gutter={[16, 16]}
+          style={{ display: "flex", justifyContent: "center" }}
+        >
+          {orderLists}
+        </Row>
       </div>
       <BackTop>
         <div style={width > 850 ? backTopstyle : backMobileTopstyle}>UP</div>
