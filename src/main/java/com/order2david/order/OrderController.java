@@ -187,7 +187,7 @@ public class OrderController {
 	 */
 	@PostMapping("order/cart")
 	public List<Order> postCart(@RequestBody Cart cart) {
-		System.err.println(cart);
+
 		String abbr = cart.getAbbr();
 		String invoice = abbr + cart.getId() + "_CART"; 
 	

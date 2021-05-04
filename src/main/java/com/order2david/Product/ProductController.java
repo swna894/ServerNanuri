@@ -44,7 +44,10 @@ import com.order2david.supplier.repository.SupplierRepository;
 public class ProductController {
 
 	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
+	static String NEW = "NEW";
+	static String SPECIAL = "SPECIAL";
+	static String CART = "CART";
+	
 	@Autowired
 	ProductRepository productRepository;
 
@@ -103,11 +106,11 @@ public class ProductController {
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
 			@PathVariable String category, Pageable pageable, Principal principal ) {	
 		Page<Product> page = null;
-		if(category.equals("NEW")) {
+		if(category.equals(NEW)) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
-		} else if(category.equals("SPECIAL")) {
+		} else if(category.equals(SPECIAL)) {
 			page = productRepository.findByAbbrAndIsSpecialAndIsShow(abbr, true, true, pageable);
-		} else if(category.equals("CART")) {
+		} else if(category.equals(CART)) {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
 		} else {
@@ -177,19 +180,25 @@ public class ProductController {
 
 	
 	@GetMapping("/products/category")
-	public List<Product> findProductsByCompany(@RequestParam String abbr) {
+	public List<String> findProductsByCompany(@RequestParam String abbr) {
 		if(abbr.isEmpty()) {
 			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 			abbr = supplier.getAbbr();
 		}
 		List<Product> products = productRepository.findByAbbr(abbr);
-		List<Product> sortedProducts = products.stream()
+//		List<Product> sortedProducts = products.stream()
+//				.filter(item -> item.isShow())
+//				.filter(item -> !item.getCategory().equals(""))
+//				.filter(distinctByKey(p -> p.getCategory()))
+//				.sorted(Comparator.comparing(Product::getCategory))
+//				.collect(Collectors.toList());
+		
+		return products.stream()
 				.filter(item -> item.isShow())
-				.filter(item -> !item.getCategory().equals(""))
-				.filter(distinctByKey(p -> p.getCategory()))
-				.sorted(Comparator.comparing(Product::getCategory))
-				.collect(Collectors.toList());
-		return sortedProducts;
+				.map(item -> item.getCategory())
+				.filter(item -> !item.isEmpty())
+				.distinct()
+				.sorted().collect(Collectors.toList());
 	}
 
 	@GetMapping("/products/categorys")

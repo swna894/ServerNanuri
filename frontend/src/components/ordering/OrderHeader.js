@@ -4,6 +4,7 @@ import { Button, Layout, Select, Space, Input, Drawer } from "antd";
 import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { IoAlarm } from "react-icons/io5";
 
 import {
   actionChangeCategory,
@@ -98,13 +99,13 @@ function OrderHeader() {
     categories === undefined
       ? []
       : categories.map((item) => (
-          <Option key={item.id} value={item.category}>
-            {item.category}
+          <Option key={item.id} value={item}>
+            {item}
           </Option>
         ));
 
   const buttonStyle = { width: "100px" };
-  const persentStyle = { width: "100%" };
+  const persentStyle = { width: "100%", marginTop:"5px" };
   const supplierStyle = { width: "230px" };
   const categoryStyle = { width: "200px" };
 
@@ -139,9 +140,7 @@ function OrderHeader() {
       ""
     );
 
-  const signoutButton = (
-    <Button style={width > 1400 ? buttonStyle : persentStyle}>SIGNOUT</Button>
-  );
+ 
 
   const searchInput = (
     <Search
@@ -149,6 +148,7 @@ function OrderHeader() {
       allowClear
       onSearch={(value) => onSearch(value)}
       style={{ margin: "16px  0", width: "100%" }}
+      enterButton
     />
   );
 
@@ -186,6 +186,7 @@ function OrderHeader() {
 
   const cartButton = (
     <Button
+      type="primary"
       style={width > 1400 ? buttonStyle : persentStyle}
       onClick={onClickCart}
     >
@@ -194,18 +195,32 @@ function OrderHeader() {
     </Button>
   );
 
+  const ordrerButton = (
+    <Button
+      type="primary"
+      style={width > 1400 ? buttonStyle : persentStyle}
+      onClick={onClickCart}
+    >
+      <ShoppingCartOutlined />
+      ORDER
+    </Button>
+  );
+
   const isNewButton = isNew ? (
     <Button
+      type="primary"
       style={width > 1400 ? buttonStyle : persentStyle}
       onClick={onClickNew}
     >
-      NEW
+      <IoAlarm />
+      &nbsp; NEW
     </Button>
   ) : (
     ""
   );
   const isSpecialButton = isSpecial ? (
     <Button
+      type="primary"
       style={width > 1400 ? buttonStyle : persentStyle}
       onClick={onClickSpecial}
     >
@@ -215,6 +230,11 @@ function OrderHeader() {
     ""
   );
 
+   const signoutButton = (
+     <Button type="primary" style={width > 1400 ? buttonStyle : persentStyle}>
+       SIGNOUT
+     </Button>
+   );
   return (
     <div>
       <Header
@@ -235,6 +255,7 @@ function OrderHeader() {
               {searchInput}
               {isNewButton}
               {isSpecialButton}
+              {ordrerButton}
               {cartButton}
               {signoutButton}
             </Space>
@@ -263,6 +284,7 @@ function OrderHeader() {
                 {searchInput}
                 {isNewButton}
                 {isSpecialButton}
+                {ordrerButton}
                 {cartButton}
                 {signoutButton}
               </div>
@@ -290,6 +312,7 @@ function OrderHeader() {
                 {searchInput}
                 {isNewButton}
                 {isSpecialButton}
+                {ordrerButton}
                 {cartButton}
                 {signoutButton}
               </div>
