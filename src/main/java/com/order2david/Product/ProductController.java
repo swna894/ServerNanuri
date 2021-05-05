@@ -96,7 +96,7 @@ public class ProductController {
 	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 		Pageable sortedBySeq = 
-				  PageRequest.of(0, 36, Sort.by("seq"));
+				  PageRequest.of(0, 100, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		updateCartQty(page, principal);
 		return page ;
@@ -114,6 +114,7 @@ public class ProductController {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
 		} else {
+			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
 		}
 		if(!page.getContent().isEmpty()) {

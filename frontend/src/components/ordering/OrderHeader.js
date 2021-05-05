@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import * as config from "../../Config";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Select, Space, Input, Drawer } from "antd";
 import { withRouter } from "react-router-dom";
@@ -18,13 +19,54 @@ import {
 
 import "./OrderPage.css";
 
+function useKey(key, cb) {
+  const callbackRef = useRef(cb);
+
+  useEffect(() => {
+    callbackRef.current = cb;
+  });
+
+  useEffect(() => {
+    function handle(event) {
+      if (event.code === key) {
+        callbackRef.current(event);
+        event.preventDefault();
+      }
+    }
+    document.addEventListener("keydown", handle);
+  
+    return () => document.removeEventListener("keydown", handle);
+  }, [key]);
+}
+
 function OrderHeader() {
+  function handleEnterRight() {
+    pageProducts(
+      abbr,
+      category === config.SELECT_CATEGORY ? "" : category,
+      page === (totalPages -1) ? page : (page + 1),
+      size
+    );
+  }
+
+  function handleEnterLeft() {
+    pageProducts(
+      abbr,
+      category === config.SELECT_CATEGORY ? "" : category,
+      page === 0 ? 0 : page - 1,
+      size
+    );
+  }
+
+  useKey("ArrowRight", handleEnterRight);
+  useKey("ArrowLeft", handleEnterLeft);
+
   const { Header } = Layout;
   const { Option } = Select;
   const { Search } = Input;
 
   const [visible, setVisible] = useState(false);
-  const [category, setCategory] = useState("Selet category");
+  const [category, setCategory] = useState(config.SELECT_CATEGORY);
   const [width] = useWindowWidthAndHeight();
 
   const suppliers = useSelector((state) => state.supplier.suppliers);
@@ -36,24 +78,18 @@ function OrderHeader() {
   const categories = useSelector((state) => state.product.categories);
   const page = useSelector((state) => state.product.products.number);
   const size = useSelector((state) => state.product.products.size);
+  const totalPages = useSelector((state) => state.product.products.totalPages);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
 
   useEffect(() => {
-    // 브라우저 API를 이용하여 문서 타이틀을 업데이트합니다.
-    document.title = `David's Na Order System`;
-    // window.addEventListener("keydown", (event) => {
-    //   console.log("keydown = " + event.key);
-    // });
     let parm = { params: { abbr: headTitle } };
-
     dispatch(getCategoriesAction(parm));
-    //console.log("company.company " + JSON.stringify(suppliers));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr, searchValue) {
-    setCategory("Selet category");
+    setCategory(config.SELECT_CATEGORY);
     dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
     dispatch(actionChangeCategory(""));
@@ -61,7 +97,6 @@ function OrderHeader() {
     dispatch(getCategoriesAction(parm));
     pageProducts(abbr, "", 0, size);
     onClose();
-    //console.log("searchValue = " + JSON.stringify(searchValue.children));
     //console.log(`selected ${value}`);
   }
 
@@ -81,11 +116,11 @@ function OrderHeader() {
     onClose();
   }
 
-  const pageProducts = (abbr, category, page = 0, size = 36) => {
+  const pageProducts = (abbr, category, page = 0, size = config.PAGE_SIZE) => {
     let param = { params: { page: page, size: size, sort: "seq" } };
     //console.log("abbr = " + abbr );
     //console.log(param);
-    dispatch(getProductsAction(abbr, category, param));
+    dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
     document.documentElement.scrollTop = 0;
   };
 
@@ -98,14 +133,14 @@ function OrderHeader() {
   const listCategoryOptions =
     categories === undefined
       ? []
-      : categories.map((item) => (
-          <Option key={item.id} value={item}>
+      : categories.map((item, index) => (
+          <Option key={index} value={item}>
             {item}
           </Option>
         ));
 
   const buttonStyle = { width: "100px" };
-  const persentStyle = { width: "100%", marginTop:"5px" };
+  const persentStyle = { width: "100%", marginTop: "5px" };
   const supplierStyle = { width: "230px" };
   const categoryStyle = { width: "200px" };
 
@@ -117,7 +152,7 @@ function OrderHeader() {
       value={supplier}
       onChange={onChangeSuppiler}
       style={width > 800 ? supplierStyle : persentStyle}
-      placeholder="Selet supplier"
+      placeholder={config.SELECT_CATEGORY}
       optionFilterProp="children"
     >
       {listSelectOptions}
@@ -131,7 +166,7 @@ function OrderHeader() {
         style={width > 800 ? categoryStyle : persentStyle}
         value={category}
         onChange={onChangeCategory}
-        placeholder="Selet category"
+        placeholder={config.SELECT_CATEGORY}
         optionFilterProp="children"
       >
         {listCategoryOptions}
@@ -139,8 +174,6 @@ function OrderHeader() {
     ) : (
       ""
     );
-
- 
 
   const searchInput = (
     <Search
@@ -230,11 +263,11 @@ function OrderHeader() {
     ""
   );
 
-   const signoutButton = (
-     <Button type="primary" style={width > 1400 ? buttonStyle : persentStyle}>
-       SIGNOUT
-     </Button>
-   );
+  const signoutButton = (
+    <Button type="primary" style={width > 1400 ? buttonStyle : persentStyle}>
+      SIGNOUT
+    </Button>
+  );
   return (
     <div>
       <Header

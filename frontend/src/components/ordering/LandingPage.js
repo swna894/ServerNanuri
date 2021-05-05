@@ -45,7 +45,10 @@ const backTopstyle = {
   left: "90px",
 };
 
+
+
 function LandingPage() {
+ 
   const dispatch = useDispatch();
   const content = useSelector((state) =>
     state.product.products.content ? state.product.products.content : []
@@ -174,12 +177,12 @@ function LandingPage() {
   const hiddenStyle = { display: "none" };
   const cardNormalStyle = {
     height: "400px",
-    width: "450px",
+    width: "458px",
     borderStyle: "groove",
   }; // 458px
   const cardOrderStyle = {
     height: "400px",
-    width: "450px",
+    width: "458px",
     backgroundColor: "#e6f7ff",
     borderStyle: "groove",
   };
