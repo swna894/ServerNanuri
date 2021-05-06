@@ -45,10 +45,7 @@ const backTopstyle = {
   left: "90px",
 };
 
-
-
 function LandingPage() {
- 
   const dispatch = useDispatch();
   const content = useSelector((state) =>
     state.product.products.content ? state.product.products.content : []
@@ -177,12 +174,12 @@ function LandingPage() {
   const hiddenStyle = { display: "none" };
   const cardNormalStyle = {
     height: "400px",
-    width: "458px",
+    width: "450px",
     borderStyle: "groove",
   }; // 458px
   const cardOrderStyle = {
     height: "400px",
-    width: "458px",
+    width: "450px",
     backgroundColor: "#e6f7ff",
     borderStyle: "groove",
   };
@@ -201,10 +198,10 @@ function LandingPage() {
     paddingTop: "13px",
   };
 
-    const specStyle = {
-      fontWeight: "bold",
-      fontStyle: "Georgia",
-    };
+  const specStyle = {
+    fontWeight: "bold",
+    fontStyle: "Georgia",
+  };
 
   const labelStyle = {
     fontWeight: "bold",

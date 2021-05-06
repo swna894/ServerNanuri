@@ -7,10 +7,11 @@ import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import "./OrderPage.css";
 
 function OrderFooter() {
-    const { Footer } = Layout;
-    const dispatch = useDispatch();
+  const { Footer } = Layout;
+  const dispatch = useDispatch();
 
   const abbr = useSelector((state) => state.supplier.abbr);
+  const search = useSelector((state) => state.supplier.search);
   const current = useSelector((state) => state.product.products.number);
   const category = useSelector((state) => state.supplier.category);
   const totalElements = useSelector(
@@ -23,18 +24,29 @@ function OrderFooter() {
     //    console.log("category = " + category);
     //   console.log("keydown = " + event.key);
     // });
-
     //console.log("company.company " + JSON.stringify(suppliers));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-
   function onChange(pageNumber, pageSize = config.PAGE_SIZE) {
-    let param = {
-      params: { page: pageNumber - 1, size: pageSize, sort: "seq" },
-    };
-    category
-      ? dispatch(getProductsAction(abbr, category, param))
-      : dispatch(getProductsAction(abbr, "", param));
+    if (category === "SEARCH") {
+      let param = {
+        params: {
+          page: pageNumber - 1,
+          size: pageSize,
+          sort: "seq",
+          abbr: abbr,
+          search: search,
+        },
+      };
+       dispatch(getProductsAction(abbr, category, param));
+    } else {
+      let param = {
+        params: { page: pageNumber - 1, size: pageSize, sort: "seq" },
+      };
+      category
+        ? dispatch(getProductsAction(abbr, category, param))
+        : dispatch(getProductsAction(abbr, "", param));
+    }
     document.documentElement.scrollTop = 0;
     //console.log("Page: ", pageNumber-1);
     //console.log("pageSize: ", pageSize);
@@ -65,6 +77,7 @@ function OrderFooter() {
             showQuickJumper
             defaultCurrent={1}
             total={totalElements}
+            showTotal={(total) => `Total ${total} items`}
             onChange={onChange}
           />
         ) : (
@@ -74,7 +87,7 @@ function OrderFooter() {
             defaultPageSize={config.PAGE_SIZE}
             onChange={onChange}
             defaultCurrent={1}
-            showTotal={(total) => `Total ${total} items`}
+            //showTotal={(total) => `Total ${total} items`}
           />
         )}
       </Footer>

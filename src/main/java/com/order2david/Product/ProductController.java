@@ -47,6 +47,7 @@ public class ProductController {
 	static String NEW = "NEW";
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
+	static String SEARCH = "SEARCH";
 	
 	@Autowired
 	ProductRepository productRepository;
@@ -104,8 +105,9 @@ public class ProductController {
 	
 	@GetMapping("/products/{abbr}/{category}" )
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
-			@PathVariable String category, Pageable pageable, Principal principal ) {	
+			@PathVariable String category, Pageable pageable, @RequestParam(required = false) String search, Principal principal ) {	
 		Page<Product> page = null;
+
 		if(category.equals(NEW)) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
 		} else if(category.equals(SPECIAL)) {
@@ -113,6 +115,9 @@ public class ProductController {
 		} else if(category.equals(CART)) {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
+		} else if(category.equals(SEARCH)) {
+			search = search.replaceAll("_", "/");	
+			page = productRepository.findByDescriptionContainsOrCodeContainsAndIsShow(search, search, true, pageable);
 		} else {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
@@ -122,6 +127,19 @@ public class ProductController {
 		}
 			return page;
 	}
+	
+//	@GetMapping("/products/search/{search}" )
+//	public Page<Product> findBySearch(@PathVariable String search, 
+//			@RequestParam(required = false) String abbr, Pageable pageable, Principal principal ) {	
+//		Page<Product> page = null;
+//		search = search.replaceAll("_", "/");	
+//		page = productRepository.findByIsShowAndCodeOrDescription(true, search, search, pageable);
+//	
+//		if(!page.getContent().isEmpty()) {
+//			updateCartQty(page, principal);
+//		}
+//			return page;
+//	}
 	
 	private Page<Product> convertProduct(Page<OrderItem> orderItems) {
 		List<Product> products = new ArrayList<>();
