@@ -117,7 +117,7 @@ public class ProductController {
 			page = convertProduct(orderItems);
 		} else if(category.equals(SEARCH)) {
 			search = search.replaceAll("_", "/");	
-			page = productRepository.findByDescriptionContainsOrCodeContainsAndIsShow(search, search, true, pageable);
+			page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(search, true, search, true, pageable);
 		} else {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);

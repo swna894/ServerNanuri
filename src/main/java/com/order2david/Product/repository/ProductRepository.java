@@ -53,5 +53,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 	Page<Product> findByDescriptionContainsOrCodeContainsAndIsShow(String description, String code, boolean b,
 			Pageable pageable);
 
+	Page<Product> findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(String description, boolean b, String code,
+			boolean c, Pageable pageable);
+
 
 }

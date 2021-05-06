@@ -7,6 +7,7 @@ import {
   CHANGE_TITLE,
   CHANGE_SUPPLIER,
   CHANGE_CATEGORY,
+  CHANGE_SEARCH,
 } from "../service/types";
 
 export const actionGetSuppliers = () => {
@@ -56,11 +57,24 @@ export const actionChangeTitle = (title) => {
   };
 };
 
+export const actionChangeSearch = (search) => {
+  return (dispatch) => {
+    dispatch(changeSearchRequest(search));
+  };
+};
+
 // const getSuppliersRequest = () => {
 //   return {
 //     type: GET_SUPPLIERS_REQUEST,
 //   };
 // };
+
+const changeSearchRequest = (search) => {
+  return {
+    type: CHANGE_SEARCH,
+    payload: search,
+  };
+};
 
 const changeCategoryRequest = (category) => {
   return {

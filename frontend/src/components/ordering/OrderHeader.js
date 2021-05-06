@@ -2,7 +2,7 @@ import * as config from "../../Config";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Select, Space, Input, Drawer } from "antd";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { IoAlarm } from "react-icons/io5";
@@ -11,6 +11,7 @@ import {
   actionChangeCategory,
   actionChangeTitle,
   actionChangeSupplier,
+  actionChangeSearch,
 } from "../../_actions/supplier_action";
 import {
   getCategoriesAction,
@@ -19,6 +20,7 @@ import {
 
 import "./OrderPage.css";
 
+// right / left key handler
 function useKey(key, cb) {
   const callbackRef = useRef(cb);
 
@@ -34,17 +36,18 @@ function useKey(key, cb) {
       }
     }
     document.addEventListener("keydown", handle);
-  
+
     return () => document.removeEventListener("keydown", handle);
   }, [key]);
 }
 
+// Start pageHeage
 function OrderHeader() {
   function handleEnterRight() {
     pageProducts(
       abbr,
       category === config.SELECT_CATEGORY ? "" : category,
-      page === (totalPages -1) ? page : (page + 1),
+      page === totalPages - 1 ? page : page + 1,
       size
     );
   }
@@ -116,11 +119,37 @@ function OrderHeader() {
     onClose();
   }
 
-  const pageProducts = (abbr, category, page = 0, size = config.PAGE_SIZE) => {
-    let param = { params: { page: page, size: size, sort: "seq" } };
-    //console.log("abbr = " + abbr );
-    //console.log(param);
-    dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
+  const onSearchInput = (search) => {
+    if (search === "") {
+      onChangeSuppiler(abbr, headTitle);
+    } else {
+      setCategory("SEARCH");
+      dispatch(actionChangeCategory("SEARCH"));
+      dispatch(actionChangeTitle(supplier + " / SEARCH"));
+      dispatch(actionChangeSearch(search));
+      pageProducts(abbr, "SEARCH", 0, size, search);
+      onClose();
+      document.documentElement.scrollTop = 0;
+    }
+  };
+
+  const pageProducts = (
+    abbr,
+    category,
+    page = 0,
+    size = config.PAGE_SIZE,
+    search
+  ) => {
+    if (category === "SEARCH") {
+      let param = {
+        params: { page: page, size: size, sort: "seq", search: search },
+      };
+      dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
+    } else {
+      let param = { params: { page: page, size: size, sort: "seq" } };
+      dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
+    }
+
     document.documentElement.scrollTop = 0;
   };
 
@@ -176,27 +205,28 @@ function OrderHeader() {
     );
 
   const searchInput = (
-    <Search
-      placeholder="input search text"
-      allowClear
-      onSearch={(value) => onSearch(value)}
-      style={{ margin: "16px  0", width: "100%" }}
-      enterButton
-    />
+    <div>
+      <Input.Group compact>
+        <Select defaultValue="Co">
+          <Option value="All">All</Option>
+          <Option value="Co">Co</Option>
+        </Select>
+        <Search
+          placeholder="input search text"
+          allowClear
+          enterButton
+          onSearch={onSearchInput}
+          style={{ width: "70%" }}
+        />
+      </Input.Group>
+    </div>
   );
 
-  const headH2 = (
-    <h2 style={{ display: "inline-block", color: "#fff" }}>{headTitle}</h2>
-  );
   const showDrawer = () => {
     setVisible(true);
   };
   const onClose = () => {
     setVisible(false);
-  };
-
-  const onSearch = (value) => {
-    console.log("value = " + value);
   };
 
   const onClickCart = () => {
@@ -261,6 +291,12 @@ function OrderHeader() {
     </Button>
   ) : (
     ""
+  );
+
+  const headH2 = (
+    <Link to="/order">
+      <h2 style={{ display: "inline-block", color: "#fff" }}>{headTitle}</h2>
+    </Link>
   );
 
   const signoutButton = (
