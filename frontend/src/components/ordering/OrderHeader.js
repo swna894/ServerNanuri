@@ -2,7 +2,7 @@ import * as config from "../../Config";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Select, Space, Input, Drawer } from "antd";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { IoAlarm } from "react-icons/io5";
@@ -305,10 +305,15 @@ function OrderHeader() {
     ""
   );
 
+   function onClickHead(e) {
+     e.preventDefault();
+     onChangeSuppiler(abbr, headTitle);
+   }
+
   const headH2 = (
-    <Link to="/order">
+    <a href="order2david.com" onClick={onClickHead}>
       <h2 style={{ display: "inline-block", color: "#fff" }}>{headTitle}</h2>
-    </Link>
+    </a>
   );
 
   const signoutButton = (
