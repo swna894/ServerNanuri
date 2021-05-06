@@ -48,16 +48,17 @@ public class ProductController {
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
 	static String SEARCH = "SEARCH";
-	
+	static String ALL = "All";
+
 	@Autowired
 	ProductRepository productRepository;
 
 	@Autowired
 	OrderRepository orderRepository;
-	
+
 	@Autowired
 	ShopRepository shopRepository;
-	
+
 	@Autowired
 	SupplierRepository supplierRepository;
 
@@ -82,7 +83,7 @@ public class ProductController {
 		products = productRepository.saveAll(products);
 		return null;
 	}
-	
+
 	@GetMapping("/products")
 	public List<Product> getAll() {
 		return productRepository.findAllByOrderByCodeAsc();
@@ -96,81 +97,87 @@ public class ProductController {
 	@GetMapping("/products/init")
 	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
-		Pageable sortedBySeq = 
-				  PageRequest.of(0, 100, Sort.by("seq"));
+		Pageable sortedBySeq = PageRequest.of(0, 100, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		updateCartQty(page, principal);
-		return page ;
+		return page;
 	}
-	
-	@GetMapping("/products/{abbr}/{category}" )
-	public Page<Product> findProdutsByPagable(@PathVariable String abbr, 
-			@PathVariable String category, Pageable pageable, @RequestParam(required = false) String search, Principal principal ) {	
+
+	@GetMapping("/products/{abbr}/{category}")
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr, @PathVariable String category,
+			Pageable pageable, @RequestParam(required = false) String search,
+			@RequestParam(required = false) String condition, Principal principal) {
 		Page<Product> page = null;
 
-		if(category.equals(NEW)) {
+		if (category.equals(NEW)) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
-		} else if(category.equals(SPECIAL)) {
+		} else if (category.equals(SPECIAL)) {
 			page = productRepository.findByAbbrAndIsSpecialAndIsShow(abbr, true, true, pageable);
-		} else if(category.equals(CART)) {
+		} else if (category.equals(CART)) {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
-		} else if(category.equals(SEARCH)) {
-			search = search.replaceAll("_", "/");	
-			page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(search, true, search, true, pageable);
+		} else if (category.equals(SEARCH)) {
+			search = search.replaceAll("_", "/");
+			if (condition.equals(ALL)) {
+				page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(search, true, search,
+						true, pageable);
+			} else {
+				page = productRepository.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShow(abbr, search, true, abbr, search,
+						true, pageable);
+			}
 		} else {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
 		}
-		if(!page.getContent().isEmpty()) {
+		if (!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
 		}
-			return page;
+		return page;
 	}
-	
-//	@GetMapping("/products/search/{search}" )
-//	public Page<Product> findBySearch(@PathVariable String search, 
-//			@RequestParam(required = false) String abbr, Pageable pageable, Principal principal ) {	
-//		Page<Product> page = null;
-//		search = search.replaceAll("_", "/");	
-//		page = productRepository.findByIsShowAndCodeOrDescription(true, search, search, pageable);
-//	
-//		if(!page.getContent().isEmpty()) {
-//			updateCartQty(page, principal);
-//		}
-//			return page;
-//	}
-	
+
+	// @GetMapping("/products/search/{search}" )
+	// public Page<Product> findBySearch(@PathVariable String search,
+	// @RequestParam(required = false) String abbr, Pageable pageable, Principal
+	// principal ) {
+	// Page<Product> page = null;
+	// search = search.replaceAll("_", "/");
+	// page = productRepository.findByIsShowAndCodeOrDescription(true, search,
+	// search, pageable);
+	//
+	// if(!page.getContent().isEmpty()) {
+	// updateCartQty(page, principal);
+	// }
+	// return page;
+	// }
+
 	private Page<Product> convertProduct(Page<OrderItem> orderItems) {
 		List<Product> products = new ArrayList<>();
 		for (OrderItem orderItem : orderItems) {
-			Product product 
-				= productRepository.findByCodeAndAbbr(orderItem.getCode(),orderItem.getInvoice().substring(0, 4));
-			    product.setQty(orderItem.getQty());
-			    products.add(product);
-		}	
+			Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(),
+					orderItem.getInvoice().substring(0, 4));
+			product.setQty(orderItem.getQty());
+			products.add(product);
+		}
 
 		return new PageImpl<Product>(products, orderItems.getPageable(), orderItems.getTotalElements());
 	}
-	
-	
 
 	private Page<OrderItem> cartRepostory(String abbr, Principal principal, Pageable pageable) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
-		String invoice = abbr + shop.getAbbr()+"_CART";
+		String invoice = abbr + shop.getAbbr() + "_CART";
 		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("code"));
 		return orderRepository.findByInvoice(invoice, pageable);
 	}
 
 	private Page<Product> updateCartQty(Page<Product> page, Principal principal) {
-		List<Product> products = page.getContent();	
+		List<Product> products = page.getContent();
 		Optional<Order> cart = getCarts(principal, products.get(0).getAbbr());
-		
-		if(cart.isPresent()) {
-			List<OrderItem> orderItems = cart.get().getOrderItems(); 
+
+		if (cart.isPresent()) {
+			List<OrderItem> orderItems = cart.get().getOrderItems();
 			for (Product product : products) {
 				for (OrderItem orderItem : orderItems) {
-					if(product.getCode().equals(orderItem.getCode())) {
+					if (product.getCode().equals(orderItem.getCode())) {
 						product.setQty(orderItem.getQty());
 						break;
 					}
@@ -179,61 +186,54 @@ public class ProductController {
 		}
 		return page;
 	}
-	
+
 	private Optional<Order> getCarts(Principal principal, String abbr) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
-		String invoice = abbr + shop.getAbbr()+"_CART";
+		String invoice = abbr + shop.getAbbr() + "_CART";
 		return orderRepository.findByInvoice(invoice);
 	}
 
-	@GetMapping("/products/abbr/{abbr}" )
-	public List<Product> findByAbbr(@PathVariable String abbr) {		
-			List<Product> products = productRepository.findByAbbrOrderByCodeAsc(abbr); 			
-			return products;
-	}
-	
-	@GetMapping("/products/{abbr}" )
-	public Page<Product> findProdutsByPagable(@PathVariable String abbr,  Pageable pageable, Boolean newp, Principal principal ) {		
-			Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable); 
-			updateCartQty(page, principal);
-			return page;
+	@GetMapping("/products/abbr/{abbr}")
+	public List<Product> findByAbbr(@PathVariable String abbr) {
+		List<Product> products = productRepository.findByAbbrOrderByCodeAsc(abbr);
+		return products;
 	}
 
-	
+	@GetMapping("/products/{abbr}")
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr, Pageable pageable, Boolean newp,
+			Principal principal) {
+		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable);
+		updateCartQty(page, principal);
+		return page;
+	}
+
 	@GetMapping("/products/category")
 	public List<String> findProductsByCompany(@RequestParam String abbr) {
-		if(abbr.isEmpty()) {
+		if (abbr.isEmpty()) {
 			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 			abbr = supplier.getAbbr();
 		}
 		List<Product> products = productRepository.findByAbbr(abbr);
-//		List<Product> sortedProducts = products.stream()
-//				.filter(item -> item.isShow())
-//				.filter(item -> !item.getCategory().equals(""))
-//				.filter(distinctByKey(p -> p.getCategory()))
-//				.sorted(Comparator.comparing(Product::getCategory))
-//				.collect(Collectors.toList());
-		
-		return products.stream()
-				.filter(item -> item.isShow())
-				.map(item -> item.getCategory())
-				.filter(item -> !item.isEmpty())
-				.distinct()
-				.sorted().collect(Collectors.toList());
+		// List<Product> sortedProducts = products.stream()
+		// .filter(item -> item.isShow())
+		// .filter(item -> !item.getCategory().equals(""))
+		// .filter(distinctByKey(p -> p.getCategory()))
+		// .sorted(Comparator.comparing(Product::getCategory))
+		// .collect(Collectors.toList());
+
+		return products.stream().filter(item -> item.isShow()).map(item -> item.getCategory())
+				.filter(item -> !item.isEmpty()).distinct().sorted().collect(Collectors.toList());
 	}
 
 	@GetMapping("/products/categorys")
 	public List<Product> findCategories() {
 		List<Product> products = productRepository.findAll();
-		List<Product> sortedProducts = products.stream()
-				.filter(item -> item.isShow())
-				.filter(item -> !item.getCategory().equals(""))
-				.filter(distinctByKey(p -> p.getCategory()))
-				.sorted(Comparator.comparing(Product::getCategory))
-				.collect(Collectors.toList());
+		List<Product> sortedProducts = products.stream().filter(item -> item.isShow())
+				.filter(item -> !item.getCategory().equals("")).filter(distinctByKey(p -> p.getCategory()))
+				.sorted(Comparator.comparing(Product::getCategory)).collect(Collectors.toList());
 		return sortedProducts;
 	}
-	
+
 	public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
 		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
 		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;

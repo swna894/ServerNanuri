@@ -7,6 +7,7 @@ import {
   CHANGE_SUPPLIER,
   CHANGE_CATEGORY,
   CHANGE_SEARCH,
+  CHANGE_CONDITION,
 } from "../service/types";
 
 const initialState = {
@@ -35,6 +36,9 @@ const reducer = (state = initialState, action) => {
 
     case CHANGE_TITLE:
       return { ...state, title: action.payload };
+
+    case CHANGE_CONDITION:
+      return { ...state, condition: action.payload };
 
     case CHANGE_SUPPLIER:
       return {

@@ -8,6 +8,7 @@ import {
   CHANGE_SUPPLIER,
   CHANGE_CATEGORY,
   CHANGE_SEARCH,
+  CHANGE_CONDITION,
 } from "../service/types";
 
 export const actionGetSuppliers = () => {
@@ -68,6 +69,12 @@ export const actionChangeSearch = (search) => {
 //     type: GET_SUPPLIERS_REQUEST,
 //   };
 // };
+export const changeSearchCondition = (condition) => {
+  return {
+    type: CHANGE_CONDITION,
+    payload: condition,
+  };
+};
 
 const changeSearchRequest = (search) => {
   return {

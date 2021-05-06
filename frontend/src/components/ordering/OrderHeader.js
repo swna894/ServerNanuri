@@ -12,7 +12,9 @@ import {
   actionChangeTitle,
   actionChangeSupplier,
   actionChangeSearch,
+  changeSearchCondition,
 } from "../../_actions/supplier_action";
+
 import {
   getCategoriesAction,
   getProductsAction,
@@ -43,6 +45,7 @@ function useKey(key, cb) {
 
 // Start pageHeage
 function OrderHeader() {
+  // 왼쪽 버튼 처리
   function handleEnterRight() {
     pageProducts(
       abbr,
@@ -52,6 +55,7 @@ function OrderHeader() {
     );
   }
 
+  // 오른쪽 버튼 처리
   function handleEnterLeft() {
     pageProducts(
       abbr,
@@ -76,6 +80,7 @@ function OrderHeader() {
   const abbr = useSelector((state) => state.supplier.abbr);
   const supplier = useSelector((state) => state.supplier.supplier);
   const headTitle = useSelector((state) => state.supplier.title);
+  const condition = useSelector((state) => state.supplier.condition);
   const isNew = useSelector((state) => state.supplier.isNew);
   const isSpecial = useSelector((state) => state.supplier.isSpecial);
   const categories = useSelector((state) => state.product.categories);
@@ -89,6 +94,7 @@ function OrderHeader() {
   useEffect(() => {
     let parm = { params: { abbr: headTitle } };
     dispatch(getCategoriesAction(parm));
+    dispatch(changeSearchCondition("Co"));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr, searchValue) {
@@ -127,7 +133,7 @@ function OrderHeader() {
       dispatch(actionChangeCategory("SEARCH"));
       dispatch(actionChangeTitle(supplier + " / SEARCH"));
       dispatch(actionChangeSearch(search));
-      pageProducts(abbr, "SEARCH", 0, size, search);
+      pageProducts(abbr, "SEARCH", 0, size, search, condition);
       onClose();
       document.documentElement.scrollTop = 0;
     }
@@ -138,12 +144,14 @@ function OrderHeader() {
     category,
     page = 0,
     size = config.PAGE_SIZE,
-    search
+    search,
+    condition = 'Co'
   ) => {
     if (category === "SEARCH") {
       let param = {
-        params: { page: page, size: size, sort: "seq", search: search },
+        params: { page: page, size: size, sort: "seq", search: search, condition:condition },
       };
+      console.log(param);
       dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
     } else {
       let param = { params: { page: page, size: size, sort: "seq" } };
@@ -204,12 +212,16 @@ function OrderHeader() {
       ""
     );
 
+  const onChangeSelect = (value) => {
+    dispatch(changeSearchCondition(value));
+  };
+
   const searchInput = (
-    <div>
+    <div style={{ width: "105%" }}>
       <Input.Group compact>
-        <Select defaultValue="Co">
+        <Select defaultValue="Co" onChange={onChangeSelect}>
           <Option value="All">All</Option>
-          <Option value="Co">Co</Option>
+          <Option value="Co">Co.</Option>
         </Select>
         <Search
           placeholder="input search text"
