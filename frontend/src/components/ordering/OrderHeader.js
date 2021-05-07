@@ -4,7 +4,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Select, Space, Input, Drawer } from "antd";
 import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
-import { MenuOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  MenuOutlined,
+  ShoppingCartOutlined,
+  DeliveredProcedureOutlined,
+  LogoutOutlined,
+  GiftOutlined,
+  CrownOutlined
+} from "@ant-design/icons";
 import { IoAlarm } from "react-icons/io5";
 
 import {
@@ -230,6 +237,7 @@ function OrderHeader() {
   const searchInput = (
     <div style={{ width: "103%" }}>
       <Input.Group compact>
+      
         <Select defaultValue="Co" onChange={onChangeSelect}>
           <Option value="All">All</Option>
           <Option value="Co">Co.</Option>
@@ -282,10 +290,11 @@ function OrderHeader() {
     <Button
       type="primary"
       style={
-        (width > 1400 ? buttonStyle : persentStyle,
         isCart === true
           ? { display: "none" }
-          : { display: "inline-block", width: "100%", marginTop: "5px" })
+          : width > 1400
+            ? { display: "inline-block", width: "100px", marginTop: "5px" }
+            : { display: "inline-block", width: "100%", marginTop: "5px", marginBottom: "5px" }
       }
       onClick={onClickCart}
     >
@@ -298,26 +307,36 @@ function OrderHeader() {
     <Button
       type="primary"
       style={
-        (width > 1400 ? buttonStyle : persentStyle,
         isCart === true
-          ? { display: "inline-block", width: "100%", marginTop: "5px",  }
-          : { display: "none" })
+          ? width > 1400
+            ? { display: "inline-block", width: "100px", marginTop: "5px" }
+            : {
+                display: "inline-block",
+                width: "100%",
+                marginTop: "5px",
+                marginBottom: "5px",
+              }
+          : { display: "none" }
       }
       onClick={onClickOrder}
     >
-      <ShoppingCartOutlined />
-      ORDER
+      <DeliveredProcedureOutlined />
+     ORDER
     </Button>
   );
 
   const isNewButton = isNew ? (
     <Button
       type="primary"
-      style={width > 1400 ? buttonStyle : persentStyle}
+       style={ isCart === true
+          ? { display: "none" }
+          : width > 1400
+            ? { display: "inline-block", width: "100px" }
+            : { display: "inline-block", width: "100%" }}
       onClick={onClickNew}
     >
-      <IoAlarm />
-      &nbsp; NEW
+      <CrownOutlined />
+       NEW
     </Button>
   ) : (
     ""
@@ -325,9 +344,16 @@ function OrderHeader() {
   const isSpecialButton = isSpecial ? (
     <Button
       type="primary"
-      style={width > 1400 ? buttonStyle : persentStyle}
+      style={
+        isCart === true
+          ? { display: "none" }
+          : width > 1400
+          ? { display: "inline-block", width: "100px" }
+          : { display: "inline-block", width: "100%" }
+      }
       onClick={onClickSpecial}
     >
+      <GiftOutlined />
       SPECIAL
     </Button>
   ) : (
@@ -342,13 +368,14 @@ function OrderHeader() {
 
   const headH2 = (
     <a href="order2david.com" onClick={onClickHead}>
-      <h2 style={{ display: "inline-block", color: "#fff" }}>{headTitle}</h2>
+      <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2>
     </a>
   );
 
   const signoutButton = (
     <Button type="primary" style={width > 1400 ? buttonStyle : persentStyle}>
-      SIGNOUT
+      <LogoutOutlined />
+      LOGOUT
     </Button>
   );
   return (
@@ -358,6 +385,7 @@ function OrderHeader() {
           position: "fixed",
           zIndex: 1,
           width: "100%",
+          backgroundColor: "#bfbfbf",
         }}
       >
         {width > 1400 ? (
