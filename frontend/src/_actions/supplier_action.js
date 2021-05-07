@@ -9,6 +9,7 @@ import {
   CHANGE_CATEGORY,
   CHANGE_SEARCH,
   CHANGE_CONDITION,
+  CHANGE_ISCART,
 } from "../service/types";
 
 export const actionGetSuppliers = () => {
@@ -80,6 +81,13 @@ const changeSearchRequest = (search) => {
   return {
     type: CHANGE_SEARCH,
     payload: search,
+  };
+};
+
+export const changeIsCartRequest = (isCart) => {
+  return {
+    type: CHANGE_ISCART,
+    payload: isCart,
   };
 };
 

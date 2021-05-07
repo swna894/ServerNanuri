@@ -227,7 +227,13 @@ function LandingPage() {
             />
           }
         >
-          <div style={{ width: "100%" }}>
+          <div
+            style={
+              item.price === 0
+                ? { width: "1em", display: "none" }
+                : { width: "1em", display: "inline" }
+            }
+          >
             <div style={item.new ? newStyle : hiddenStyle}>
               <img src={newProduct} alt="special"></img>
             </div>

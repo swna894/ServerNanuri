@@ -8,6 +8,7 @@ import {
   CHANGE_CATEGORY,
   CHANGE_SEARCH,
   CHANGE_CONDITION,
+  CHANGE_ISCART,
 } from "../service/types";
 
 const initialState = {
@@ -55,6 +56,9 @@ const reducer = (state = initialState, action) => {
 
     case CHANGE_SEARCH:
       return { ...state, search: action.payload };
+
+    case CHANGE_ISCART:
+      return { ...state, isCart: action.payload };
 
     case GET_SUPPLIERS_SUCCESS:
       return {

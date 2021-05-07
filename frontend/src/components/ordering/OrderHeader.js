@@ -13,6 +13,7 @@ import {
   actionChangeSupplier,
   actionChangeSearch,
   changeSearchCondition,
+  changeIsCartRequest,
 } from "../../_actions/supplier_action";
 
 import {
@@ -49,7 +50,7 @@ function OrderHeader() {
   function handleEnterRight() {
     pageProducts(
       abbr,
-      category === config.SELECT_CATEGORY ? "" : category,
+      categoryPrompt === config.SELECT_CATEGORY ? "" : categoryPrompt,
       page === totalPages - 1 ? page : page + 1,
       size
     );
@@ -59,7 +60,7 @@ function OrderHeader() {
   function handleEnterLeft() {
     pageProducts(
       abbr,
-      category === config.SELECT_CATEGORY ? "" : category,
+      categoryPrompt === config.SELECT_CATEGORY ? "" : categoryPrompt,
       page === 0 ? 0 : page - 1,
       size
     );
@@ -73,7 +74,7 @@ function OrderHeader() {
   const { Search } = Input;
 
   const [visible, setVisible] = useState(false);
-  const [category, setCategory] = useState(config.SELECT_CATEGORY);
+  const [categoryPrompt, setCategoryPrompt] = useState(config.SELECT_CATEGORY);
   const [width] = useWindowWidthAndHeight();
 
   const suppliers = useSelector((state) => state.supplier.suppliers);
@@ -81,9 +82,11 @@ function OrderHeader() {
   const supplier = useSelector((state) => state.supplier.supplier);
   const headTitle = useSelector((state) => state.supplier.title);
   const condition = useSelector((state) => state.supplier.condition);
+  const isCart = useSelector((state) => state.supplier.isCart);
   const isNew = useSelector((state) => state.supplier.isNew);
   const isSpecial = useSelector((state) => state.supplier.isSpecial);
   const categories = useSelector((state) => state.product.categories);
+  //const category = useSelector((state) => state.supplier.category);
   const page = useSelector((state) => state.product.products.number);
   const size = useSelector((state) => state.product.products.size);
   const totalPages = useSelector((state) => state.product.products.totalPages);
@@ -95,11 +98,13 @@ function OrderHeader() {
     let parm = { params: { abbr: headTitle } };
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
+    dispatch(changeIsCartRequest(false));
+    console.log("catgegory = " + categoryPrompt);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr, searchValue) {
-    setCategory(config.SELECT_CATEGORY);
-    dispatch(actionChangeTitle(searchValue.children));
+    setCategoryPrompt(config.SELECT_CATEGORY);
+    //dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
     dispatch(actionChangeCategory(""));
     let parm = { params: { abbr: abbr } };
@@ -110,7 +115,7 @@ function OrderHeader() {
   }
 
   function onChangeCategory(category) {
-    setCategory(category);
+    setCategoryPrompt(category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, page, size);
@@ -118,7 +123,7 @@ function OrderHeader() {
   }
 
   function onChangeButton(category) {
-    setCategory(category);
+    setCategoryPrompt(category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, 0, size);
@@ -129,7 +134,7 @@ function OrderHeader() {
     if (search === "") {
       onChangeSuppiler(abbr, headTitle);
     } else {
-      setCategory("SEARCH");
+      setCategoryPrompt("SEARCH");
       dispatch(actionChangeCategory("SEARCH"));
       dispatch(actionChangeTitle(supplier + " / SEARCH"));
       dispatch(actionChangeSearch(search));
@@ -145,11 +150,17 @@ function OrderHeader() {
     page = 0,
     size = config.PAGE_SIZE,
     search,
-    condition = 'Co'
+    condition = "Co"
   ) => {
     if (category === "SEARCH") {
       let param = {
-        params: { page: page, size: size, sort: "seq", search: search, condition:condition },
+        params: {
+          page: page,
+          size: size,
+          sort: "seq",
+          search: search,
+          condition: condition,
+        },
       };
       console.log(param);
       dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
@@ -177,7 +188,7 @@ function OrderHeader() {
         ));
 
   const buttonStyle = { width: "100px" };
-  const persentStyle = { width: "100%", marginTop: "5px" };
+  const persentStyle = { width: "100%", marginTop: "5px", marginBottom: "5px" };
   const supplierStyle = { width: "230px" };
   const categoryStyle = { width: "200px" };
 
@@ -197,11 +208,11 @@ function OrderHeader() {
   );
 
   const listCategorySelect =
-    categories && categories.length > 0 ? (
+    (categories && categories.length > 0) && isCart === false ? (
       <Select
         showSearch
         style={width > 800 ? categoryStyle : persentStyle}
-        value={category}
+        value={categoryPrompt}
         onChange={onChangeCategory}
         placeholder={config.SELECT_CATEGORY}
         optionFilterProp="children"
@@ -217,7 +228,7 @@ function OrderHeader() {
   };
 
   const searchInput = (
-    <div style={{ width: "105%" }}>
+    <div style={{ width: "103%" }}>
       <Input.Group compact>
         <Select defaultValue="Co" onChange={onChangeSelect}>
           <Option value="All">All</Option>
@@ -243,6 +254,14 @@ function OrderHeader() {
 
   const onClickCart = () => {
     onChangeButton("CART");
+    dispatch(changeIsCartRequest(true));
+    onClose();
+    document.documentElement.scrollTop = 0;
+  };
+
+  const onClickOrder = () => {
+    onChangeSuppiler(abbr, headTitle);
+    dispatch(changeIsCartRequest(false));
     onClose();
     document.documentElement.scrollTop = 0;
   };
@@ -262,7 +281,12 @@ function OrderHeader() {
   const cartButton = (
     <Button
       type="primary"
-      style={width > 1400 ? buttonStyle : persentStyle}
+      style={
+        (width > 1400 ? buttonStyle : persentStyle,
+        isCart === true
+          ? { display: "none" }
+          : { display: "inline-block", width: "100%", marginTop: "5px" })
+      }
       onClick={onClickCart}
     >
       <ShoppingCartOutlined />
@@ -273,8 +297,13 @@ function OrderHeader() {
   const ordrerButton = (
     <Button
       type="primary"
-      style={width > 1400 ? buttonStyle : persentStyle}
-      onClick={onClickCart}
+      style={
+        (width > 1400 ? buttonStyle : persentStyle,
+        isCart === true
+          ? { display: "inline-block", width: "100%", marginTop: "5px",  }
+          : { display: "none" })
+      }
+      onClick={onClickOrder}
     >
       <ShoppingCartOutlined />
       ORDER
@@ -305,10 +334,11 @@ function OrderHeader() {
     ""
   );
 
-   function onClickHead(e) {
-     e.preventDefault();
-     onChangeSuppiler(abbr, headTitle);
-   }
+  function onClickHead(e) {
+    e.preventDefault();
+    dispatch(changeIsCartRequest(false));
+    onChangeSuppiler(abbr, headTitle);
+  }
 
   const headH2 = (
     <a href="order2david.com" onClick={onClickHead}>

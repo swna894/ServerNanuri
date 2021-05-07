@@ -12,6 +12,7 @@ function OrderFooter() {
 
   const abbr = useSelector((state) => state.supplier.abbr);
   const search = useSelector((state) => state.supplier.search);
+  const condition = useSelector((state) => state.supplier.condition);
   const current = useSelector((state) => state.product.products.number);
   const category = useSelector((state) => state.supplier.category);
   const totalElements = useSelector(
@@ -36,6 +37,7 @@ function OrderFooter() {
           sort: "seq",
           abbr: abbr,
           search: search,
+          condition:condition
         },
       };
        dispatch(getProductsAction(abbr, category, param));
