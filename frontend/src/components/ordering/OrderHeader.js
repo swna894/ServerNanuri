@@ -306,8 +306,7 @@ function OrderHeader() {
   };
 
   const onClickHistory = () => {
-      //onChangeButton("SPECIAL");
-      console.log("history");
+      onChangeButton("HISTORY");
       onClose();
       document.documentElement.scrollTop = 0;
   };

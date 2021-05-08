@@ -52,6 +52,7 @@ public class ProductController {
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
 	static String SEARCH = "SEARCH";
+	static String HISTORY = "HISTORY";
 	static String ALL = "All";
 
 	@Autowired
@@ -119,11 +120,23 @@ public class ProductController {
 
 		if (category.equals(NEW)) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
+			
 		} else if (category.equals(SPECIAL)) {
 			page = productRepository.findByAbbrAndIsSpecialAndIsShow(abbr, true, true, pageable);
+			
 		} else if (category.equals(CART)) {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
+			
+		} else if (category.equals(HISTORY)) {
+			Shop shop = shopRepository.findByEmail(principal.getName());	
+			String invoice = abbr + shop.getAbbr();
+			
+			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWith(OrderType.ORDER, invoice);
+			List<String> invoices = orders.stream().map(item -> item.getInvoice()).collect(Collectors.toList());
+			List<String> codes = orderItemRepository.findByInvoiceInOrderByCodeAsc(invoices);
+			page = productRepository.findByAbbrAndCodeIn(abbr, codes, pageable);
+			
 		} else if (category.equals(SEARCH)) {
 			search = search.replaceAll("_", "/");
 			if (condition.equals(ALL)) {
@@ -133,6 +146,7 @@ public class ProductController {
 				page = productRepository.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShow(abbr, search, true, abbr, search,
 						true, pageable);
 			}
+			
 		} else {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
