@@ -305,7 +305,10 @@ public class OrderController {
 			String invoice = abbr + shop.getAbbr() + formatDateTime;
 			Order order = orderOptional.get();
 			order.setInvoice(invoice);
-			order.getOrderItems().forEach(item -> item.setInvoice(invoice));
+			order.getOrderItems().forEach(item -> { 
+				item.setInvoice(invoice);
+				item.setStatus(OrderType.ORDER);
+			});
 			order.setStatus(OrderType.ORDER);
 			
 			orderRepository.save(order);

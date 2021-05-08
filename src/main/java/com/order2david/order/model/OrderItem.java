@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -55,6 +57,8 @@ public class OrderItem {
 	@Column(name = "updated", updatable = true)
 	private LocalDateTime updated;
 	
+	@Enumerated(EnumType.STRING)
+	private OrderType status; // 주문상태
 	private String invoice;
 	private String code;
 	private String description;
@@ -84,6 +88,7 @@ public class OrderItem {
 		this.description = cart.getDecription();
 		this.invoice = cart.getInvoice();
 		this.amount = getTotalPrice();	
+		this.status = OrderType.CART;
 	}
 	
 	// ==생성 메서드== //

@@ -14,7 +14,6 @@ import {
 import {
   getProductsInitAction,
   changeCart,
-  
 } from "../../_actions/product_action";
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
@@ -53,22 +52,21 @@ function LandingPage() {
     state.product.products.content ? state.product.products.content : []
   );
   const products = useSelector((state) => state.product.products);
-  const totalElements = useSelector((state) => state.product.products.totalElements);
+  const totalElements = useSelector(
+    (state) => state.product.products.totalElements
+  );
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
   const abbr = useSelector((state) => state.supplier.abbr);
   const comapny = useSelector((state) => state.user.userData);
 
-
   useEffect(() => {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
     dispatch(getProductsInitAction());
-    
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
- 
-  const onClickIncrease = (code, pack, qty) => {   
+  const onClickIncrease = (code, pack, qty) => {
     const param = {
       abbr: abbr,
       code: code,
@@ -89,7 +87,6 @@ function LandingPage() {
   };
 
   const onClickDecrease = (code, pack, qty) => {
-
     const count = parseInt(qty) - parseInt(pack);
     const param = {
       abbr: abbr,
@@ -263,7 +260,15 @@ function LandingPage() {
               <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
               <span style={specStyle}>{item.stock}</span>
             </div>
-            <p style={{ color: "#1835D0", marginLeft: "32px" }}>2001-02-02</p>
+            <p
+              style={{
+                color: "#f5222d",
+                marginLeft: "32px",
+                fontWeight: "bold",
+              }}
+            >
+              {item.orderedDate}
+            </p>
             <p style={{ color: "#fff", margin: "40px" }}>&nbsp; </p>
             <div style={buttonStyle}>
               <Button

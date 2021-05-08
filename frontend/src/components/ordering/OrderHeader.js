@@ -283,9 +283,10 @@ function OrderHeader() {
   const onClickOrder = () => {
     dispatch(changeIsCartRequest(false));
     dispatch(setOrderRequest(abbr));
-  
+
     onClose();
     if (!error) {
+      onChangeSuppiler(abbr, headTitle);
       success();
       onChangeSuppiler(abbr, headTitle);
     }
@@ -302,6 +303,13 @@ function OrderHeader() {
     onChangeButton("SPECIAL");
     onClose();
     document.documentElement.scrollTop = 0;
+  };
+
+  const onClickHistory = () => {
+      //onChangeButton("SPECIAL");
+      console.log("history");
+      onClose();
+      document.documentElement.scrollTop = 0;
   };
 
   const cartButton = (
@@ -355,6 +363,33 @@ function OrderHeader() {
     >
       <DeliveredProcedureOutlined />
       ORDER
+    </Button>
+  );
+
+  const historyButton = (
+    <Button
+      type="primary"
+      style={
+        //isCart === true
+           width > 1400
+            ? {
+                display: "inline-block",
+                width: "100px",
+                marginTop: "5px",
+                borderStyle: "ridge",
+              }
+            : {
+                display: "inline-block",
+                width: "100%",
+                marginTop: "10px",
+                marginBottom: "5px",
+              }
+         // : { display: "none" }
+      }
+      onClick={onClickHistory}
+    >
+      <DeliveredProcedureOutlined />
+      HISTORY
     </Button>
   );
 
@@ -424,12 +459,11 @@ function OrderHeader() {
     </Button>
   );
 
-   function success() {
-     Modal.success({
-       title: "Thanks for Ordering ...",
-     });
-   }
-
+  function success() {
+    Modal.success({
+      title: "Thanks for Ordering ...",
+    });
+  }
 
   return (
     <div>
@@ -466,6 +500,7 @@ function OrderHeader() {
               <space>
                 {isNewButton}
                 {isSpecialButton}
+                {historyButton}
                 {ordrerButton}
                 {cartButton}
                 {signoutButton}
@@ -496,6 +531,7 @@ function OrderHeader() {
                 {searchInput}
                 {isNewButton}
                 {isSpecialButton}
+                {historyButton}
                 {ordrerButton}
                 {cartButton}
                 {signoutButton}
@@ -524,6 +560,7 @@ function OrderHeader() {
                 {searchInput}
                 {isNewButton}
                 {isSpecialButton}
+                {historyButton}
                 {ordrerButton}
                 {cartButton}
                 {signoutButton}

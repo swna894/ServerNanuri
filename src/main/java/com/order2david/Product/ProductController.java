@@ -1,6 +1,7 @@
 package com.order2david.Product;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -33,11 +34,14 @@ import com.order2david.Product.model.Product;
 import com.order2david.Product.repository.ProductRepository;
 import com.order2david.order.model.Order;
 import com.order2david.order.model.OrderItem;
+import com.order2david.order.model.OrderType;
+import com.order2david.order.repository.OrderItemRepository;
 import com.order2david.order.repository.OrderRepository;
 import com.order2david.shop.model.Shop;
 import com.order2david.shop.repository.ShopRepository;
 import com.order2david.supplier.model.Supplier;
 import com.order2david.supplier.repository.SupplierRepository;
+import com.order2david.util.MyDate;
 
 @RestController
 @RequestMapping("api")
@@ -61,6 +65,9 @@ public class ProductController {
 
 	@Autowired
 	SupplierRepository supplierRepository;
+	
+	@Autowired
+	OrderItemRepository orderItemRepository;
 
 	@PostMapping("/products")
 	@Transactional
@@ -100,6 +107,7 @@ public class ProductController {
 		Pageable sortedBySeq = PageRequest.of(0, 100, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		updateCartQty(page, principal);
+		updateCartHistory(page,principal);
 		return page;
 	}
 
@@ -131,6 +139,7 @@ public class ProductController {
 		}
 		if (!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
+			updateCartHistory(page,principal);
 		}
 		return page;
 	}
@@ -149,6 +158,27 @@ public class ProductController {
 	// }
 	// return page;
 	// }
+
+	private Page<Product> updateCartHistory(Page<Product> page, Principal principal) {
+		List<Product> products = page.getContent();
+
+		Shop shop = shopRepository.findByEmail(principal.getName());	
+		String invoice = products.get(0).getAbbr() + shop.getAbbr();
+		for (Product product : products) {
+	        OrderItem orderItem 
+	        	= orderItemRepository.findFirstyByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
+
+	        if(orderItem != null) {
+				LocalDateTime orderDate = orderItem.getOrder().getOrderDate();			
+				product.setOrderedDate(MyDate.toDay(orderDate));
+			} else {
+				product.setOrderedDate("");
+			}
+		}
+	
+		return page;
+		
+	}
 
 	private Page<Product> convertProduct(Page<OrderItem> orderItems) {
 		List<Product> products = new ArrayList<>();
