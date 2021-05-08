@@ -14,7 +14,7 @@ import {
 import {
   getProductsInitAction,
   changeCart,
-  getInitCartInform,
+  
 } from "../../_actions/product_action";
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
@@ -61,7 +61,6 @@ function LandingPage() {
 
 
   useEffect(() => {
-    dispatch(getInitCartInform());
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
     dispatch(getProductsInitAction());

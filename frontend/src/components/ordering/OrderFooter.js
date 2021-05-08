@@ -20,12 +20,6 @@ function OrderFooter() {
   );
 
   useEffect(() => {
-    // window.addEventListener("keydown", (event) => {
-    //   console.log("abbr = " + abbr);
-    //    console.log("category = " + category);
-    //   console.log("keydown = " + event.key);
-    // });
-    //console.log("company.company " + JSON.stringify(suppliers));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChange(pageNumber, pageSize = config.PAGE_SIZE) {

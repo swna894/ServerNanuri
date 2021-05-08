@@ -26,6 +26,7 @@ import {
 import {
   getCategoriesAction,
   getProductsAction,
+  getInitCartInform,
 } from "../../_actions/product_action";
 
 import "./OrderPage.css";
@@ -107,6 +108,7 @@ function OrderHeader() {
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
     dispatch(changeIsCartRequest(false));
+    dispatch(getInitCartInform());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr, searchValue) {
@@ -114,9 +116,11 @@ function OrderHeader() {
     //dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
     dispatch(actionChangeCategory(""));
+    dispatch(changeIsCartRequest(false));
     let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
     pageProducts(abbr, "", 0, size);
+    dispatch(getInitCartInform(abbr));
     onClose();
     //console.log(`selected ${value}`);
   }
@@ -297,7 +301,7 @@ function OrderHeader() {
     <Button
       type="primary"
       style={
-        isCart === true
+        isCart === true || cartInform === undefined || cartInform === ''
           ? { display: "none" }
           : width > 1400
           ? {

@@ -76,9 +76,9 @@ export async function changeCart(products, pageable, param) {
   };
 }
 
-export const getInitCartInform = () => {
+export const getInitCartInform = (abbr = '') => {
   const request = axios
-    .get(`/api/order/cart/inform`)
+    .get(`/api/order/cart/inform/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Supplier", error);

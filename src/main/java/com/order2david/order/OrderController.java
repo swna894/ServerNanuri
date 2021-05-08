@@ -243,12 +243,14 @@ public class OrderController {
 		List<OrderItem> items = order.getOrderItems();
 		int count = items.size();
 		Double amount = items.stream().mapToDouble(item -> item.getAmount()).sum();
+		if(count == 0) {
+			return null;
+		}
 		return String.valueOf(count) + " items Total " + String.format("$%,.2f",amount);
 	}
 	
 	@GetMapping("order/cart/inform/{abbr}")
 	public String getCartInfromById(@PathVariable String abbr, Principal principal) {
-		
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		String invoice = abbr + shop.getAbbr() + "_CART";
 
@@ -258,15 +260,18 @@ public class OrderController {
 			Order order = orderOptional.get();
 			List<OrderItem> items = order.getOrderItems();
 			int count = items.size();
-			//Double amount = items.stream().mapToDouble(item -> item.getAmount()).sum();
-			return String.valueOf(count) + " items   Total " + String.format("$%,.2f",order.getAmount());	
+			if(count == 0) {
+				return null;
+			} 
+				return String.valueOf(count) + " items   Total " + String.format("$%,.2f",order.getAmount());	
 		} else {
-			return "";
+			return null;
 		}	
 	}
 	
 	@GetMapping("order/cart/inform")
 	public String getInitCartInfrom(Principal principal) {
+
 		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		String invoice = supplier.getAbbr() + shop.getAbbr() + "_CART";
@@ -277,9 +282,12 @@ public class OrderController {
 			List<OrderItem> items = orderOptional.get().getOrderItems();
 			int count = items.size();
 			Double amount = items.stream().mapToDouble(item -> item.getAmount()).sum();
+			if(count == 0) {
+				return null;
+			} 
 			return String.valueOf(count) + " items   Total " + String.format("$%,.2f",amount);	
 		} else {
-			return "";
+			return null;
 		}	
 	}
 }

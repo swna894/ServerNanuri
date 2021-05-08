@@ -3,6 +3,7 @@ import {
   GET_PRODUCTS_REQUEST,
   GET_PRODUCTS_INIT,
   CHANGE_CART,
+  GET_CART_INFORM,
 } from "../service/types";
 
 const initialState = {
@@ -22,7 +23,10 @@ export default function reducerProduct(state = initialState, action) {
       return { ...state, products: action.payload };
 
     case CHANGE_CART:
-      return { ...state, products: action.payload };
+      return { ...state, products: action.payload, cart : action.payload.cart};
+
+    case GET_CART_INFORM:
+      return { ...state, cart: action.payload };
 
     default:
       return state;

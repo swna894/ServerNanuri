@@ -10,11 +10,11 @@ import {
   CHANGE_SEARCH,
   CHANGE_CONDITION,
   CHANGE_ISCART,
+  GET_CART_INFORM,
 } from "../service/types";
 
 export const actionGetSuppliers = () => {
   return (dispatch) => {
-    
     //dispatch(getSuppliersRequest());
     axios
       .get("/api/suppliers")
@@ -99,13 +99,13 @@ const changeCategoryRequest = (category) => {
 };
 
 const changeSupplierRequest = (abbr) => {
-   const request = axios
-     .get(`/api/supplier/${abbr}`)
-     .then((response) => response.data)
-     .catch((error) => {
-       console.log("Problem !!! Get Supplier", error);
-       //dispatch(getSuppliersFailusre(error.message));
-     });
+  const request = axios
+    .get(`/api/supplier/${abbr}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log("Problem !!! Get Supplier", error);
+      //dispatch(getSuppliersFailusre(error.message));
+    });
   return {
     type: CHANGE_SUPPLIER,
     payload: request,
@@ -137,6 +137,20 @@ const getSuppliersFailusre = (error) => {
   return {
     type: GET_SUPPLIERS_FAILUAR,
     payload: error,
+  };
+};
+
+export const getCartInform = (abbr = "") => {
+  const request = axios
+    .get(`/api/order/cart/inform/${abbr}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log("Problem !!! Get Supplier", error);
+      //dispatch(getSuppliersFailusre(error.message));
+    });
+  return {
+    type: GET_CART_INFORM,
+    payload: request,
   };
 };
 
