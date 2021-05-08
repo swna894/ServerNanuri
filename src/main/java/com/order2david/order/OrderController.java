@@ -290,4 +290,28 @@ public class OrderController {
 			return null;
 		}	
 	}
+	
+	@PutMapping("order/confirm/{abbr}")
+	public Boolean putOrderConfirm(@PathVariable String abbr, Principal principal) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		String cart = abbr + shop.getAbbr() + "_CART";
+
+		Optional<Order> orderOptional = orderRepository.findByInvoice(cart);
+		
+		if(orderOptional.isPresent()) {
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("_MMddHHmmss");
+			String formatDateTime = LocalDateTime.now().format(formatter);
+			
+			String invoice = abbr + shop.getAbbr() + formatDateTime;
+			Order order = orderOptional.get();
+			order.setInvoice(invoice);
+			order.getOrderItems().forEach(item -> item.setInvoice(invoice));
+			order.setStatus(OrderType.ORDER);
+			
+			orderRepository.save(order);
+			return false;	
+		} else {
+			return true;
+		}	
+	}
 }

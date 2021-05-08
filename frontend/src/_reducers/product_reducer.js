@@ -4,6 +4,7 @@ import {
   GET_PRODUCTS_INIT,
   CHANGE_CART,
   GET_CART_INFORM,
+  SET_ORDERING_REQUEST,
 } from "../service/types";
 
 const initialState = {
@@ -23,10 +24,13 @@ export default function reducerProduct(state = initialState, action) {
       return { ...state, products: action.payload };
 
     case CHANGE_CART:
-      return { ...state, products: action.payload, cart : action.payload.cart};
+      return { ...state, products: action.payload, cart: action.payload.cart };
 
     case GET_CART_INFORM:
       return { ...state, cart: action.payload };
+
+    case SET_ORDERING_REQUEST:
+      return { ...state, error: action.payload };
 
     default:
       return state;

@@ -4,6 +4,7 @@ import {
   GET_PRODUCTS_INIT,
   CHANGE_CART,
   GET_CART_INFORM,
+  SET_ORDERING_REQUEST,
 } from "../service/types";
 
 import axios from "axios";
@@ -86,6 +87,20 @@ export const getInitCartInform = (abbr = '') => {
     });
   return {
     type: GET_CART_INFORM,
+    payload: request,
+  };
+};
+
+export const setOrderRequest = (abbr) => {
+  const request = axios
+    .put(`/api/order/confirm/${abbr}`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log("Problem !!! Get Supplier", error);
+      //dispatch(getSuppliersFailusre(error.message));
+    });
+  return {
+    type: SET_ORDERING_REQUEST,
     payload: request,
   };
 };

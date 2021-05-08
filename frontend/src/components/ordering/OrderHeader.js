@@ -1,7 +1,7 @@
 import * as config from "../../Config";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Layout, Select, Space, Input, Drawer } from "antd";
+import { Button, Layout, Select, Space, Input, Drawer, Modal } from "antd";
 import { withRouter } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import {
@@ -10,7 +10,7 @@ import {
   DeliveredProcedureOutlined,
   LogoutOutlined,
   GiftOutlined,
-  CrownOutlined
+  CrownOutlined,
 } from "@ant-design/icons";
 //import { IoAlarm } from "react-icons/io5";
 
@@ -27,6 +27,7 @@ import {
   getCategoriesAction,
   getProductsAction,
   getInitCartInform,
+  setOrderRequest,
 } from "../../_actions/product_action";
 
 import "./OrderPage.css";
@@ -99,6 +100,7 @@ function OrderHeader() {
   const size = useSelector((state) => state.product.products.size);
   const totalPages = useSelector((state) => state.product.products.totalPages);
   const cartInform = useSelector((state) => state.product.cart);
+  const error = useSelector((state) => state.product.error);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -223,7 +225,7 @@ function OrderHeader() {
   );
 
   const listCategorySelect =
-    (categories && categories.length > 0) && isCart === false ? (
+    categories && categories.length > 0 && isCart === false ? (
       <Select
         showSearch
         style={width > 800 ? categoryStyle : persentStyle}
@@ -279,9 +281,14 @@ function OrderHeader() {
   };
 
   const onClickOrder = () => {
-    onChangeSuppiler(abbr, headTitle);
     dispatch(changeIsCartRequest(false));
+    dispatch(setOrderRequest(abbr));
+  
     onClose();
+    if (!error) {
+      success();
+      onChangeSuppiler(abbr, headTitle);
+    }
     document.documentElement.scrollTop = 0;
   };
 
@@ -301,7 +308,7 @@ function OrderHeader() {
     <Button
       type="primary"
       style={
-        isCart === true || cartInform === undefined || cartInform === ''
+        isCart === true || cartInform === undefined || cartInform === ""
           ? { display: "none" }
           : width > 1400
           ? {
@@ -382,7 +389,12 @@ function OrderHeader() {
           ? { display: "none" }
           : width > 1400
           ? { display: "inline-block", width: "100px", borderStyle: "ridge" }
-          : { display: "inline-block", width: "100%", marginBottom: "5px", marginTop: "5px", }
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginBottom: "5px",
+              marginTop: "5px",
+            }
       }
       onClick={onClickSpecial}
     >
@@ -411,6 +423,14 @@ function OrderHeader() {
       LOGOUT
     </Button>
   );
+
+   function success() {
+     Modal.success({
+       title: "Thanks for Ordering ...",
+     });
+   }
+
+
   return (
     <div>
       <div
@@ -430,8 +450,8 @@ function OrderHeader() {
           zIndex: 1,
           width: "100%",
           backgroundColor: "#bfbfbf",
-          height:"70px",
-          paddingTop:"6px"
+          height: "70px",
+          paddingTop: "6px",
         }}
       >
         {width > 1400 ? (
@@ -523,7 +543,7 @@ function OrderHeader() {
           fontWeight: "bold",
           fontStyle: "italic",
           paddingRight: "52px",
-          paddingTop: "3px"
+          paddingTop: "3px",
         }}
       >
         {cartInform}
