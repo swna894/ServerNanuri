@@ -178,6 +178,7 @@ public class ProductController {
 
 		Shop shop = shopRepository.findByEmail(principal.getName());	
 		String invoice = products.get(0).getAbbr() + shop.getAbbr();
+		
 		for (Product product : products) {
 	        OrderItem orderItem 
 	        	= orderItemRepository.findFirstyByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
@@ -248,6 +249,7 @@ public class ProductController {
 			Principal principal) {
 		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable);
 		updateCartQty(page, principal);
+		updateCartHistory(page,principal);
 		return page;
 	}
 

@@ -39,8 +39,7 @@ export function getProductsAction(abbr, category, params) {
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
-    });
-
+    }); 
   return {
     type: GET_PRODUCTS_REQUEST,
     payload: request,
