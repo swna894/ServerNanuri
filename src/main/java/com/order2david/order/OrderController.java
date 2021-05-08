@@ -1,5 +1,6 @@
 package com.order2david.order;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -186,7 +188,7 @@ public class OrderController {
 	 *   2. 없음 -> orderItem 생성 추가
 	 */
 	@PostMapping("order/cart")
-	public List<Order> postCart(@RequestBody Cart cart) {
+	public String postCart(@RequestBody Cart cart) {
 
 		String abbr = cart.getAbbr();
 		String invoice = abbr + cart.getId() + "_CART"; 
@@ -235,8 +237,49 @@ public class OrderController {
 		}
 		order.setSupplier(supplier);
 		order.setAmount(order.getTotalPrice());
-		orderRepository.save(order);
+		order = orderRepository.save(order);
 		productRepository.save(product);
-		return null;
+		
+		List<OrderItem> items = order.getOrderItems();
+		int count = items.size();
+		Double amount = items.stream().mapToDouble(item -> item.getAmount()).sum();
+		return String.valueOf(count) + " items Total " + String.format("$%,.2f",amount);
+	}
+	
+	@GetMapping("order/cart/inform/{abbr}")
+	public String getCartInfromById(@PathVariable String abbr, Principal principal) {
+		
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		String invoice = abbr + shop.getAbbr() + "_CART";
+
+		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
+		
+		if(orderOptional.isPresent()) {
+			Order order = orderOptional.get();
+			List<OrderItem> items = order.getOrderItems();
+			int count = items.size();
+			//Double amount = items.stream().mapToDouble(item -> item.getAmount()).sum();
+			return String.valueOf(count) + " items   Total " + String.format("$%,.2f",order.getAmount());	
+		} else {
+			return "";
+		}	
+	}
+	
+	@GetMapping("order/cart/inform")
+	public String getInitCartInfrom(Principal principal) {
+		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		String invoice = supplier.getAbbr() + shop.getAbbr() + "_CART";
+
+		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
+		
+		if(orderOptional.isPresent()) {
+			List<OrderItem> items = orderOptional.get().getOrderItems();
+			int count = items.size();
+			Double amount = items.stream().mapToDouble(item -> item.getAmount()).sum();
+			return String.valueOf(count) + " items   Total " + String.format("$%,.2f",amount);	
+		} else {
+			return "";
+		}	
 	}
 }

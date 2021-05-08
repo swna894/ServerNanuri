@@ -12,7 +12,7 @@ import {
   GiftOutlined,
   CrownOutlined
 } from "@ant-design/icons";
-import { IoAlarm } from "react-icons/io5";
+//import { IoAlarm } from "react-icons/io5";
 
 import {
   actionChangeCategory,
@@ -97,6 +97,7 @@ function OrderHeader() {
   const page = useSelector((state) => state.product.products.number);
   const size = useSelector((state) => state.product.products.size);
   const totalPages = useSelector((state) => state.product.products.totalPages);
+  const cartInform = useSelector((state) => state.product.cart);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -106,7 +107,6 @@ function OrderHeader() {
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
     dispatch(changeIsCartRequest(false));
-    console.log("catgegory = " + categoryPrompt);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr, searchValue) {
@@ -169,7 +169,6 @@ function OrderHeader() {
           condition: condition,
         },
       };
-      console.log(param);
       dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
     } else {
       let param = { params: { page: page, size: size, sort: "seq" } };
@@ -194,10 +193,15 @@ function OrderHeader() {
           </Option>
         ));
 
-  const buttonStyle = { width: "100px" };
-  const persentStyle = { width: "100%", marginTop: "5px", marginBottom: "5px" };
-  const supplierStyle = { width: "230px" };
-  const categoryStyle = { width: "200px" };
+  const buttonStyle = { width: "100px", borderStyle: "ridge" };
+  const persentStyle = {
+    width: "100%",
+    marginTop: "5px",
+    marginBottom: "5px",
+    borderStyle: "ridge",
+  };
+  const supplierStyle = { width: "230px", borderStyle: "ridge" };
+  const categoryStyle = { width: "200px", borderStyle: "ridge" };
 
   const listSupplierSelect = (
     <Select
@@ -237,17 +241,20 @@ function OrderHeader() {
   const searchInput = (
     <div style={{ width: "103%" }}>
       <Input.Group compact>
-      
-        <Select defaultValue="Co" onChange={onChangeSelect}>
+        <Select
+          defaultValue="Co"
+          onChange={onChangeSelect}
+          style={{ borderStyle: "ridge" }}
+        >
           <Option value="All">All</Option>
-          <Option value="Co">Co.</Option>
+          <Option value="Co">Co</Option>
         </Select>
         <Search
           placeholder="input search text"
           allowClear
           enterButton
           onSearch={onSearchInput}
-          style={{ width: "70%" }}
+          style={{ width: "70%", borderStyle: "ridge" }}
         />
       </Input.Group>
     </div>
@@ -293,8 +300,18 @@ function OrderHeader() {
         isCart === true
           ? { display: "none" }
           : width > 1400
-            ? { display: "inline-block", width: "100px", marginTop: "5px" }
-            : { display: "inline-block", width: "100%", marginTop: "5px", marginBottom: "5px" }
+          ? {
+              display: "inline-block",
+              width: "100px",
+              marginTop: "5px",
+              borderStyle: "ridge",
+            }
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginTop: "10px",
+              marginBottom: "5px",
+            }
       }
       onClick={onClickCart}
     >
@@ -309,11 +326,16 @@ function OrderHeader() {
       style={
         isCart === true
           ? width > 1400
-            ? { display: "inline-block", width: "100px", marginTop: "5px" }
+            ? {
+                display: "inline-block",
+                width: "100px",
+                marginTop: "5px",
+                borderStyle: "ridge",
+              }
             : {
                 display: "inline-block",
                 width: "100%",
-                marginTop: "5px",
+                marginTop: "10px",
                 marginBottom: "5px",
               }
           : { display: "none" }
@@ -321,22 +343,29 @@ function OrderHeader() {
       onClick={onClickOrder}
     >
       <DeliveredProcedureOutlined />
-     ORDER
+      ORDER
     </Button>
   );
 
   const isNewButton = isNew ? (
     <Button
       type="primary"
-       style={ isCart === true
+      style={
+        isCart === true
           ? { display: "none" }
           : width > 1400
-            ? { display: "inline-block", width: "100px" }
-            : { display: "inline-block", width: "100%" }}
+          ? { display: "inline-block", width: "100px", borderStyle: "ridge" }
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginBottom: "5px",
+              marginTop: "5px",
+            }
+      }
       onClick={onClickNew}
     >
       <CrownOutlined />
-       NEW
+      NEW
     </Button>
   ) : (
     ""
@@ -348,8 +377,8 @@ function OrderHeader() {
         isCart === true
           ? { display: "none" }
           : width > 1400
-          ? { display: "inline-block", width: "100px" }
-          : { display: "inline-block", width: "100%" }
+          ? { display: "inline-block", width: "100px", borderStyle: "ridge" }
+          : { display: "inline-block", width: "100%", marginBottom: "5px", marginTop: "5px", }
       }
       onClick={onClickSpecial}
     >
@@ -380,12 +409,25 @@ function OrderHeader() {
   );
   return (
     <div>
+      <div
+        style={{
+          position: "fixed",
+          zIndex: 1,
+          width: "100%",
+          backgroundColor: "#bfbfbf",
+          height: "10px",
+        }}
+      >
+        {cartInform}
+      </div>
       <Header
         style={{
           position: "fixed",
           zIndex: 1,
           width: "100%",
           backgroundColor: "#bfbfbf",
+          height:"70px",
+          paddingTop:"6px"
         }}
       >
         {width > 1400 ? (
@@ -397,11 +439,13 @@ function OrderHeader() {
             </Space>
             <Space style={{ float: "right", color: "#fff", marginTop: "3px" }}>
               {searchInput}
-              {isNewButton}
-              {isSpecialButton}
-              {ordrerButton}
-              {cartButton}
-              {signoutButton}
+              <space>
+                {isNewButton}
+                {isSpecialButton}
+                {ordrerButton}
+                {cartButton}
+                {signoutButton}
+              </space>
             </Space>
           </div>
         ) : width > 800 ? (
@@ -464,6 +508,22 @@ function OrderHeader() {
           </div>
         )}
       </Header>
+      <div
+        style={{
+          position: "fixed",
+          zIndex: 1,
+          width: "100%",
+          backgroundColor: "#bfbfbf",
+          height: "10px",
+          textAlign: "right",
+          fontWeight: "bold",
+          fontStyle: "italic",
+          paddingRight: "52px",
+          paddingTop: "3px"
+        }}
+      >
+        {cartInform}
+      </div>
     </div>
   );
 }

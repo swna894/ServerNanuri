@@ -3,7 +3,9 @@ import {
   GET_PRODUCTS_REQUEST,
   GET_PRODUCTS_INIT,
   CHANGE_CART,
+  GET_CART_INFORM,
 } from "../service/types";
+
 import axios from "axios";
 //import authToken from "../utils/authToken";
 function authToken(token) {
@@ -59,19 +61,31 @@ export function getProductsInitAction() {
   };
 }
 
-
-export function changeCart(products, pageable, param) {
+export async function changeCart(products, pageable, param) {
   authToken(localStorage.jwtToken);
-  axios
+  const request = await axios
     .post(`/api/order/cart`, param)
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
-  });
-
-  const contenst = { content: products, ...pageable };
+    });
+  const contenst = { content: products, ...pageable, cart: request };
   return {
     type: CHANGE_CART,
     payload: contenst,
   };
 }
+
+export const getInitCartInform = () => {
+  const request = axios
+    .get(`/api/order/cart/inform`)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.log("Problem !!! Get Supplier", error);
+      //dispatch(getSuppliersFailusre(error.message));
+    });
+  return {
+    type: GET_CART_INFORM,
+    payload: request,
+  };
+};

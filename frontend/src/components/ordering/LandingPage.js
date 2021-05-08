@@ -10,9 +10,11 @@ import {
   actionGetSuppliers,
   actionGetSupplier,
 } from "../../_actions/supplier_action";
+
 import {
   getProductsInitAction,
   changeCart,
+  getInitCartInform,
 } from "../../_actions/product_action";
 import newProduct from "../../images/new.png";
 import discount from "../../images/discount.png";
@@ -51,22 +53,22 @@ function LandingPage() {
     state.product.products.content ? state.product.products.content : []
   );
   const products = useSelector((state) => state.product.products);
-  const totalElements = useSelector(
-    (state) => state.product.products.totalElements
-  );
+  const totalElements = useSelector((state) => state.product.products.totalElements);
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
-
   const abbr = useSelector((state) => state.supplier.abbr);
   const comapny = useSelector((state) => state.user.userData);
 
+
   useEffect(() => {
+    dispatch(getInitCartInform());
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
     dispatch(getProductsInitAction());
+    
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onClickIncrease = (code, pack, qty) => {
+  const onClickIncrease = (code, pack, qty) => {   
     const param = {
       abbr: abbr,
       code: code,
@@ -87,6 +89,7 @@ function LandingPage() {
   };
 
   const onClickDecrease = (code, pack, qty) => {
+
     const count = parseInt(qty) - parseInt(pack);
     const param = {
       abbr: abbr,
@@ -170,7 +173,7 @@ function LandingPage() {
     margin: "10px auto",
   };
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
-  const newStyle = { position: "absolute", top: "220px", left: "25px" };
+  const newStyle = { position: "absolute", top: "200px", left: "25px" };
   const hiddenStyle = { display: "none" };
   const cardNormalStyle = {
     height: "400px",
