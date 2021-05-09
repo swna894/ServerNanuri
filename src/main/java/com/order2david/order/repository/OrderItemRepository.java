@@ -18,5 +18,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 	@Query("SELECT DISTINCT code FROM OrderItem WHERE invoice IN (?1)")
 	List<String> findByInvoiceInOrderByCodeAsc(List<String> invoices);
 
+	OrderItem findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(String code, OrderType order,
+			String invoice);
+
     
 }

@@ -181,7 +181,7 @@ public class ProductController {
 		
 		for (Product product : products) {
 	        OrderItem orderItem 
-	        	= orderItemRepository.findFirstyByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
+	        	= orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
 
 	        if(orderItem != null) {
 				LocalDateTime orderDate = orderItem.getOrder().getOrderDate();			

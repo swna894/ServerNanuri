@@ -260,10 +260,16 @@ function LandingPage() {
               <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
               <span style={specStyle}>{item.stock}</span>
             </div>
-            <p style={{ color: "#f5222d", marginLeft: "32px", fontWeight: "bold",}}>
-                        {item.orderedDate}
+            <p
+              style={{
+                color: "#f5222d",
+                marginLeft: "32px",
+                fontWeight: "bold",
+              }}
+            >
+              {item.orderedDate}
             </p>
-            <p style={{ color: "#fff", margin: "40px" }}>&nbsp; </p>
+            <p style={{ color: "#fff", margin: "50px" }}>&nbsp; </p>
             <div style={buttonStyle}>
               <Button
                 type="primary"

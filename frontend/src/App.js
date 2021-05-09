@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LandingPage from "./components/ordering/LandingPage";
 import SigninPage from "./components/signin/SigninPage";
 import SignupPage from "./components/signin/SignupPage";
+import HistroyPage from "./components/history/HistoryPage";
 import Auth from "./hoc/Auth";
 
 function App() {
@@ -14,7 +15,8 @@ function App() {
           <Route exact path="/" component={Auth(SigninPage, false)} />
           <Route exact path="/signin" component={Auth(SigninPage, false)} />
           <Route exact path="/signup" component={Auth(SignupPage, false)} />
-          <Route exact path="/order" component={Auth(LandingPage, null)} />
+          <Route exact path="/order" component={Auth(LandingPage, true)} />
+          <Route exact path="/history" component={Auth(HistroyPage, true)} />
         </Switch>
       </div>
     </Router>

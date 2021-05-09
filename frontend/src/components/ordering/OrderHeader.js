@@ -2,17 +2,20 @@ import * as config from "../../Config";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Select, Space, Input, Drawer, Modal } from "antd";
-import { withRouter } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
+import { MenuOutlined } from "@ant-design/icons";
+
 import {
-  MenuOutlined,
-  ShoppingCartOutlined,
-  DeliveredProcedureOutlined,
-  LogoutOutlined,
-  GiftOutlined,
-  CrownOutlined,
-} from "@ant-design/icons";
-//import { IoAlarm } from "react-icons/io5";
+  FaHome,
+  FaTruck,
+  FaShoppingCart,
+  FaSignOutAlt,
+  FaSun,
+  FaGifts,
+  FaCalendarCheck,
+  FaChartLine,
+} from "react-icons/fa";
 
 import {
   actionChangeCategory,
@@ -86,9 +89,10 @@ function OrderHeader() {
   const [categoryPrompt, setCategoryPrompt] = useState(config.SELECT_CATEGORY);
   const [width] = useWindowWidthAndHeight();
 
+  const supplier = useSelector((state) => state.supplier.supplier);
   const suppliers = useSelector((state) => state.supplier.suppliers);
   const abbr = useSelector((state) => state.supplier.abbr);
-  const supplier = useSelector((state) => state.supplier.supplier);
+
   const headTitle = useSelector((state) => state.supplier.title);
   const condition = useSelector((state) => state.supplier.condition);
   const isCart = useSelector((state) => state.supplier.isCart);
@@ -199,16 +203,19 @@ function OrderHeader() {
           </Option>
         ));
 
-  const buttonStyle = { width: "100px", borderStyle: "ridge" };
-  const persentStyle = {
+  const stylePersent = {
     width: "100%",
     marginTop: "5px",
     marginBottom: "5px",
     borderStyle: "ridge",
   };
-  const supplierStyle = { width: "230px", borderStyle: "ridge" };
-  const categoryStyle = { width: "200px", borderStyle: "ridge" };
-
+  const styleSupplier = { width: "230px", borderStyle: "ridge" };
+  const styleCategory = { width: "200px", borderStyle: "ridge" };
+  const styleButton = {
+    display: "inline-block",
+    width: "110px",
+    borderStyle: "ridge",
+  };
   const listSupplierSelect = (
     <Select
       ref={formRef}
@@ -216,7 +223,7 @@ function OrderHeader() {
       showSearch
       value={supplier}
       onChange={onChangeSuppiler}
-      style={width > 800 ? supplierStyle : persentStyle}
+      style={width > 800 ? styleSupplier : stylePersent}
       placeholder={config.SELECT_CATEGORY}
       optionFilterProp="children"
     >
@@ -228,7 +235,7 @@ function OrderHeader() {
     categories && categories.length > 0 && isCart === false ? (
       <Select
         showSearch
-        style={width > 800 ? categoryStyle : persentStyle}
+        style={width > 800 ? styleCategory : stylePersent}
         value={categoryPrompt}
         onChange={onChangeCategory}
         placeholder={config.SELECT_CATEGORY}
@@ -305,25 +312,21 @@ function OrderHeader() {
     document.documentElement.scrollTop = 0;
   };
 
-  const onClickHistory = () => {
-      onChangeButton("HISTORY");
-      onClose();
-      document.documentElement.scrollTop = 0;
+  const onClickOrdered = () => {
+    onChangeButton("HISTORY");
+    onClose();
+    document.documentElement.scrollTop = 0;
   };
 
-  const cartButton = (
+
+  const buttonCart = (
     <Button
       type="primary"
       style={
         isCart === true || cartInform === undefined || cartInform === ""
           ? { display: "none" }
           : width > 1400
-          ? {
-              display: "inline-block",
-              width: "100px",
-              marginTop: "5px",
-              borderStyle: "ridge",
-            }
+          ? styleButton
           : {
               display: "inline-block",
               width: "100%",
@@ -333,23 +336,18 @@ function OrderHeader() {
       }
       onClick={onClickCart}
     >
-      <ShoppingCartOutlined />
-      CART
+      <FaShoppingCart size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; CART
     </Button>
   );
 
-  const ordrerButton = (
+  const buttonOrder = (
     <Button
       type="primary"
       style={
         isCart === true
           ? width > 1400
-            ? {
-                display: "inline-block",
-                width: "100px",
-                marginTop: "5px",
-                borderStyle: "ridge",
-              }
+            ? styleButton
             : {
                 display: "inline-block",
                 width: "100%",
@@ -360,46 +358,65 @@ function OrderHeader() {
       }
       onClick={onClickOrder}
     >
-      <DeliveredProcedureOutlined />
-      ORDER
+      <FaCalendarCheck size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; CONFIRM
     </Button>
   );
 
-  const historyButton = (
+  const buttonOrdered = (
     <Button
       type="primary"
       style={
         //isCart === true
-           width > 1400
-            ? {
-                display: "inline-block",
-                width: "100px",
-                marginTop: "5px",
-                borderStyle: "ridge",
-              }
+        width > 1400
+          ? styleButton
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginTop: "10px",
+              marginBottom: "5px",
+            }
+        // : { display: "none" }
+      }
+      onClick={onClickOrdered}
+    >
+      <FaTruck size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; ORDERED
+    </Button>
+  );
+
+  const buttonHistory = (
+    <Link to="/history">
+      <Button
+        type="primary"
+        style={
+          //isCart === true
+          width > 1400
+            ? styleButton
             : {
                 display: "inline-block",
                 width: "100%",
                 marginTop: "10px",
                 marginBottom: "5px",
               }
-         // : { display: "none" }
-      }
-      onClick={onClickHistory}
-    >
-      <DeliveredProcedureOutlined />
-      HISTORY
-    </Button>
+          // : { display: "none" }
+        }
+        //onClick={onClickHistory}
+      >
+        <FaChartLine size={16} style={{ marginBottom: "-4px" }} />
+        &nbsp; HISTORY
+      </Button>
+    </Link>
   );
 
-  const isNewButton = isNew ? (
+  const buttonIsNew = isNew ? (
     <Button
       type="primary"
       style={
         isCart === true
           ? { display: "none" }
           : width > 1400
-          ? { display: "inline-block", width: "100px", borderStyle: "ridge" }
+          ? styleButton
           : {
               display: "inline-block",
               width: "100%",
@@ -409,20 +426,20 @@ function OrderHeader() {
       }
       onClick={onClickNew}
     >
-      <CrownOutlined />
-      NEW
+      <FaSun size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; NEW
     </Button>
   ) : (
     ""
   );
-  const isSpecialButton = isSpecial ? (
+  const buttonIsSpecial = isSpecial ? (
     <Button
       type="primary"
       style={
         isCart === true
           ? { display: "none" }
           : width > 1400
-          ? { display: "inline-block", width: "100px", borderStyle: "ridge" }
+          ? styleButton
           : {
               display: "inline-block",
               width: "100%",
@@ -432,8 +449,8 @@ function OrderHeader() {
       }
       onClick={onClickSpecial}
     >
-      <GiftOutlined />
-      SPECIAL
+      <FaGifts size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; SPECIAL
     </Button>
   ) : (
     ""
@@ -447,14 +464,17 @@ function OrderHeader() {
 
   const headH2 = (
     <a href="order2david.com" onClick={onClickHead}>
-      <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2>
+      <Space>
+        <FaHome size={28} style={{ color: "#000" }} />
+        <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2>
+      </Space>
     </a>
   );
 
-  const signoutButton = (
-    <Button type="primary" style={width > 1400 ? buttonStyle : persentStyle}>
-      <LogoutOutlined />
-      LOGOUT
+  const buttonSignout = (
+    <Button type="primary" style={width > 1400 ? styleButton : stylePersent}>
+      <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; LOGOUT
     </Button>
   );
 
@@ -496,14 +516,15 @@ function OrderHeader() {
             </Space>
             <Space style={{ float: "right", color: "#fff", marginTop: "3px" }}>
               {searchInput}
-              <space>
-                {isNewButton}
-                {isSpecialButton}
-                {historyButton}
-                {ordrerButton}
-                {cartButton}
-                {signoutButton}
-              </space>
+              <div>
+                {buttonIsNew}
+                {buttonIsSpecial}
+                {buttonOrdered}
+                {buttonOrder}
+                {buttonCart}
+                {buttonHistory}
+                {buttonSignout}
+              </div>
             </Space>
           </div>
         ) : width > 800 ? (
@@ -528,12 +549,13 @@ function OrderHeader() {
             >
               <div style={{ display: "block", color: "#fff" }}>
                 {searchInput}
-                {isNewButton}
-                {isSpecialButton}
-                {historyButton}
-                {ordrerButton}
-                {cartButton}
-                {signoutButton}
+                {buttonIsNew}
+                {buttonIsSpecial}
+                {buttonOrdered}
+                {buttonOrder}
+                {buttonCart}
+                {buttonHistory}
+                {buttonSignout}
               </div>
             </Drawer>
           </div>
@@ -557,12 +579,13 @@ function OrderHeader() {
                 {listSupplierSelect}
                 {listCategorySelect}
                 {searchInput}
-                {isNewButton}
-                {isSpecialButton}
-                {historyButton}
-                {ordrerButton}
-                {cartButton}
-                {signoutButton}
+                {buttonIsNew}
+                {buttonIsSpecial}
+                {buttonOrdered}
+                {buttonOrder}
+                {buttonCart}
+                {buttonHistory}
+                {buttonSignout}
               </div>
             </Drawer>
           </div>
