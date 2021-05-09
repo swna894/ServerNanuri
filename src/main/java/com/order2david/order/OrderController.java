@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.Product.model.Product;
 import com.order2david.Product.repository.ProductRepository;
+import com.order2david.mail.EmailService;
 import com.order2david.order.model.Cart;
 import com.order2david.order.model.Order;
 import com.order2david.order.model.OrderItem;
@@ -311,7 +312,11 @@ public class OrderController {
 			});
 			order.setStatus(OrderType.ORDER);
 			
-			orderRepository.save(order);
+			order = orderRepository.save(order);
+			if(order != null) {
+				EmailService service = new  EmailService();
+				service.sendMail(order);
+			}
 			return false;	
 		} else {
 			return true;
