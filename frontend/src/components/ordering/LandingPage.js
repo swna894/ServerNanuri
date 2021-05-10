@@ -55,7 +55,7 @@ function LandingPage() {
   const totalElements = useSelector((state) => state.product.products.totalElements);
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
-  const abbr = useSelector((state) => state.supplier.abbr);
+  //const abbr = useSelector((state) => state.supplier.abbr);
   const comapny = useSelector((state) => state.user.userData);
 
   useEffect(() => {
@@ -64,7 +64,7 @@ function LandingPage() {
     dispatch(getProductsInitAction());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onClickIncrease = (code, pack, qty) => {
+  const onClickIncrease = (abbr, code, pack, qty) => {
     const param = {
       abbr: abbr,
       code: code,
@@ -84,7 +84,7 @@ function LandingPage() {
     dispatch(changeCart(goods, pageable, param));
   };
 
-  const onClickDecrease = (code, pack, qty) => {
+  const onClickDecrease = (abbr, code, pack, qty) => {
     const count = parseInt(qty) - parseInt(pack);
     const param = {
       abbr: abbr,
@@ -112,7 +112,7 @@ function LandingPage() {
     dispatch(changeCart(goods, pageable, param));
   };
 
-  const onChangeInputHandler = (code, qty) => {
+  const onChangeInputHandler = (abbr, code, qty) => {
     const param = { abbr: abbr, code: code, id: comapny.id, qty: qty };
     const goods = content.map((item) =>
       item.code === code ? { ...item, qty: qty } : item
@@ -272,20 +272,24 @@ function LandingPage() {
               <Button
                 type="primary"
                 icon={<MinusOutlined />}
-                onClick={() => onClickDecrease(item.code, item.pack, item.qty)}
+                onClick={() =>
+                  onClickDecrease(item.abbr, item.code, item.pack, item.qty)
+                }
               ></Button>
 
               <Input
                 style={inputQtyStyle}
                 value={item.qty}
                 onChange={(e) =>
-                  onChangeInputHandler(item.code, e.target.value)
+                  onChangeInputHandler(item.abbr, item.code, e.target.value)
                 }
               ></Input>
               <Button
                 type="primary"
                 icon={<PlusOutlined />}
-                onClick={() => onClickIncrease(item.code, item.pack, item.qty)}
+                onClick={() =>
+                  onClickIncrease(item.abbr, item.code, item.pack, item.qty)
+                }
               ></Button>
             </div>
           </div>

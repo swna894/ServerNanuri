@@ -102,11 +102,23 @@ public class OrderController {
 		order.setStatus(OrderType.ORDER);
 		order.setSupplier(supplier);
 		order.setShop(shop);
+		
+		updateProductStock(order);
 	
 		return orderRepository.save(order);
 
 	}
 	
+	private void updateProductStock(Order order) {
+		List<OrderItem> orderItems = order.getOrderItems();
+		String abbr = order.getShopAbbr();
+		for (OrderItem orderItem : orderItems) {
+			Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), abbr);
+			product.setStock(product.getStock() - orderItem.getQty());
+			productRepository.save(product);
+		}	
+	}
+
 	public String genInvoice(Order order) {
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("_MMddHHmmss");
@@ -198,7 +210,7 @@ public class OrderController {
 		Supplier supplier = supplierRepository.findByAbbr(cart.getAbbr());
 		
 		Product product = productRepository.findByCodeAndAbbr(cart.getCode(), abbr);
-		product.removeStock(cart.getQty());
+		//product.removeStock(cart.getQty());
 		// 특판 제품에 대한 가격 설정
 		if(product.isSpecial()) {
 		    cart.setPrice(product.getSpecialPrice());
@@ -239,7 +251,8 @@ public class OrderController {
 		order.setSupplier(supplier);
 		order.setAmount(order.getTotalPrice());
 		order = orderRepository.save(order);
-		productRepository.save(product);
+		//카트에서의 수매 내역을 제품의 재고 반영시 논리적 bug 발생 주의해야함
+		//productRepository.save(product);
 		
 		List<OrderItem> items = order.getOrderItems();
 		int count = items.size();

@@ -52,7 +52,7 @@ public class ProductController {
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
 	static String SEARCH = "SEARCH";
-	static String HISTORY = "HISTORY";
+	static String HISTORY = "ORDERED";
 	static String ALL = "All";
 
 	@Autowired

@@ -11,7 +11,7 @@ import {
   FaTruck,
   FaShoppingCart,
   FaSignOutAlt,
-  FaSun,
+  FaTags,
   FaGifts,
   FaCalendarCheck,
   FaChartLine,
@@ -232,7 +232,7 @@ function OrderHeader(props) {
       showSearch
       value={supplier}
       onChange={onChangeSuppiler}
-      style={width > 800 ? styleSupplier : stylePersent}
+      style={width > config.WIDTH_SMALL ? styleSupplier : stylePersent}
       placeholder={config.SELECT_CATEGORY}
       optionFilterProp="children"
     >
@@ -244,7 +244,7 @@ function OrderHeader(props) {
     categories && categories.length > 0 && isCart === false ? (
       <Select
         showSearch
-        style={width > 800 ? styleCategory : stylePersent}
+        style={width > config.WIDTH_SMALL ? styleCategory : stylePersent}
         value={categoryPrompt}
         onChange={onChangeCategory}
         placeholder={config.SELECT_CATEGORY}
@@ -322,7 +322,7 @@ function OrderHeader(props) {
   };
 
   const onClickOrdered = () => {
-    onChangeButton("HISTORY");
+    onChangeButton("ORDERED");
     onClose();
     document.documentElement.scrollTop = 0;
   };
@@ -333,7 +333,7 @@ function OrderHeader(props) {
       style={
         isCart === true || cartInform === undefined || cartInform === ""
           ? { display: "none" }
-          : width > 1400
+          : width > config.WIDTH_BIG
           ? styleButton
           : {
               display: "inline-block",
@@ -354,7 +354,7 @@ function OrderHeader(props) {
       type="primary"
       style={
         isCart === true
-          ? width > 1400
+          ? width > config.WIDTH_BIG
             ? styleButton
             : {
                 display: "inline-block",
@@ -376,7 +376,7 @@ function OrderHeader(props) {
       type="primary"
       style={
         //isCart === true
-        width > 1400
+        width > config.WIDTH_BIG
           ? styleButton
           : {
               display: "inline-block",
@@ -399,7 +399,7 @@ function OrderHeader(props) {
         type="primary"
         style={
           //isCart === true
-          width > 1400
+          width > config.WIDTH_BIG
             ? styleButton
             : {
                 display: "inline-block",
@@ -423,7 +423,7 @@ function OrderHeader(props) {
       style={
         isCart === true
           ? { display: "none" }
-          : width > 1400
+          : width > config.WIDTH_BIG
           ? styleButton
           : {
               display: "inline-block",
@@ -434,7 +434,7 @@ function OrderHeader(props) {
       }
       onClick={onClickNew}
     >
-      <FaSun size={16} style={{ marginBottom: "-4px" }} />
+      <FaTags size={16} style={{ marginBottom: "-4px" }} />
       &nbsp; NEW
     </Button>
   ) : (
@@ -446,7 +446,7 @@ function OrderHeader(props) {
       style={
         isCart === true
           ? { display: "none" }
-          : width > 1400
+          : width > config.WIDTH_BIG
           ? styleButton
           : {
               display: "inline-block",
@@ -483,7 +483,7 @@ function OrderHeader(props) {
     <Button
       onClick={onClickSignout}
       type="primary"
-      style={width > 1400 ? styleButton : stylePersent}
+      style={width > config.WIDTH_BIG ? styleButton : stylePersent}
     >
       <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
       &nbsp; LOGOUT
@@ -519,7 +519,7 @@ function OrderHeader(props) {
           paddingTop: "6px",
         }}
       >
-        {width > 1400 ? (
+        {width > config.WIDTH_BIG ? (
           <div>
             <Space>
               {headH2}
@@ -539,7 +539,7 @@ function OrderHeader(props) {
               </div>
             </Space>
           </div>
-        ) : width > 800 ? (
+        ) : width > config.WIDTH_SMALL ? (
           <div>
             <Space>
               {headH2}

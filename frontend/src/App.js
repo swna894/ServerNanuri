@@ -17,6 +17,7 @@ function App() {
           <Route exact path="/signup" component={Auth(SignupPage, false)} />
           <Route exact path="/order" component={Auth(LandingPage, true)} />
           <Route exact path="/history" component={Auth(HistroyPage, true)} />
+          <Route component={SigninPage} />
         </Switch>
       </div>
     </Router>
