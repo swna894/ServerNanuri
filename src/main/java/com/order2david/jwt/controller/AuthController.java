@@ -84,6 +84,23 @@ public class AuthController {
 		}
 	}
 
+	@GetMapping("/signout")
+	public ResponseEntity<TokenDto> signout() {
+
+		try {
+			TokenDto tokenDto = getTokenDto(null, null);
+			return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
+		} catch (Exception e) {
+			TokenDto tokenDto = getTokenDto(null, null);
+			System.err.println(e.getMessage());
+			//e.printStackTrace(); // 오류 출력(방법은 여러가지)
+			// throw e; //최상위 클래스가 아니라면 무조건 던져주자
+			return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
+		} finally {
+
+		}
+	}
+	
 	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@PostMapping("/signup")

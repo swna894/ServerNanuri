@@ -1,5 +1,10 @@
 import axios from "axios";
-import { SIGNIN_USER, SIGNUP_USER, AUTH_USER } from "../service/types";
+import {
+  SIGNIN_USER,
+  SIGNUP_USER,
+  AUTH_USER,
+  SIGNOUT_USER,
+} from "../service/types";
 
 export function signinUser(dataToSubmit) {
   const request = axios
@@ -26,8 +31,20 @@ export function signupUser(datatosubmit) {
   };
 }
 
+export function signoutUser() {
+  const request = axios
+    .get("/api/signout")
+    .then((response) => response.data);
+
+  return {
+    type: SIGNOUT_USER,
+    payload: request,
+  };
+}
+
 export function auth() {
-  const request = axios.get("/api/auth").then((response) => response.data);
+  const request = axios.get("/api/auth")
+  .then((response) => response.data);
 
   return {
     type: AUTH_USER,

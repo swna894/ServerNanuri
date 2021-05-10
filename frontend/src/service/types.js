@@ -1,6 +1,7 @@
-export const SIGNIN_USER = "signin_user";
-export const SIGNUP_USER = "signup_user";
-export const AUTH_USER = "auth_user";
+export const SIGNIN_USER = "SIGNIN_USER";
+export const SIGNUP_USER = "SIGNUP_USER";
+export const SIGNOUT_USER = "SIGNOUT_USER";
+export const AUTH_USER = "AUTH_USER";
 
 export const GET_SUPPLIER_REQUEST = "GET_SUPPLIER_REQUEST";
 export const GET_SUPPLIERS_REQUEST = "GET_SUPPLIERS_REQUEST";

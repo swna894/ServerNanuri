@@ -52,9 +52,7 @@ function LandingPage() {
     state.product.products.content ? state.product.products.content : []
   );
   const products = useSelector((state) => state.product.products);
-  const totalElements = useSelector(
-    (state) => state.product.products.totalElements
-  );
+  const totalElements = useSelector((state) => state.product.products.totalElements);
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
   const abbr = useSelector((state) => state.supplier.abbr);

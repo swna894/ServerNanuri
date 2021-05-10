@@ -33,6 +33,8 @@ import {
   setOrderRequest,
 } from "../../_actions/product_action";
 
+import { signoutUser } from "../../_actions/user_action";
+
 import "./OrderPage.css";
 
 // right / left key handler
@@ -57,7 +59,7 @@ function useKey(key, cb) {
 }
 
 // Start pageHeage
-function OrderHeader() {
+function OrderHeader(props) {
   // 왼쪽 버튼 처리
   function handleEnterRight() {
     pageProducts(
@@ -159,6 +161,13 @@ function OrderHeader() {
       onClose();
       document.documentElement.scrollTop = 0;
     }
+  };
+
+  const onClickSignout = () => {
+    localStorage.setItem("jwtToken", "");
+    dispatch(signoutUser());
+    //props.history.push("/");
+    window.location.href = "/";
   };
 
   const pageProducts = (
@@ -318,7 +327,6 @@ function OrderHeader() {
     document.documentElement.scrollTop = 0;
   };
 
-
   const buttonCart = (
     <Button
       type="primary"
@@ -472,7 +480,11 @@ function OrderHeader() {
   );
 
   const buttonSignout = (
-    <Button type="primary" style={width > 1400 ? styleButton : stylePersent}>
+    <Button
+      onClick={onClickSignout}
+      type="primary"
+      style={width > 1400 ? styleButton : stylePersent}
+    >
       <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
       &nbsp; LOGOUT
     </Button>

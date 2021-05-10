@@ -39,7 +39,7 @@ export function getProductsAction(abbr, category, params) {
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
-    }); 
+    });
   return {
     type: GET_PRODUCTS_REQUEST,
     payload: request,
@@ -53,6 +53,7 @@ export function getProductsInitAction() {
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
+       window.location.href = "/";
     });
 
   return {
@@ -76,7 +77,7 @@ export async function changeCart(products, pageable, param) {
   };
 }
 
-export const getInitCartInform = (abbr = '') => {
+export const getInitCartInform = (abbr = "") => {
   const request = axios
     .get(`/api/order/cart/inform/${abbr}`)
     .then((response) => response.data)
