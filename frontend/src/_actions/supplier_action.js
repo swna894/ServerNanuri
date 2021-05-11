@@ -13,11 +13,12 @@ import {
   GET_CART_INFORM,
 } from "../service/types";
 
-export const actionGetSuppliers = () => {
+export const actionGetSuppliers = (cart = '') => {
   return (dispatch) => {
     //dispatch(getSuppliersRequest());
+    let url = cart ? "/api/suppliers/cart" : "/api/suppliers/order";
     axios
-      .get("/api/suppliers")
+      .get(url)
       .then((response) => {
         dispatch(getSuppliersSucess(response.data));
       })
@@ -25,7 +26,7 @@ export const actionGetSuppliers = () => {
         dispatch(getSuppliersFailusre(error.message));
       });
   };
-};
+}; 
 
 export const actionGetSupplier = () => {
   return (dispatch) => {

@@ -24,6 +24,7 @@ import {
   actionChangeSearch,
   changeSearchCondition,
   changeIsCartRequest,
+  actionGetSuppliers,
 } from "../../_actions/supplier_action";
 
 import {
@@ -112,6 +113,7 @@ function OrderHeader(props) {
   const formRef = React.useRef();
 
   useEffect(() => {
+    document.body.style.background = "#f0f0f0";
     let parm = { params: { abbr: headTitle } };
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
@@ -119,7 +121,7 @@ function OrderHeader(props) {
     dispatch(getInitCartInform());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  function onChangeSuppiler(abbr, searchValue) {
+  function onChangeSuppiler(abbr) {
     setCategoryPrompt(config.SELECT_CATEGORY);
     //dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
@@ -132,6 +134,11 @@ function OrderHeader(props) {
     onClose();
     //console.log(`selected ${value}`);
   }
+
+  // function onChangeCart(abbr) {
+  //   dispatch(actionChangeSupplier(abbr));
+  //   onChangeButton(config.CART);
+  // }
 
   function onChangeCategory(category) {
     setCategoryPrompt(category);
@@ -290,19 +297,21 @@ function OrderHeader(props) {
   };
 
   const onClickCart = () => {
-    onChangeButton("CART");
+    onChangeButton(config.CART);
+    dispatch(actionGetSuppliers("cart"));
     dispatch(changeIsCartRequest(true));
     onClose();
     document.documentElement.scrollTop = 0;
   };
 
   const onClickOrder = () => {
+    dispatch(actionGetSuppliers());
     dispatch(changeIsCartRequest(false));
     dispatch(setOrderRequest(abbr));
 
     onClose();
     if (!error) {
-      onChangeSuppiler(abbr, headTitle);
+      //onChangeSuppiler(abbr, headTitle);
       success();
       onChangeSuppiler(abbr, headTitle);
     }
@@ -466,6 +475,7 @@ function OrderHeader(props) {
 
   function onClickHead(e) {
     e.preventDefault();
+    dispatch(actionGetSuppliers());
     dispatch(changeIsCartRequest(false));
     onChangeSuppiler(abbr, headTitle);
   }

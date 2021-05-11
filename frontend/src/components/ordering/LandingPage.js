@@ -172,12 +172,12 @@ function LandingPage() {
   const hiddenStyle = { display: "none" };
   const cardNormalStyle = {
     height: "400px",
-    width: "450px",
+   // width: "450px",
     borderStyle: "groove",
   }; // 458px
   const cardOrderStyle = {
     height: "400px",
-    width: "450px",
+    //width: "450px",
     backgroundColor: "#e6f7ff",
     borderStyle: "groove",
   };
@@ -212,7 +212,7 @@ function LandingPage() {
   const orderLists =
     content &&
     content.map((item, index) => (
-      <Col key={index}>
+      <Col xxl={6} xl={8} lg={12} md={12} sm={24} xs={24} key={index}>
         <Card
           bodyStyle={{ padding: "0" }}
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
@@ -303,11 +303,11 @@ function LandingPage() {
       <OrderHeader />
       <div
         style={{
-          display: "flex",
+         //display: "flex",
           width: "100%",
           //height: "100vh",
           padding: "80px 10px 10px 10px",
-          backgroundColor: "#f0f0f0",
+          //backgroundColor: "#f0f0f0",
         }}
       >
         <Row

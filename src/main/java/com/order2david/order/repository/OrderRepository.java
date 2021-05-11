@@ -24,5 +24,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByStatusAndInvoiceStartsWith(OrderType order, String invoice);
 
+	List<Order> findByInvoiceContains(String cart);
+
+
     
 }
