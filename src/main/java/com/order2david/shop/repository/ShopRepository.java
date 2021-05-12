@@ -22,5 +22,7 @@ public interface ShopRepository extends JpaRepository<Shop, Long> {
 
 	Shop findByAbbr(String abbr);
 
+	Shop findByCompany(String company);
+
     
 }

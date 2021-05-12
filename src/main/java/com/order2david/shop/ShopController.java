@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.shop.model.IsShow;
@@ -50,6 +51,8 @@ public class ShopController {
 	
 	@PostMapping("/shop")
 	public Shop post(@RequestBody Shop shop) {
+		Shop lastShop = shopRepository.findTopByOrderByAbbrDesc();
+		shop.setAbbr(String.valueOf(Integer.valueOf(lastShop.getAbbr()) + 1));	
 		return shopRepository.save(shop);
 	}
 	
@@ -69,10 +72,19 @@ public class ShopController {
 		return shopEntities;
 	}
 
+	@GetMapping("company")
+	public Shop findShop(@RequestParam Map<String, String> param) {
+		
+		return shopRepository.findByCompany(param.get("company"));
+		
+	}
+
+	
 	@DeleteMapping("/shops")
 	public void deleteAll(@RequestBody List<Shop> shops) {
 		shopRepository.deleteAll(shops);
 	}
+
 
 
 

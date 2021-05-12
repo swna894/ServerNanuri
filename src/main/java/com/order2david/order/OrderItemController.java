@@ -45,22 +45,25 @@ public class OrderItemController {
 	@PostMapping("/orderItems/migration")
 	@Transactional
 	public List<OrderItem> migration(@RequestBody List<OrderItem> orderItems) {
-
+	
 		for (OrderItem orderItem : orderItems) {
 			String invoice = orderItem.getInvoice();
 			// String abbr = invoice.substring(0, 4);
-			Optional<Order> order = orderRepository.findByInvoice(invoice);
+			Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
 
-			// Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(),
-			// abbr);
-			if (order.isPresent()) {
-				order.get().getOrderItems().add(orderItem);
-				orderItem.setOrder(order.get());
+			// Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), abbr);
+			Order order = null;
+			if (orderOptional.isPresent()) {
+				order = orderOptional.get();
+				order.getOrderItems().add(orderItem);
+				orderItem.setOrder(order);
 			}
+			orderRepository.save(order);
 			// orderItem.setProduct(product);
 			// System.err.println(orderItem);
 		}
-		return orderItemRepository.saveAll(orderItems);
+		return null;
+		//return orderItemRepository.saveAll(orderItems);
 	}
 
 	@PostMapping("/orderItems")

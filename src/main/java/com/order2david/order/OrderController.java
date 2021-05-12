@@ -162,7 +162,7 @@ public class OrderController {
 
 	@PostMapping("orders/migration")
 	@Transactional
-	public List<Order> migration(@RequestBody List<Order> orders) {
+	public List<Order> migrations(@RequestBody List<Order> orders) {
 		List<Supplier> suppliers = supplierRepository.findAll();
 		List<Shop> shops = shopRepository.findAll();
 		orderRepository.deleteAll();
@@ -181,6 +181,27 @@ public class OrderController {
 		// return null;
 	}
 
+	@PostMapping("orders/migration/s")
+	@Transactional
+	public Order migration(@RequestBody Order order) {
+		List<Supplier> suppliers = supplierRepository.findAll();
+		List<Shop> shops = shopRepository.findAll();
+		orderRepository.deleteAll();
+
+
+			Shop shop = shops.stream().filter(item -> item.getAbbr().equals(order.getShopAbbr())).findAny()
+					.orElse(null);
+
+			String supplierAbbr = order.getInvoice().substring(0, 4);
+			Supplier supplier = suppliers.stream().filter(item -> item.getAbbr().equals(supplierAbbr)).findAny()
+					.orElse(null);
+			order.setShop(shop);
+			order.setSupplier(supplier);
+	
+		return orderRepository.save(order);
+		// return null;
+	}
+	
 	@DeleteMapping("orders")
 	public void delete(@RequestBody List<Order> items) {
 		for (Order order : items) {

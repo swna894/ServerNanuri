@@ -50,7 +50,9 @@ public class Supplier {
 	private Boolean isNew;
 	@Column(columnDefinition = "boolean default false")
 	private Boolean isSpecial;
-
+	@Column(columnDefinition = "boolean default true")
+	private Boolean isActive;
+	
 	@Embedded
 	private Address address;
     
