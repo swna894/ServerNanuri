@@ -61,6 +61,7 @@ public class SupplierController {
 	public Supplier post(@RequestBody Supplier supplier) {
 		// shop column 생성
 		shopJdbcRepository.newColumn(supplier);
+		supplierRepository.flush();
 		return supplierRepository.save(supplier);
 	}
 
