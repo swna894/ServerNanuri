@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -355,5 +356,14 @@ public class OrderController {
 		} else {
 			return true;
 		}	
+	}
+	
+	@GetMapping("orders/history")
+	@Transactional
+	public List<Order> history(Principal principal) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		List<Order> orders = orderRepository.findByShopAbbrAndStatusOrderByOrderDateDesc(shop.getAbbr(), OrderType.ORDER);
+		return orders;
+		// return null;
 	}
 }

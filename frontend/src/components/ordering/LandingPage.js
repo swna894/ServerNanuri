@@ -212,7 +212,7 @@ function LandingPage() {
   const orderLists =
     content &&
     content.map((item, index) => (
-      <Col xxl={6} xl={8} lg={12} md={12} sm={24} xs={24} key={index}>
+      <Col xxl={6} xl={8} lg={10} md={12} sm={24} xs={24} key={index}>
         <Card
           bodyStyle={{ padding: "0" }}
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
@@ -312,7 +312,7 @@ function LandingPage() {
       >
         <Row
           gutter={[16, 16]}
-          style={{ display: "flex", justifyContent: "center" }}
+          //style={{ display: "flex", justifyContent: "center" }}
         >
           {orderLists}
         </Row>

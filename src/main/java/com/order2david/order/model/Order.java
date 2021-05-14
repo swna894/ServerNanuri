@@ -47,6 +47,7 @@ public class Order {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	
 	@ToString.Exclude
 	@CreationTimestamp
 	@CreatedDate
@@ -65,7 +66,8 @@ public class Order {
 	@Column(unique = true)
 	private String invoice;
 	private String shopAbbr;
-
+	private String comment;
+	
 	private LocalDateTime orderDate; // 주문시간
 
 	// ==연관 관계==//
