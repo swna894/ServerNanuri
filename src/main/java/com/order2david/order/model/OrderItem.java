@@ -64,6 +64,7 @@ public class OrderItem {
 	private String description;
 	private double price; // 주문 가격
 	private double amount;
+	private String abbr;
 	private int qty; // 주문 수량
 	
 	// ==연관 관계== //
@@ -88,6 +89,7 @@ public class OrderItem {
 		this.description = cart.getDecription();
 		this.invoice = cart.getInvoice();
 		this.amount = getTotalPrice();	
+		this.abbr = cart.getAbbr();
 		this.status = OrderType.CART;
 	}
 	

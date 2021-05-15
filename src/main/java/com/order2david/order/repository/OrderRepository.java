@@ -30,6 +30,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	List<Order> findByShopAbbrAndStatusOrderByOrderDateDesc(String abbr, OrderType order);
 
+	List<Order> findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType order, String supplier, String abbr);
+
 
 
     

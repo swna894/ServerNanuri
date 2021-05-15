@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Table, Row, Col } from "antd";
+import moment from "moment";
 import HitoryHeader from "./HistoryHeader";
 import HistoryFooter from "./HistoryFooter";
 import "antd/dist/antd.css";
 import { getHistoryOrder } from "../../_actions/history_action";
+
+function currencyFormat(num) {
+  return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
+}
 
 function HistoryPage() {
   const orders = useSelector((state) => state.history.orders);
@@ -14,6 +19,11 @@ function HistoryPage() {
     dispatch(getHistoryOrder());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+   orders.map(item => {
+    let date = moment(new Date(item.orderDate));
+    item.orderDate = date.format("YYYY-MM-DD");
+  }) 
+
   const data = [];
   for (let i = 0; i < orders.length; ++i) {
     data.push({
@@ -21,7 +31,7 @@ function HistoryPage() {
       id: orders[i].id,
       invoice: orders[i].invoice,
       shop: orders[i].shop.company,
-      amount: orders[i].amount,
+      amount: currencyFormat(orders[i].amount),
       date: orders[i].orderDate,
       comment: orders[i].comment,
     });
@@ -36,9 +46,9 @@ function HistoryPage() {
         key: i + 1,
         code: items[i].code,
         description: items[i].description,
-        price: items[i].price,
+        price: currencyFormat(items[i].price),
         qty: items[i].qty,
-        amount: items[i].amount,
+        amount: currencyFormat(items[i].amount),
         comment: items[i].comment,
       });
     }
@@ -54,9 +64,9 @@ function HistoryPage() {
     const columns = [
       { title: "CODE", dataIndex: "code", key: "code" },
       { title: "DESCRITPION", dataIndex: "description", key: "description" },
-      { title: "PRICE", dataIndex: "price", key: "price" },
-      { title: "QTY", dataIndex: "qty", key: "qty" },
-      { title: "AMOUNT", dataIndex: "amount", key: "amount" },
+      { title: "PRICE", dataIndex: "price", key: "price", align: "right" },
+      { title: "QTY", dataIndex: "qty", key: "qty", align: "right" },
+      { title: "AMOUNT", dataIndex: "amount", key: "amount", align: "right" },
       { title: "COMMENT", dataIndex: "comment", key: "commnet" },
     ];
     let inTable = orderItems.filter((item) => item.key === row.key);
@@ -76,8 +86,8 @@ function HistoryPage() {
     { title: "NO", dataIndex: "key", key: "key" },
     { title: "INVOICE", dataIndex: "invoice", key: "invoice" },
     { title: "SHOP", dataIndex: "shop", key: "shop" },
-    { title: "AMOUNT", dataIndex: "amount", key: "amount" },
-    { title: "DATE", dataIndex: "date", key: "date" },
+    { title: "AMOUNT", dataIndex: "amount", key: "amount", align: "right" },
+    { title: "DATE", dataIndex: "date", key: "date", align: "center" },
     { title: "COMMENT", dataIndex: "comment", key: "commnet" },
   ];
 

@@ -52,7 +52,7 @@ public class ProductController {
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
 	static String SEARCH = "SEARCH";
-	static String HISTORY = "ORDERED";
+	static String ORDERED = "ORDERED";
 	static String ALL = "All";
 
 	@Autowired
@@ -128,11 +128,11 @@ public class ProductController {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
 			
-		} else if (category.equals(HISTORY)) {
+		} else if (category.equals(ORDERED)) {
 			Shop shop = shopRepository.findByEmail(principal.getName());	
-			String invoice = abbr + shop.getAbbr();
-			
-			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWith(OrderType.ORDER, invoice);
+			String supplier = abbr;
+	
+			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType.ORDER, supplier, shop.getAbbr() );
 			List<String> invoices = orders.stream().map(item -> item.getInvoice()).collect(Collectors.toList());
 			List<String> codes = orderItemRepository.findByInvoiceInOrderByCodeAsc(invoices);
 			page = productRepository.findByAbbrAndCodeIn(abbr, codes, pageable);
@@ -177,12 +177,15 @@ public class ProductController {
 		List<Product> products = page.getContent();
 
 		Shop shop = shopRepository.findByEmail(principal.getName());	
-		String invoice = products.get(0).getAbbr() + shop.getAbbr();
+		String supplier = products.get(0).getAbbr();
 		
 		for (Product product : products) {
-	        OrderItem orderItem 
-	        	= orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
+	        //OrderItem orderItem 
+	        //	= orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
 
+	        OrderItem orderItem 
+        	= orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithAndAbbrOrderByCreatedDesc(product.getCode(),OrderType.ORDER, supplier, shop.getAbbr());
+	        
 	        if(orderItem != null) {
 				LocalDateTime orderDate = orderItem.getOrder().getOrderDate();			
 				product.setOrderedDate(MyDate.toDay(orderDate));

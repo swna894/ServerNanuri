@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -241,13 +240,15 @@ public class OrderController {
 		}
 		cart.setDecription(product.getDescription());
 		cart.setInvoice(invoice);
+		cart.setAbbr(shop.getAbbr());
+		
 	
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
 		Order order = null;
 		if(!orderOptional.isPresent() && cart.getQty() != 0) {	
 			order = new Order();
 
-			order.setShopAbbr(abbr);
+			//order.setShopAbbr(abbr);
 			order.setStatus(OrderType.CART);
 			order.setInvoice(invoice);
 			order.addOrderItem(new OrderItem(cart));
@@ -346,6 +347,7 @@ public class OrderController {
 				item.setStatus(OrderType.ORDER);
 			});
 			order.setStatus(OrderType.ORDER);
+			order.setShopAbbr(shop.getAbbr());
 			
 			order = orderRepository.save(order);
 			if(order != null) {

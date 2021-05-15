@@ -21,5 +21,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 	OrderItem findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(String code, OrderType order,
 			String invoice);
 
+	OrderItem findTopByCodeAndStatusAndInvoiceStartsWithAndAbbrOrderByCreatedDesc(String code, OrderType order,
+			String supplier, String abbr);
+
     
 }
