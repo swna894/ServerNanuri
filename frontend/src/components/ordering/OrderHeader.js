@@ -15,6 +15,7 @@ import {
   FaGifts,
   FaCalendarCheck,
   FaChartLine,
+  FaUserGraduate,
 } from "react-icons/fa";
 
 import {
@@ -108,6 +109,7 @@ function OrderHeader(props) {
   const totalPages = useSelector((state) => state.product.products.totalPages);
   const cartInform = useSelector((state) => state.product.cart);
   const error = useSelector((state) => state.product.error);
+  const userData = useSelector((state) => state.user.userData);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -300,6 +302,7 @@ function OrderHeader(props) {
     onChangeButton(config.CART);
     dispatch(actionGetSuppliers("cart"));
     dispatch(changeIsCartRequest(true));
+    dispatch(setOrderRequest(abbr));
     onClose();
     document.documentElement.scrollTop = 0;
   };
@@ -508,17 +511,6 @@ function OrderHeader(props) {
 
   return (
     <div>
-      <div
-        style={{
-          position: "fixed",
-          zIndex: 1,
-          width: "100%",
-          backgroundColor: "#bfbfbf",
-          height: "10px",
-        }}
-      >
-        {cartInform}
-      </div>
       <Header
         style={{
           position: "fixed",
@@ -613,6 +605,7 @@ function OrderHeader(props) {
           </div>
         )}
       </Header>
+
       <div
         style={{
           position: "fixed",
@@ -628,6 +621,22 @@ function OrderHeader(props) {
         }}
       >
         {cartInform}
+      </div>
+      <div
+        style={{
+          position: "fixed",
+          zIndex: 1,
+          width: "50%",
+          backgroundColor: "#bfbfbf",
+          height: "10px",
+          textAlign: "left",
+          fontWeight: "bold",
+          fontStyle: "italic",
+          paddingLeft: "90px",
+          paddingTop: "3px",
+        }}
+      >
+        Welcome to {userData ? userData.company : ""}
       </div>
     </div>
   );
