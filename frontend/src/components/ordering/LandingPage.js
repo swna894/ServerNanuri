@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import OrderHeader from "./OrderHeader";
 import OrderFooter from "./OrderFooter";
-import { Card, Row, Col, BackTop, Button, Input } from "antd";
+import { Card, Row, Col, BackTop, Button, Input, Tooltip } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 
@@ -52,7 +52,9 @@ function LandingPage() {
     state.product.products.content ? state.product.products.content : []
   );
   const products = useSelector((state) => state.product.products);
-  const totalElements = useSelector((state) => state.product.products.totalElements);
+  const totalElements = useSelector(
+    (state) => state.product.products.totalElements
+  );
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
   //const abbr = useSelector((state) => state.supplier.abbr);
@@ -132,6 +134,8 @@ function LandingPage() {
     marginLeft: "32px",
     fontWeight: "bold",
     fontStyle: "italic",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
   };
 
   const inputQtyStyle = {
@@ -172,7 +176,7 @@ function LandingPage() {
   const hiddenStyle = { display: "none" };
   const cardNormalStyle = {
     height: "400px",
-   // width: "450px",
+    // width: "450px",
     borderStyle: "groove",
   }; // 458px
   const cardOrderStyle = {
@@ -217,12 +221,14 @@ function LandingPage() {
           bodyStyle={{ padding: "0" }}
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
-            <img
-              style={imageStyel}
-              alt={item.code}
-              //src={`/images/${item.abbr}/${item.code}.jpg`}
-              src={"data:image/jpg;base64," + item.image}
-            />
+            <Tooltip title={item.description}>
+              <img
+                style={imageStyel}
+                alt={item.code}
+                //src={`/images/${item.abbr}/${item.code}.jpg`}
+                src={"data:image/jpg;base64," + item.image}
+              />
+            </Tooltip>
           }
         >
           <div
@@ -250,6 +256,7 @@ function LandingPage() {
             <span style={item.special ? specialPriceStyle : priceStyle}>
               ${item.price}
             </span>
+
             <div style={specDivStyle}>
               <span style={labelStyle}>&nbsp;CODE :&nbsp;</span>
               <span style={specStyle}> {item.code}</span> &nbsp;
@@ -258,6 +265,7 @@ function LandingPage() {
               <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
               <span style={specStyle}>{item.stock}</span>
             </div>
+            <p>${item.abbr}</p>
             <p
               style={{
                 color: "#f5222d",
@@ -303,7 +311,7 @@ function LandingPage() {
       <OrderHeader />
       <div
         style={{
-         //display: "flex",
+          //display: "flex",
           width: "100%",
           //height: "100vh",
           padding: "80px 10px 10px 10px",

@@ -84,6 +84,7 @@ public class SupplierController {
 		return supplierRepository.findAllByOrderByCompanyAsc();
 	}
 
+	
 	@GetMapping("/supplier")
 	public Supplier find() {
 		return supplierRepository.findFirstByOrderByCompanyAsc();
@@ -105,7 +106,7 @@ public class SupplierController {
 		List<Supplier> list = new ArrayList<>();
 		for (Supplier supplier : suppliers) {	
 			for (IsShow isShow : shows) {
-				if (isShow.getAbbr().equals(supplier.getAbbr()) && isShow.getIs()) {
+				if (isShow.getAbbr().equals(supplier.getAbbr()) && isShow.getIs() && supplier.getIsActive()) {
 					list.add(supplier);
 				}
 			}

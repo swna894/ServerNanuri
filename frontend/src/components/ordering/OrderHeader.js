@@ -15,7 +15,6 @@ import {
   FaGifts,
   FaCalendarCheck,
   FaChartLine,
-  FaUserGraduate,
 } from "react-icons/fa";
 
 import {
@@ -623,16 +622,22 @@ function OrderHeader(props) {
         {cartInform}
       </div>
       <div
+        xxl={6}
+        xl={8}
+        lg={10}
+        md={12}
+        sm={24}
+        xs={24}
         style={{
           position: "fixed",
           zIndex: 1,
-          width: "50%",
+          width: "70%",
           backgroundColor: "#bfbfbf",
           height: "10px",
           textAlign: "left",
           fontWeight: "bold",
           fontStyle: "italic",
-          paddingLeft: "90px",
+          paddingLeft: "50px",
           paddingTop: "3px",
         }}
       >

@@ -18,6 +18,8 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
 	List<Supplier> findAllByOrderByAbbrAsc();
 
+	List<Supplier> findByIsActiveOrderByCompanyAsc(boolean b);
+
 
 
     

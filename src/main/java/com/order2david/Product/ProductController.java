@@ -1,6 +1,8 @@
 package com.order2david.Product;
 
 import java.security.Principal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.Product.model.Product;
+import com.order2david.Product.model.ProductStatus;
 import com.order2david.Product.repository.ProductRepository;
 import com.order2david.order.model.Order;
 import com.order2david.order.model.OrderItem;
@@ -135,7 +138,7 @@ public class ProductController {
 			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType.ORDER, supplier, shop.getAbbr() );
 			List<String> invoices = orders.stream().map(item -> item.getInvoice()).collect(Collectors.toList());
 			List<String> codes = orderItemRepository.findByInvoiceInOrderByCodeAsc(invoices);
-			page = productRepository.findByAbbrAndCodeIn(abbr, codes, pageable);
+			page = productRepository.findByAbbrAndIsShowAndCodeIn(abbr, true, codes, pageable);
 			
 		} else if (category.equals(SEARCH)) {
 			search = search.replaceAll("_", "/");
@@ -286,5 +289,33 @@ public class ProductController {
 	public static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
 		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
 		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+	}
+	
+	@GetMapping("/products/status")
+	public List<ProductStatus> getcompanies() {
+		DecimalFormat formatter = (DecimalFormat) NumberFormat.getNumberInstance();
+		List<ProductStatus> productStatus = new ArrayList<ProductStatus>();
+
+		List<Supplier> supplierList = supplierRepository.findAll();
+				
+		for (Supplier supplier : supplierList) {
+			List<Product> products = productRepository.findByAbbr(supplier.getAbbr());
+			long items = products.size();
+			long image = products.stream().filter(item -> item.getImage() != null ).count();
+			long isShow = products.stream().filter(item -> item.isShow() == true).count();
+			long isNew = products.stream().filter(item -> item.isNew() == true).count(); 
+			long isSpecial = products.stream().filter(item -> item.isSpecial() == true).count(); 
+
+			ProductStatus status = new ProductStatus();
+			status.setAbbr(supplier.getAbbr());			
+			status.setSupplier(supplier.getCompany());
+			status.setProducts(formatter.format(items));
+			status.setImages(formatter.format(image));
+			status.setIsShow(formatter.format(isShow));
+			status.setIsNew(formatter.format(isNew));
+			status.setIsSpecial(formatter.format(isSpecial));
+			productStatus.add(status);
+		}
+		return productStatus;
 	}
 }
