@@ -77,8 +77,9 @@ public class ProductController {
 	@Transactional
 	public List<Product> postAll(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
-		// 0423 Supplier supplier = supplierRepository.findByAbbr(abbr);
-		// supplier.getOrders().clear();
+		Supplier supplier = supplierRepository.findByAbbr(abbr);
+		// 0423  supplier.getOrders().clear();
+		products.forEach(item -> item.setCompany(supplier.getCompany()));
 		productRepository.deleteAllByAbbr(abbr);
 
 		// if (result > 0) {
@@ -296,7 +297,7 @@ public class ProductController {
 		DecimalFormat formatter = (DecimalFormat) NumberFormat.getNumberInstance();
 		List<ProductStatus> productStatus = new ArrayList<ProductStatus>();
 
-		List<Supplier> supplierList = supplierRepository.findAll();
+		List<Supplier> supplierList = supplierRepository.findAllByOrderByCompanyAsc();
 				
 		for (Supplier supplier : supplierList) {
 			List<Product> products = productRepository.findByAbbr(supplier.getAbbr());
@@ -314,6 +315,7 @@ public class ProductController {
 			status.setIsShow(formatter.format(isShow));
 			status.setIsNew(formatter.format(isNew));
 			status.setIsSpecial(formatter.format(isSpecial));
+			status.setActive(supplier.getIsActive());
 			productStatus.add(status);
 		}
 		return productStatus;

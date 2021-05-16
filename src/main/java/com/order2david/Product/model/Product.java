@@ -50,6 +50,7 @@ public class Product {
 	private int seq;
 	private String code; // 이름
 	private String abbr;
+	private String company;
 	private String barcode;
 	private String description; // 제품설명
 	private String category;

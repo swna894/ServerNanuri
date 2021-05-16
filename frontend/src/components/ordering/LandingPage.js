@@ -57,7 +57,8 @@ function LandingPage() {
   );
   const size = useSelector((state) => state.product.products.size);
   const number = useSelector((state) => state.product.products.number);
-  //const abbr = useSelector((state) => state.supplier.abbr);
+  const condition = useSelector((state) => state.supplier.condition);
+  const category = useSelector((state) => state.supplier.category);
   const comapny = useSelector((state) => state.user.userData);
 
   useEffect(() => {
@@ -265,7 +266,6 @@ function LandingPage() {
               <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
               <span style={specStyle}>{item.stock}</span>
             </div>
-            <p>${item.abbr}</p>
             <p
               style={{
                 color: "#f5222d",
@@ -274,6 +274,22 @@ function LandingPage() {
               }}
             >
               {item.orderedDate}
+            </p>
+            {console.log("condtion = " + condition)}
+            <p
+              style={
+                condition === "All" && category === "SEARCH"
+                  ? {
+                      display: "inline",
+                      color: "#40a9ff",
+                      marginTop: "-15px",
+                      marginLeft: "32px",
+                      fontWeight: "bold",
+                    }
+                  : { display: "none" }
+              }
+            >
+              {item.company}
             </p>
             <p style={{ color: "#fff", margin: "50px" }}>&nbsp; </p>
             <div style={buttonStyle}>

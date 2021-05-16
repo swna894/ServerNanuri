@@ -16,5 +16,6 @@ public class ProductStatus {
 	private String isShow;
 	private String isNew;
 	private String isSpecial;
+	private boolean isActive;
 	
 }
