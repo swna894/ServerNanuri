@@ -248,7 +248,7 @@ public class OrderController {
 		if(!orderOptional.isPresent() && cart.getQty() != 0) {	
 			order = new Order();
 
-			//order.setShopAbbr(abbr);
+			order.setShopAbbr(shop.getAbbr());
 			order.setStatus(OrderType.CART);
 			order.setInvoice(invoice);
 			order.addOrderItem(new OrderItem(cart));
@@ -327,6 +327,8 @@ public class OrderController {
 			return null;
 		}	
 	}
+	@Autowired
+	EmailService service;
 	
 	@PutMapping("order/confirm/{abbr}")
 	public Boolean putOrderConfirm(@PathVariable String abbr, Principal principal) {
@@ -351,7 +353,7 @@ public class OrderController {
 			
 			order = orderRepository.save(order);
 			if(order != null) {
-				EmailService service = new  EmailService();
+				//EmailService service = new  EmailService();
 				service.sendMail(order);
 			}
 			return false;	

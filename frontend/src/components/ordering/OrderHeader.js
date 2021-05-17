@@ -301,7 +301,6 @@ function OrderHeader(props) {
     onChangeButton(config.CART);
     dispatch(actionGetSuppliers("cart"));
     dispatch(changeIsCartRequest(true));
-    dispatch(setOrderRequest(abbr));
     onClose();
     document.documentElement.scrollTop = 0;
   };
