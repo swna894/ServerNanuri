@@ -270,6 +270,7 @@ function LandingPage() {
               style={{
                 color: "#f5222d",
                 marginLeft: "32px",
+                marginBottom: "5px",
                 fontWeight: "bold",
               }}
             >
@@ -282,7 +283,7 @@ function LandingPage() {
                   ? {
                       display: "inline",
                       color: "#40a9ff",
-                      marginTop: "-15px",
+                      marginTop: "-50px",
                       marginLeft: "32px",
                       fontWeight: "bold",
                     }

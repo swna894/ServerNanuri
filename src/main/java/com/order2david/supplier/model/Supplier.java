@@ -108,12 +108,13 @@ public class Supplier {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Supplier [id=" + id + ", name=" + name + ", abbr=" + abbr + ", company=" + company + ", cellphone="
+				+ cellphone + ", phone=" + phone + ", email=" + email + ", comment=" + comment + ", isNew=" + isNew
+				+ ", isSpecial=" + isSpecial + ", isActive=" + isActive + ", address=" + address + "]";
+	}
 	
-//	@Override
-//	public String toString() {
-//		return "Supplier [id=" + id + ", name=" + name + ", abbr=" + abbr + ", company=" + company + ", cellphone="
-//				+ cellphone + ", phone=" + phone + ", email=" + email + ", comment=" + comment + ", address=" + address
-//				+ ", orders=" + orders + ", products=" + products + ", created=" + created + ", updated=" + updated
-//				+ "]\n\n";
-//	}
+
 }

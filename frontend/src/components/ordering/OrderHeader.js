@@ -174,7 +174,6 @@ function OrderHeader(props) {
   const onClickSignout = () => {
     localStorage.setItem("jwtToken", "");
     dispatch(signoutUser());
-    //props.history.push("/");
     window.location.href = "/";
   };
 
@@ -226,12 +225,11 @@ function OrderHeader(props) {
     marginBottom: "5px",
     borderStyle: "ridge",
   };
-  const styleSupplier = { width: "230px", borderStyle: "ridge" };
-  const styleCategory = { width: "200px", borderStyle: "ridge" };
+  const styleSupplier = { width: "230px" };
+  const styleCategory = { width: "200px" };
   const styleButton = {
     display: "inline-block",
     width: "110px",
-    borderStyle: "ridge",
   };
   const listSupplierSelect = (
     <Select
@@ -274,7 +272,7 @@ function OrderHeader(props) {
         <Select
           defaultValue="Co"
           onChange={onChangeSelect}
-          style={{ borderStyle: "ridge" }}
+         // style={{ borderStyle: "ridge" }}
         >
           <Option value="All">All</Option>
           <Option value="Co">Co</Option>
@@ -284,7 +282,7 @@ function OrderHeader(props) {
           allowClear
           enterButton
           onSearch={onSearchInput}
-          style={{ width: "70%", borderStyle: "ridge" }}
+          style={{ width: "70%" }}
         />
       </Input.Group>
     </div>
@@ -450,6 +448,7 @@ function OrderHeader(props) {
   ) : (
     ""
   );
+
   const buttonIsSpecial = isSpecial ? (
     <Button
       type="primary"

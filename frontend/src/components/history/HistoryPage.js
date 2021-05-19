@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Table, Row, Col } from "antd";
+import {  Table, Row, Col } from "antd";
 import moment from "moment";
 import HitoryHeader from "./HistoryHeader";
 import HistoryFooter from "./HistoryFooter";
 import "antd/dist/antd.css";
 import { getHistoryOrder } from "../../_actions/history_action";
+
 
 function currencyFormat(num) {
   return "$" + num.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,");
@@ -14,15 +15,16 @@ function currencyFormat(num) {
 function HistoryPage() {
   const orders = useSelector((state) => state.history.orders);
   const dispatch = useDispatch();
+  
   useEffect(() => {
     document.body.style.background = "#f0f0f0";
     dispatch(getHistoryOrder());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-   orders.map(item => {
+  orders.map((item) => {
     let date = moment(new Date(item.orderDate));
-    item.orderDate = date.format("YYYY-MM-DD");
-  }) 
+    return item.orderDate = date.format("YYYY-MM-DD");
+  });
 
   const data = [];
   for (let i = 0; i < orders.length; ++i) {
@@ -57,11 +59,12 @@ function HistoryPage() {
       item,
     });
   }
-/*   console.log(JSON.stringify(orderItems));
+  /*   console.log(JSON.stringify(orderItems));
   console.log("======================="); */
 
   const expandedRowRender = (row) => {
     const columns = [
+      { title: "NO", dataIndex: "key", key: "key" },
       { title: "CODE", dataIndex: "code", key: "code" },
       { title: "DESCRITPION", dataIndex: "description", key: "description" },
       { title: "PRICE", dataIndex: "price", key: "price", align: "right" },
@@ -70,7 +73,7 @@ function HistoryPage() {
       { title: "COMMENT", dataIndex: "comment", key: "commnet" },
     ];
     let inTable = orderItems.filter((item) => item.key === row.key);
-/*     console.log("row = " + JSON.stringify(inTable));
+    /*     console.log("row = " + JSON.stringify(inTable));
     console.log("inTable = " + JSON.stringify(inTable[0].item));
     console.log("======================="); */
     return (
@@ -106,6 +109,8 @@ function HistoryPage() {
       name: record.name,
     }),
   };
+
+ 
 
   const [selectionType, setSelectionType] = useState("checkbox");
   return (

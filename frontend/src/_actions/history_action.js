@@ -12,10 +12,10 @@ function authToken(token) {
   }
 }
 
-export function getHistoryOrder() {
+export const getHistoryOrder = (abbr = '') => {
   authToken(localStorage.jwtToken);
   const request = axios
-    .get("/api/orders/history")
+    .get(`/api/orders/history/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get History", error);

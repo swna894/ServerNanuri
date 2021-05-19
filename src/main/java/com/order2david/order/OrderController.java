@@ -364,9 +364,17 @@ public class OrderController {
 	
 	@GetMapping("orders/history")
 	@Transactional
-	public List<Order> history(Principal principal) {
+	public List<Order> history( Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		List<Order> orders = orderRepository.findByShopAbbrAndStatusOrderByOrderDateDesc(shop.getAbbr(), OrderType.ORDER);
+		return orders;
+	}
+	
+	@GetMapping("orders/history/{abbr}")
+	@Transactional
+	public List<Order> historyByAbbr(@PathVariable String abbr, Principal principal) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		List<Order> orders = orderRepository.findByShopAbbrAndInvoiceContainsAndStatusOrderByOrderDateDesc(shop.getAbbr(), abbr, OrderType.ORDER);
 		return orders;
 		// return null;
 	}
