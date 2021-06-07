@@ -113,7 +113,7 @@ public class Supplier {
 	public String toString() {
 		return "Supplier [id=" + id + ", name=" + name + ", abbr=" + abbr + ", company=" + company + ", cellphone="
 				+ cellphone + ", phone=" + phone + ", email=" + email + ", comment=" + comment + ", isNew=" + isNew
-				+ ", isSpecial=" + isSpecial + ", isActive=" + isActive + ", address=" + address + "]";
+				+ ", isSpecial=" + isSpecial + ", isActive=" + isActive + ", address=" + address + "]\n";
 	}
 	
 

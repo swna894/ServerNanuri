@@ -113,11 +113,11 @@ function HistoryHeader() {
           {headH2}
           {listSupplierSelect}
         </Space>
-        <Space style={{ float: "right" }}>
+        <div style={{ float: "right" }}>
           {buttonOrder}
           {buttonReload}
           {buttonSignout}
-        </Space>
+        </div>
       </Layout.Header>
     </div>
   );

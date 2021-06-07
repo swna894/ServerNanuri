@@ -102,11 +102,10 @@ public class SupplierController {
 		List<Supplier> suppliers = supplierRepository.findAllByOrderByAbbrAsc();
 		Map<String, List<IsShow>> maps = shopJdbcRepository.findAllAbbrs();
 		List<IsShow> shows = maps.get(shop.getCompany());
-		
 		List<Supplier> list = new ArrayList<>();
-		for (Supplier supplier : suppliers) {	
+		for (Supplier supplier : suppliers) {			
 			for (IsShow isShow : shows) {
-				if (isShow.getAbbr().equals(supplier.getAbbr()) && isShow.getIs() && supplier.getIsActive()) {
+				if (isShow.getIs() != null && isShow.getAbbr().equals(supplier.getAbbr()) && isShow.getIs() && supplier.getIsActive()) {
 					list.add(supplier);
 				}
 			}
