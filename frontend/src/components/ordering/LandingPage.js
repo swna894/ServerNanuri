@@ -132,11 +132,12 @@ function LandingPage() {
     overflow: "hidden",
     fontSize: "20px",
     marginBottom: "7px",
-    marginLeft: "32px",
+    //marginLeft: "32px",
     fontWeight: "bold",
     fontStyle: "italic",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
+    textAlign: "center",
   };
 
   const inputQtyStyle = {
@@ -245,7 +246,7 @@ function LandingPage() {
             <div style={item.special ? specialStyle : hiddenStyle}>
               <img src={discount} alt="special"></img>
             </div>
-            <p style={descriptionStyle}>{item.description}</p>
+            <div style={descriptionStyle}>{item.description}</div>
             <span style={item.special ? priceStyle : { display: "none" }}>
               ${item.specialPrice}
             </span>
