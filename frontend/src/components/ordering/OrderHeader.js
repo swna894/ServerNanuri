@@ -377,7 +377,7 @@ function OrderHeader(props) {
       onClick={onClickOrder}
     >
       <FaCalendarCheck size={16} style={{ marginBottom: "-4px" }} />
-      &nbsp; CONFIRM
+      &nbsp; CHECKOUT
     </Button>
   );
 
@@ -399,7 +399,7 @@ function OrderHeader(props) {
       onClick={onClickOrdered}
     >
       <FaTruck size={16} style={{ marginBottom: "-4px" }} />
-      &nbsp; ORDERED
+      &nbsp; HISTORY
     </Button>
   );
 
@@ -422,7 +422,7 @@ function OrderHeader(props) {
         //onClick={onClickHistory}
       >
         <FaChartLine size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; HISTORY
+        &nbsp; REPORT
       </Button>
     </Link>
   );
@@ -504,7 +504,7 @@ function OrderHeader(props) {
 
   function success() {
     Modal.success({
-      title: "Thanks for Ordering ...",
+      title: "Thanks for your order ...",
     });
   }
 

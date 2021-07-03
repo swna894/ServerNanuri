@@ -344,7 +344,7 @@ function LandingPage() {
         </Row>
       </div>
       <BackTop>
-        <div style={width > 850 ? backTopstyle : backMobileTopstyle}>UP</div>
+        <div style={width > 850 ? backTopstyle : backMobileTopstyle}>TOP</div>
       </BackTop>
       <OrderFooter />
     </div>
