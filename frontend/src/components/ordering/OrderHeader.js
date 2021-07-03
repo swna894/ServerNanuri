@@ -225,14 +225,15 @@ function OrderHeader(props) {
     marginBottom: "5px",
     borderStyle: "ridge",
   };
-  const styleSupplier = { width: "230px" };
-  const styleCategory = { width: "200px" };
+  const styleSupplier = { width: "100%", fontSize:"24px", fontWeight: "bold" };
+  const styleCategory = { width: "100%", fontSize:"20px", fontWeight: "bold"};
   const styleButton = {
     display: "inline-block",
     width: "110px",
   };
   const listSupplierSelect = (
     <Select
+      bordered={false}
       ref={formRef}
       name="supplier"
       showSearch
@@ -249,6 +250,7 @@ function OrderHeader(props) {
   const listCategorySelect =
     categories && categories.length > 0 && isCart === false ? (
       <Select
+        bordered={false}
         showSearch
         style={width > config.WIDTH_SMALL ? styleCategory : stylePersent}
         value={categoryPrompt}
@@ -484,7 +486,7 @@ function OrderHeader(props) {
     <a href="order2david.com" onClick={onClickHead}>
       <Space>
         <FaHome size={28} style={{ color: "#000" }} />
-        <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2>
+        {/* <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2> */}
       </Space>
     </a>
   );
@@ -520,7 +522,7 @@ function OrderHeader(props) {
       >
         {width > config.WIDTH_BIG ? (
           <div>
-            <Space>
+            <Space style={{ marginTop: "10px" }}>
               {headH2}
               {listSupplierSelect}
               {listCategorySelect}
@@ -635,8 +637,8 @@ function OrderHeader(props) {
           textAlign: "left",
           fontWeight: "bold",
           fontStyle: "italic",
-          paddingLeft: "50px",
-          paddingTop: "3px",
+          padding: "0px 0px 0px 50px",
+          marginBottom: "5px"
         }}
       >
         Welcome to {userData ? userData.company : ""}
