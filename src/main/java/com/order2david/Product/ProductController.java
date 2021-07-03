@@ -267,15 +267,17 @@ public class ProductController {
 			abbr = supplier.getAbbr();
 		}
 		List<Product> products = productRepository.findByAbbr(abbr);
-		// List<Product> sortedProducts = products.stream()
-		// .filter(item -> item.isShow())
-		// .filter(item -> !item.getCategory().equals(""))
-		// .filter(distinctByKey(p -> p.getCategory()))
-		// .sorted(Comparator.comparing(Product::getCategory))
-		// .collect(Collectors.toList());
+//		List<String> categories = new ArrayList<>();
+//		for (Product product : products) {
+//			String category = product.getCategory();
+//			if(product.isShow() && !categories.contains(category)) {
+//				categories.add(category);
+//			}
+//		}
 
 		return products.stream().filter(item -> item.isShow()).map(item -> item.getCategory())
 				.filter(item -> !item.isEmpty()).distinct().sorted().collect(Collectors.toList());
+	
 	}
 
 	@GetMapping("/products/categorys")
