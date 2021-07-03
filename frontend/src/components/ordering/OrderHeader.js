@@ -334,6 +334,7 @@ function OrderHeader(props) {
   const onClickOrdered = () => {
     onChangeButton("ORDERED");
     onClose();
+    dispatch(getInitCartInform());
     document.documentElement.scrollTop = 0;
   };
 
