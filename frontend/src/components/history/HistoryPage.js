@@ -32,7 +32,7 @@ function HistoryPage() {
       key: i + 1,
       id: orders[i].id,
       invoice: orders[i].invoice,
-      shop: orders[i].shop.company,
+      shop: orders[i].company,
       amount: currencyFormat(orders[i].amount),
       date: orders[i].orderDate,
       comment: orders[i].comment,
@@ -88,7 +88,7 @@ function HistoryPage() {
   const columns = [
     { title: "NO", dataIndex: "key", key: "key" },
     { title: "INVOICE", dataIndex: "invoice", key: "invoice" },
-    { title: "SHOP", dataIndex: "shop", key: "shop" },
+    { title: "SUPPLIER", dataIndex: "shop", key: "shop" },
     { title: "AMOUNT", dataIndex: "amount", key: "amount", align: "right" },
     { title: "DATE", dataIndex: "date", key: "date", align: "center" },
     { title: "COMMENT", dataIndex: "comment", key: "commnet" },

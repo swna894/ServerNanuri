@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -68,7 +69,8 @@ public class Order {
 	private String invoice;
 	private String shopAbbr;
 	private String comment;
-	
+	@Transient
+	private String company;
 	private LocalDateTime orderDate; // 주문시간
 
 	// ==연관 관계==//

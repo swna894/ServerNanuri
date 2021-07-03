@@ -573,7 +573,7 @@ function OrderHeader(props) {
             </Drawer>
           </div>
         ) : (
-          <div>
+          <div style={{ marginTop: "10px" }} >
             {headH2}
             <Button
               type="primary"

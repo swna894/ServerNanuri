@@ -367,6 +367,7 @@ public class OrderController {
 	public List<Order> history( Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		List<Order> orders = orderRepository.findByShopAbbrAndStatusOrderByOrderDateDesc(shop.getAbbr(), OrderType.ORDER);
+		orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
 		return orders;
 	}
 	
@@ -375,6 +376,7 @@ public class OrderController {
 	public List<Order> historyByAbbr(@PathVariable String abbr, Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		List<Order> orders = orderRepository.findByShopAbbrAndInvoiceContainsAndStatusOrderByOrderDateDesc(shop.getAbbr(), abbr, OrderType.ORDER);
+		orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
 		return orders;
 		// return null;
 	}
