@@ -28,8 +28,8 @@ const backMobileTopstyle = {
   textAlign: "center",
   fontSize: 14,
   position: "absolute",
-  top: "-54px",
-  left: "45px",
+  top: "-10px",
+  left: "55px",
 };
 
 const backTopstyle = {
@@ -42,7 +42,7 @@ const backTopstyle = {
   textAlign: "center",
   fontSize: 14,
   position: "absolute",
-  top: "-42px",
+  top: "-10px",
   left: "90px",
 };
 

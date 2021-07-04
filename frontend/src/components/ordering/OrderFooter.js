@@ -50,7 +50,7 @@ function OrderFooter() {
 
   const [width] = useWindowWidthAndHeight();
 
-  const footerStyel = {
+  const footerStyle = {
     position: "fixed",
     width: "100%",
     bottom: "0",
@@ -62,9 +62,10 @@ function OrderFooter() {
 
   return (
     <div>
-      <Footer style={footerStyel}>
+      <Footer style={footerStyle}>
         {width > 1000 ? (
           <Pagination
+            className={'paginationItemStyle'}
             current={current + 1}
             defaultPageSize={config.PAGE_SIZE}
             pageSizeOptions={[16, 24, 36, 60, 100]}

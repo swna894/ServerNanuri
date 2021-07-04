@@ -144,6 +144,8 @@ public class ProductController {
 		} else if (category.equals(SEARCH)) {
 			search = search.replaceAll("_", "/");
 			if (condition.equals(ALL)) {
+				pageable = 
+						  PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("company").ascending().and(Sort.by("seq")));
 				page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(search, true, search,
 						true, pageable);
 			} else {
