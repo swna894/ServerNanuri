@@ -155,7 +155,7 @@ public class ProductController {
 			
 		} else {
 			category = category.replaceAll("_", "/");
-			page = productRepository.findByAbbrAndCategoryAndIsShow(abbr, category, true, pageable);
+			page = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, category, pageable);
 		}
 		if (!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
@@ -253,6 +253,44 @@ public class ProductController {
 		return products;
 	}
 
+	@GetMapping("/products/elements/{abbr}")
+	public Long findByAbbrElements(@PathVariable String abbr) { 
+		Pageable paging =  PageRequest.of(0, 100, Sort.by("code"));
+		Page<Product> products = productRepository.findByAbbr(abbr, paging);
+		//System.err.println(products.getTotalElements());
+		//System.err.println(products.getTotalPages());
+		return products.getTotalElements();
+	}
+	
+	@GetMapping("/products/counts/{abbr}")
+	public Integer findByAbbrCounts(@PathVariable String abbr) { 
+		Pageable paging =  PageRequest.of(0, 100, Sort.by("code"));
+		Page<Product> products = productRepository.findByAbbr(abbr, paging);
+		//System.err.println(products.getTotalElements());
+		//System.err.println(products.getTotalPages());
+		return products.getTotalPages();
+	}
+	
+	@GetMapping("/products/search/{abbr}/{search}")
+	public List<Product> findByAbbrSearch(@PathVariable String abbr, @PathVariable String search) {
+		
+		//List<Product> products = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, search);
+		List<Product> products = productRepository.findByAbbrAndCategoryContainsOrAbbrAndDescriptionContainsOrAbbrAndCodeContainsOrAbbrAndBarcodeContains
+				(abbr, search, abbr, search, abbr, search, abbr, search);
+		products.forEach(item -> item.setImage(null));
+		return products;
+	}
+	
+	@GetMapping("/products/pageable/{abbr}/{number}/{size}")
+	public List<Product> findByAbbrPagable(@PathVariable String abbr, @PathVariable String number, @PathVariable String size) {
+		Pageable paging = 
+				  PageRequest.of(Integer.valueOf(number), Integer.valueOf(size), Sort.by("code"));
+		List<Product> products = productRepository.findByAbbr(abbr, paging).getContent();
+		products.forEach(item -> item.setImage(null));
+		
+		return products;
+	}
+	
 	@GetMapping("/products/{abbr}")
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, Pageable pageable, Boolean newp,
 			Principal principal) {
@@ -264,6 +302,7 @@ public class ProductController {
 
 	@GetMapping("/products/category")
 	public List<String> findProductsByCompany(@RequestParam String abbr) {
+		// 초기 카테고리 필요시 
 		if (abbr.isEmpty()) {
 			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 			abbr = supplier.getAbbr();

@@ -20,7 +20,7 @@ function authToken(token) {
 export function getCategoriesAction(params) {
   authToken(localStorage.jwtToken);
   const request = axios
-    .get("/api/products/category", params)
+    .get("/api/categorys", params)
     .then((response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Categoies", error);

@@ -54,11 +54,12 @@ public class Product {
 	private String barcode;
 	private String description; // 제품설명
 	private String category;
-	private String imagePath;
+	//private String imagePath;
 	private double price; // 가격
 	private double specialPrice;
 	private int stock; // 재고수량
 	private int pack;
+	private boolean isPhoto;
 	private boolean isShow;
 	private boolean isSpecial;
 	private boolean isNew;
@@ -101,7 +102,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", seq=" + seq + ", code=" + code + ", abbr=" + abbr + ", barcode=" + barcode
-				+ ", description=" + description + ", category=" + category + ", imagePath=" + imagePath + ", price="
+				+ ", description=" + description + ", category=" + category + ", price="
 				+ price + ", stock=" + stock + ", pack=" + pack + "]\n\n";
 	}
 

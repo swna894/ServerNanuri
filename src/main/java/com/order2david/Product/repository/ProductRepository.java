@@ -63,5 +63,21 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 	Page<Product> findByAbbrAndIsShowAndCodeIn(String abbr, boolean b, List<String> codes, Pageable pageable);
 
+	Double countByAbbr(String abbr);
+
+	Page<Product> findByAbbrAndIsShowAndCategory(String abbr, boolean b, String category, Pageable pageable);
+
+	Page<Product> findByAbbrAndIsShowAndCategoryContains(String abbr, boolean b, String category, Pageable pageable);
+
+	List<Product> findByAbbrAndIsShowAndCategoryContains(String abbr, boolean b, String search);
+
+
+	List<Product> findByAbbrAndCategoryContainsOrAbbrAndDescriptionContains(String abbr, String search, String abbr2,
+			String search2);
+
+	List<Product> findByAbbrAndCategoryContainsOrAbbrAndDescriptionContainsOrAbbrAndCodeContainsOrAbbrAndBarcodeContains(
+			String abbr, String search, String abbr2, String search2, String abbr3, String search3, String abbr4,
+			String search4);
+
 
 }
