@@ -69,6 +69,8 @@ public class Product {
 	@Transient
 	private int qty;
 	@Transient
+	private boolean isCheck;
+	@Transient
 	private String orderedDate;
 	
 

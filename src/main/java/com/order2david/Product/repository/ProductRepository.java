@@ -79,5 +79,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 			String abbr, String search, String abbr2, String search2, String abbr3, String search3, String abbr4,
 			String search4);
 
+	Double countByAbbrAndIsNew(String abbr, boolean b);
+
+	Double countByAbbrAndIsSpecial(String abbr, boolean b);
+
+	Double countByAbbrAndIsPhoto(String abbr, boolean b);
+
+	Double countByAbbrAndIsShow(String abbr, boolean b);
+
 
 }

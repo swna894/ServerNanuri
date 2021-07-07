@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.order2david.Product.model.Product;
 import com.order2david.Product.model.ProductStatus;
 import com.order2david.Product.repository.ProductRepository;
+import com.order2david.Product.repository.ProductStatusRepository;
 import com.order2david.order.model.Order;
 import com.order2david.order.model.OrderItem;
 import com.order2david.order.model.OrderType;
@@ -68,8 +69,11 @@ public class ProductController {
 	ShopRepository shopRepository;
 
 	@Autowired
+	ProductStatusRepository productStatusRepository;
+
+	@Autowired
 	SupplierRepository supplierRepository;
-	
+
 	@Autowired
 	OrderItemRepository orderItemRepository;
 
@@ -78,10 +82,13 @@ public class ProductController {
 	public List<Product> postAll(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
-		// 0423  supplier.getOrders().clear();
+		// 0423 supplier.getOrders().clear();
 		products.forEach(item -> item.setCompany(supplier.getCompany()));
-		productRepository.deleteAllByAbbr(abbr);
 
+		if (products.get(0).isCheck()) {
+			productRepository.deleteAllByAbbr(abbr);
+		}
+		System.err.println(products.size());
 		// if (result > 0) {
 		// 0423 products.forEach(item -> item.setSupplier(supplier));
 		return productRepository.saveAll(products);
@@ -112,7 +119,7 @@ public class ProductController {
 		Pageable sortedBySeq = PageRequest.of(0, 100, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		updateCartQty(page, principal);
-		updateCartHistory(page,principal);
+		updateCartHistory(page, principal);
 		return page;
 	}
 
@@ -124,42 +131,43 @@ public class ProductController {
 
 		if (category.equals(NEW)) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
-			
+
 		} else if (category.equals(SPECIAL)) {
 			page = productRepository.findByAbbrAndIsSpecialAndIsShow(abbr, true, true, pageable);
-			
+
 		} else if (category.equals(CART)) {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
-			
+
 		} else if (category.equals(ORDERED)) {
-			Shop shop = shopRepository.findByEmail(principal.getName());	
+			Shop shop = shopRepository.findByEmail(principal.getName());
 			String supplier = abbr;
-	
-			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType.ORDER, supplier, shop.getAbbr() );
+
+			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType.ORDER, supplier,
+					shop.getAbbr());
 			List<String> invoices = orders.stream().map(item -> item.getInvoice()).collect(Collectors.toList());
 			List<String> codes = orderItemRepository.findByInvoiceInOrderByCodeAsc(invoices);
 			page = productRepository.findByAbbrAndIsShowAndCodeIn(abbr, true, codes, pageable);
-			
+
 		} else if (category.equals(SEARCH)) {
 			search = search.replaceAll("_", "/");
 			if (condition.equals(ALL)) {
-				pageable = 
-						  PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("company").ascending().and(Sort.by("seq")));
+				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+						Sort.by("company").ascending().and(Sort.by("seq")));
 				page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(search, true, search,
 						true, pageable);
 			} else {
-				page = productRepository.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShow(abbr, search, true, abbr, search,
-						true, pageable);
+				page = productRepository.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShow(abbr,
+						search, true, abbr, search, true, pageable);
 			}
-			
+
 		} else {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, category, pageable);
 		}
 		if (!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
-			updateCartHistory(page,principal);
+			updateCartHistory(page, principal);
 		}
 		return page;
 	}
@@ -182,26 +190,28 @@ public class ProductController {
 	private Page<Product> updateCartHistory(Page<Product> page, Principal principal) {
 		List<Product> products = page.getContent();
 
-		Shop shop = shopRepository.findByEmail(principal.getName());	
+		Shop shop = shopRepository.findByEmail(principal.getName());
 		String supplier = products.get(0).getAbbr();
-		
-		for (Product product : products) {
-	        //OrderItem orderItem 
-	        //	= orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
 
-	        OrderItem orderItem 
-        	= orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithAndAbbrOrderByCreatedDesc(product.getCode(),OrderType.ORDER, supplier, shop.getAbbr());
-	        
-	        if(orderItem != null) {
-				LocalDateTime orderDate = orderItem.getOrder().getOrderDate();			
+		for (Product product : products) {
+			// OrderItem orderItem
+			// =
+			// orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
+
+			OrderItem orderItem = orderItemRepository
+					.findTopByCodeAndStatusAndInvoiceStartsWithAndAbbrOrderByCreatedDesc(product.getCode(),
+							OrderType.ORDER, supplier, shop.getAbbr());
+
+			if (orderItem != null) {
+				LocalDateTime orderDate = orderItem.getOrder().getOrderDate();
 				product.setOrderedDate(MyDate.toDay(orderDate));
 			} else {
 				product.setOrderedDate("");
 			}
 		}
-	
+
 		return page;
-		
+
 	}
 
 	private Page<Product> convertProduct(Page<OrderItem> orderItems) {
@@ -254,71 +264,73 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/elements/{abbr}")
-	public Long findByAbbrElements(@PathVariable String abbr) { 
-		Pageable paging =  PageRequest.of(0, 100, Sort.by("code"));
+	public Long findByAbbrElements(@PathVariable String abbr) {
+		Pageable paging = PageRequest.of(0, 100, Sort.by("code"));
 		Page<Product> products = productRepository.findByAbbr(abbr, paging);
-		//System.err.println(products.getTotalElements());
-		//System.err.println(products.getTotalPages());
+		// System.err.println(products.getTotalElements());
+		// System.err.println(products.getTotalPages());
 		return products.getTotalElements();
 	}
-	
+
 	@GetMapping("/products/counts/{abbr}")
-	public Integer findByAbbrCounts(@PathVariable String abbr) { 
-		Pageable paging =  PageRequest.of(0, 100, Sort.by("code"));
+	public Integer findByAbbrCounts(@PathVariable String abbr) {
+		Pageable paging = PageRequest.of(0, 100, Sort.by("code"));
 		Page<Product> products = productRepository.findByAbbr(abbr, paging);
-		//System.err.println(products.getTotalElements());
-		//System.err.println(products.getTotalPages());
+		// System.err.println(products.getTotalElements());
+		// System.err.println(products.getTotalPages());
 		return products.getTotalPages();
 	}
-	
+
 	@GetMapping("/products/search/{abbr}/{search}")
 	public List<Product> findByAbbrSearch(@PathVariable String abbr, @PathVariable String search) {
-		
-		//List<Product> products = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, search);
-		List<Product> products = productRepository.findByAbbrAndCategoryContainsOrAbbrAndDescriptionContainsOrAbbrAndCodeContainsOrAbbrAndBarcodeContains
-				(abbr, search, abbr, search, abbr, search, abbr, search);
+
+		// List<Product> products =
+		// productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, search);
+		List<Product> products = productRepository
+				.findByAbbrAndCategoryContainsOrAbbrAndDescriptionContainsOrAbbrAndCodeContainsOrAbbrAndBarcodeContains(
+						abbr, search, abbr, search, abbr, search, abbr, search);
 		products.forEach(item -> item.setImage(null));
 		return products;
 	}
-	
+
 	@GetMapping("/products/pageable/{abbr}/{number}/{size}")
-	public List<Product> findByAbbrPagable(@PathVariable String abbr, @PathVariable String number, @PathVariable String size) {
-		Pageable paging = 
-				  PageRequest.of(Integer.valueOf(number), Integer.valueOf(size), Sort.by("code"));
+	public List<Product> findByAbbrPagable(@PathVariable String abbr, @PathVariable String number,
+			@PathVariable String size) {
+		Pageable paging = PageRequest.of(Integer.valueOf(number), Integer.valueOf(size), Sort.by("code"));
 		List<Product> products = productRepository.findByAbbr(abbr, paging).getContent();
 		products.forEach(item -> item.setImage(null));
-		
+
 		return products;
 	}
-	
+
 	@GetMapping("/products/{abbr}")
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, Pageable pageable, Boolean newp,
 			Principal principal) {
 		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable);
 		updateCartQty(page, principal);
-		updateCartHistory(page,principal);
+		updateCartHistory(page, principal);
 		return page;
 	}
 
 	@GetMapping("/products/category")
 	public List<String> findProductsByCompany(@RequestParam String abbr) {
-		// 초기 카테고리 필요시 
+		// 초기 카테고리 필요시
 		if (abbr.isEmpty()) {
 			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
 			abbr = supplier.getAbbr();
 		}
 		List<Product> products = productRepository.findByAbbr(abbr);
-//		List<String> categories = new ArrayList<>();
-//		for (Product product : products) {
-//			String category = product.getCategory();
-//			if(product.isShow() && !categories.contains(category)) {
-//				categories.add(category);
-//			}
-//		}
+		// List<String> categories = new ArrayList<>();
+		// for (Product product : products) {
+		// String category = product.getCategory();
+		// if(product.isShow() && !categories.contains(category)) {
+		// categories.add(category);
+		// }
+		// }
 
 		return products.stream().filter(item -> item.isShow()).map(item -> item.getCategory())
 				.filter(item -> !item.isEmpty()).distinct().sorted().collect(Collectors.toList());
-	
+
 	}
 
 	@GetMapping("/products/categorys")
@@ -334,33 +346,53 @@ public class ProductController {
 		Map<Object, Boolean> seen = new ConcurrentHashMap<>();
 		return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
 	}
+
+	DecimalFormat formatter = (DecimalFormat) NumberFormat.getNumberInstance();
 	
 	@GetMapping("/products/status")
 	public List<ProductStatus> getcompanies() {
-		DecimalFormat formatter = (DecimalFormat) NumberFormat.getNumberInstance();
-		List<ProductStatus> productStatus = new ArrayList<ProductStatus>();
+	
+		List<ProductStatus> productStatus = new ArrayList<>();
+		// 2021-07-06 memeory heap 문제로 변경함
+		 List<Supplier> suppliers = supplierRepository.findAllByOrderByCompanyAsc();
 
-		List<Supplier> supplierList = supplierRepository.findAllByOrderByCompanyAsc();
-				
-		for (Supplier supplier : supplierList) {
-			List<Product> products = productRepository.findByAbbr(supplier.getAbbr());
-			long items = products.size();
-			long image = products.stream().filter(item -> item.getImage() != null ).count();
-			long isShow = products.stream().filter(item -> item.isShow() == true).count();
-			long isNew = products.stream().filter(item -> item.isNew() == true).count(); 
-			long isSpecial = products.stream().filter(item -> item.isSpecial() == true).count(); 
+		 for (Supplier supplier : suppliers) {
+			 
+			 String abbr = supplier.getAbbr();
+			 ProductStatus status = new ProductStatus();
+			 status.setAbbr(abbr);
+			 status.setSupplier(supplier.getCompany());
+			 
+			 Double count = productRepository.countByAbbr(abbr);
+			 status.setProducts(formatter.format(count));
+			 
+			 count = productRepository.countByAbbrAndIsShow(abbr, true);
+			 status.setIsShow(formatter.format(count));
+			 
+			 count = productRepository.countByAbbrAndIsPhoto(abbr, true);
+			 status.setImages(formatter.format(count));
+			 
+			 count = productRepository.countByAbbrAndIsNew(abbr, true);
+			 status.setIsNew(formatter.format(count));
+			 
+			 count = productRepository.countByAbbrAndIsSpecial(abbr, true);
+			 status.setIsSpecial(formatter.format(count));
 
-			ProductStatus status = new ProductStatus();
-			status.setAbbr(supplier.getAbbr());			
-			status.setSupplier(supplier.getCompany());
-			status.setProducts(formatter.format(items));
-			status.setImages(formatter.format(image));
-			status.setIsShow(formatter.format(isShow));
-			status.setIsNew(formatter.format(isNew));
-			status.setIsSpecial(formatter.format(isSpecial));
-			status.setActive(supplier.getIsActive());
-			productStatus.add(status);
-		}
+	         status.setActive(supplier.getIsActive());
+        	 productStatus.add(status);
+		 }
+		 
 		return productStatus;
+	}
+
+	@PostMapping("/products/status")
+	public ProductStatus postStatus(@RequestBody ProductStatus status) {
+
+		ProductStatus tmp = productStatusRepository.findByAbbr(status.getAbbr());
+		if (tmp != null) {
+			status.setId(tmp.getId());
+			status.setActive(tmp.isActive());
+		}
+		return productStatusRepository.save(status);
 	}
 }
