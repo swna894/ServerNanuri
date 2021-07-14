@@ -5,6 +5,8 @@ import OrderFooter from "./OrderFooter";
 import { Card, Row, Col, BackTop, Button, Input, Tooltip } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
+import { trackPromise } from 'react-promise-tracker';
+import { Spinner } from './../../common/spinner';
 
 import {
   actionGetSuppliers,
@@ -64,7 +66,8 @@ function LandingPage() {
   useEffect(() => {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
-    dispatch(getProductsInitAction());
+    trackPromise(
+    dispatch(getProductsInitAction()));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onClickIncrease = (abbr, code, pack, qty) => {
@@ -98,12 +101,12 @@ function LandingPage() {
     const goods = content.map((item) =>
       item.code === code
         ? {
-            ...item,
-            qty:
-              parseInt(item.qty) - item.pack > 0
-                ? parseInt(item.qty) - item.pack
-                : 0,
-          }
+          ...item,
+          qty:
+            parseInt(item.qty) - item.pack > 0
+              ? parseInt(item.qty) - item.pack
+              : 0,
+        }
         : item
     );
     const pageable = {
@@ -267,27 +270,30 @@ function LandingPage() {
               <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
               <span style={specStyle}>{item.stock}</span>
             </div>
-            <p
-              style={{
-                color: "#f5222d",
-                marginLeft: "32px",
-                marginBottom: "5px",
-                fontWeight: "bold",
-              }}
-            >
-              {item.orderedDate}
-            </p>
+            <Tooltip placement="right" title="last ordered date">
+              <p
+                style={{
+                  color: "#f5222d",
+                  marginLeft: "32px",
+                  marginBottom: "5px",
+                  fontWeight: "bold",
+                  width: "80px"
+                }}
+              >
+                {item.orderedDate}
+              </p>
+            </Tooltip>
             {console.log("condtion = " + condition)}
             <p
               style={
                 condition === "All" && category === "SEARCH"
                   ? {
-                      display: "inline",
-                      color: "#40a9ff",
-                      marginTop: "-50px",
-                      marginLeft: "32px",
-                      fontWeight: "bold",
-                    }
+                    display: "inline",
+                    color: "#40a9ff",
+                    marginTop: "-50px",
+                    marginLeft: "32px",
+                    fontWeight: "bold",
+                  }
                   : { display: "none" }
               }
             >
@@ -337,12 +343,13 @@ function LandingPage() {
         }}
       >
         <Row
-          gutter={[16, 16]}
-          //style={{ display: "flex", justifyContent: "center" }}
+          gutter={[16, 16]}   //style={{ display: "flex", justifyContent: "center" }}
         >
           {orderLists}
+          
         </Row>
       </div>
+      <Spinner/>
       <BackTop>
         <div style={width > 850 ? backTopstyle : backMobileTopstyle}>TOP</div>
       </BackTop>
