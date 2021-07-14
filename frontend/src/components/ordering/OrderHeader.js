@@ -123,9 +123,9 @@ function OrderHeader(props) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr) {
-    setCategoryPrompt(config.SELECT_CATEGORY);
-    //dispatch(actionChangeTitle(searchValue.children));
     dispatch(actionChangeSupplier(abbr));
+    setCategoryPrompt(config.SELECT_CATEGORY);
+      //dispatch(actionChangeTitle(searchValue.children)); 
     dispatch(actionChangeCategory(""));
     dispatch(changeIsCartRequest(false));
     let parm = { params: { abbr: abbr } };
@@ -133,13 +133,17 @@ function OrderHeader(props) {
     pageProducts(abbr, "", 0, size);
     dispatch(getInitCartInform(abbr));
     onClose();
+    // }
+
     //console.log(`selected ${value}`);
   }
 
-  // function onChangeCart(abbr) {
-  //   dispatch(actionChangeSupplier(abbr));
-  //   onChangeButton(config.CART);
-  // }
+  function onChangeCart(abbr) {
+    dispatch(actionChangeSupplier(abbr));
+    //onChangeButton(config.CART);
+    pageProducts(abbr, "CART", 0, size);
+    dispatch(getInitCartInform(abbr));
+  }
 
   function onChangeCategory(category) {
     setCategoryPrompt(category);
@@ -231,6 +235,15 @@ function OrderHeader(props) {
     display: "inline-block",
     width: "110px",
   };
+
+  const onClickCart = () => {
+    onChangeButton(config.CART);
+    dispatch(actionGetSuppliers("cart"));
+    dispatch(changeIsCartRequest(true));
+    onClose();
+    document.documentElement.scrollTop = 0;
+  };
+
   const listSupplierSelect = (
     <Select
       bordered={false}
@@ -238,7 +251,7 @@ function OrderHeader(props) {
       name="supplier"
       showSearch
       value={supplier}
-      onChange={onChangeSuppiler}
+      onChange={isCart ? onChangeCart : onChangeSuppiler}
       style={width > config.WIDTH_SMALL ? styleSupplier : stylePersent}
       placeholder={config.SELECT_CATEGORY}
       optionFilterProp="children"
@@ -297,13 +310,7 @@ function OrderHeader(props) {
     setVisible(false);
   };
 
-  const onClickCart = () => {
-    onChangeButton(config.CART);
-    dispatch(actionGetSuppliers("cart"));
-    dispatch(changeIsCartRequest(true));
-    onClose();
-    document.documentElement.scrollTop = 0;
-  };
+  
 
   const onClickOrder = () => {
     dispatch(actionGetSuppliers());
@@ -478,9 +485,10 @@ function OrderHeader(props) {
 
   function onClickHead(e) {
     e.preventDefault();
+    setCategoryPrompt(config.SELECT_CATEGORY);
     dispatch(actionGetSuppliers());
-    dispatch(changeIsCartRequest(false));
     onChangeSuppiler(abbr, headTitle);
+   
   }
 
   const headH2 = (
