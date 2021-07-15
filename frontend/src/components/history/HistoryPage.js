@@ -110,9 +110,8 @@ function HistoryPage() {
     }),
   };
 
- 
-
   const [selectionType, setSelectionType] = useState("checkbox");
+  
   return (
     <div
       style={{

@@ -92,6 +92,7 @@ public class OrderController {
 		return orderRepository.save(order);
 	}
 
+	@Transactional
 	@PutMapping("orders/confirm")
 	public Order putConfirm(@RequestBody Order order) {
 		Supplier supplier = supplierRepository.findByAbbr(order.getShopAbbr());

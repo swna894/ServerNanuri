@@ -283,7 +283,6 @@ function LandingPage() {
                 {item.orderedDate}
               </p>
             </Tooltip>
-            {console.log("condtion = " + condition)}
             <p
               style={
                 condition === "All" && category === "SEARCH"

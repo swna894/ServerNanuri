@@ -92,7 +92,7 @@ export const getInitCartInform = (abbr = "") => {
 };
 
 export const setOrderRequest = (abbr) => {
-  const request = axios
+  const request =  axios
     .put(`/api/order/confirm/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {

@@ -11,6 +11,7 @@ function OrderFooter() {
   const dispatch = useDispatch();
 
   const abbr = useSelector((state) => state.supplier.abbr);
+  const cartInform = useSelector((state) => state.product.cart);
   const search = useSelector((state) => state.supplier.search);
   const condition = useSelector((state) => state.supplier.condition);
   const current = useSelector((state) => state.product.products.number);
@@ -63,6 +64,21 @@ function OrderFooter() {
   return (
     <div>
       <Footer style={footerStyle}>
+      <div
+        style={{
+          position: "fixed",
+          zIndex: 1,
+          height: "8px",
+          textAlign: "left",
+          fontWeight: "bold",
+          fontStyle: "italic",
+          fontSize : "18px",
+          paddingRight: "52px",
+          paddingTop: "3px",
+        }}
+      >
+      {cartInform}
+      </div>
         {width > 1000 ? (
           <Pagination
             className={'paginationItemStyle'}

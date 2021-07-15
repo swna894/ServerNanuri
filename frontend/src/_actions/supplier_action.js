@@ -13,6 +13,13 @@ import {
   GET_CART_INFORM,
 } from "../service/types";
 
+export const actionUpdateSuppliers = (suppliers) => {
+  return (dispatch) => {
+        dispatch(getSuppliersSucess(suppliers));
+     
+  };
+}; 
+
 export const actionGetSuppliers = (cart = '') => {
   return (dispatch) => {
     //dispatch(getSuppliersRequest());

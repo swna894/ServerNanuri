@@ -25,6 +25,7 @@ import {
   changeSearchCondition,
   changeIsCartRequest,
   actionGetSuppliers,
+  actionUpdateSuppliers,
 } from "../../_actions/supplier_action";
 
 import {
@@ -89,6 +90,7 @@ function OrderHeader(props) {
   const { Search } = Input;
 
   const [visible, setVisible] = useState(false);
+  const [visibleCart, setVisibleCart] = useState(false);
   const [categoryPrompt, setCategoryPrompt] = useState(config.SELECT_CATEGORY);
   const [width] = useWindowWidthAndHeight();
 
@@ -306,22 +308,42 @@ function OrderHeader(props) {
   const showDrawer = () => {
     setVisible(true);
   };
+
   const onClose = () => {
     setVisible(false);
   };
 
   
+  // const showCartModal = () => {
+  //   setVisibleCart(true);
+  // };
 
-  const onClickOrder = () => {
+  const gotoOrder = () => {
+    setVisibleCart(false);
     dispatch(actionGetSuppliers());
     dispatch(changeIsCartRequest(false));
     dispatch(setOrderRequest(abbr));
-
     onClose();
+    onChangeSuppiler(abbr, headTitle);
+  };
+
+  const gotoCart = () => {
+    setVisibleCart(false);
+      const newList = suppliers.filter((item) => item.abbr !== abbr);
+      dispatch(setOrderRequest(abbr));
+      dispatch(actionUpdateSuppliers(newList));
+      dispatch(actionChangeSupplier(newList[0].abbr));
+      onChangeCart(newList[0].abbr)
+  
+  };
+
+  const handleCancel = () => {
+    setVisibleCart(false);
+  };
+
+  const onClickCheckout = () => {
     if (!error) {
-      //onChangeSuppiler(abbr, headTitle);
-      success();
-      onChangeSuppiler(abbr, headTitle);
+      setVisibleCart(true);
     }
     document.documentElement.scrollTop = 0;
   };
@@ -367,7 +389,7 @@ function OrderHeader(props) {
     </Button>
   );
 
-  const buttonOrder = (
+  const buttonCheckout = (
     <Button
       type="primary"
       style={
@@ -382,7 +404,7 @@ function OrderHeader(props) {
               }
           : { display: "none" }
       }
-      onClick={onClickOrder}
+      onClick={onClickCheckout}
     >
       <FaCalendarCheck size={16} style={{ marginBottom: "-4px" }} />
       &nbsp; CHECKOUT
@@ -511,11 +533,11 @@ function OrderHeader(props) {
     </Button>
   );
 
-  function success() {
-    Modal.success({
-      title: "Thanks for your order ...",
-    });
-  }
+  // function success() {
+  //   Modal.success({
+  //     title: "Thanks for your order ...",
+  //   });
+  // }
 
   return (
     <div>
@@ -542,7 +564,7 @@ function OrderHeader(props) {
                 {buttonIsNew}
                 {buttonIsSpecial}
                 {buttonOrdered}
-                {buttonOrder}
+                {buttonCheckout}
                 {buttonCart}
                 {buttonHistory}
                 {buttonSignout}
@@ -564,8 +586,8 @@ function OrderHeader(props) {
               <MenuOutlined />
             </Button>
             <Drawer
-              placement="left"
-              closable={false}
+              placement="right"
+              closable={true}
               onClose={onClose}
               visible={visible}
             >
@@ -574,7 +596,7 @@ function OrderHeader(props) {
                 {buttonIsNew}
                 {buttonIsSpecial}
                 {buttonOrdered}
-                {buttonOrder}
+                {buttonCheckout}
                 {buttonCart}
                 {buttonHistory}
                 {buttonSignout}
@@ -592,19 +614,19 @@ function OrderHeader(props) {
               <MenuOutlined />
             </Button>
             <Drawer
-              placement="left"
-              closable={false}
+              placement="right"
+              closable={true}
               onClose={onClose}
               visible={visible}
             >
-              <div style={{ display: "block", color: "#fff" }}>
+              <div style={{ display: "block", color: "#fff"}}>
                 {listSupplierSelect}
                 {listCategorySelect}
                 {searchInput}
                 {buttonIsNew}
                 {buttonIsSpecial}
                 {buttonOrdered}
-                {buttonOrder}
+                {buttonCheckout}
                 {buttonCart}
                 {buttonHistory}
                 {buttonSignout}
@@ -628,7 +650,7 @@ function OrderHeader(props) {
           paddingTop: "3px",
         }}
       >
-        {cartInform}
+        Welcome to {userData ? userData.company : ""}
       </div>
       <div
         xxl={6}
@@ -640,18 +662,47 @@ function OrderHeader(props) {
         style={{
           position: "fixed",
           zIndex: 1,
-          width: "70%",
+          width:"30%",
           backgroundColor: "#bfbfbf",
-          height: "10px",
+          color:'#3455eb',
           textAlign: "left",
           fontWeight: "bold",
           fontStyle: "italic",
-          padding: "0px 0px 0px 50px",
-          marginBottom: "5px"
+          padding: "5px 0px 0px 100px",
+          marginBottom: "-10px"
         }}
       >
-        Welcome to {userData ? userData.company : ""}
+        Key Suppliers
       </div>
+      <Modal
+          visible={visibleCart}
+          onOk={gotoOrder}
+          onCancel={handleCancel}
+          footer={ suppliers.length > 1 ? [
+            <Button key="back" onClick={handleCancel}>
+              Return
+            </Button>,
+            <Button type="primary"  onClick={gotoCart}>
+              Continue Cart
+            </Button>,     
+            <Button type="primary" onClick={gotoOrder}>
+              Go to ordering
+            </Button>,
+          ] : [
+            <Button key="back" onClick={handleCancel}>
+              Return
+            </Button>,   
+            <Button type="primary" onClick={gotoOrder}>
+              Go to ordering
+            </Button>,
+          ]}
+        >
+          <p  style={{
+          fontWeight: "bold",
+          fontStyle: "italic",
+          fontSize: "24px",
+        }}>Thanks for your order ...</p>
+        </Modal>
     </div>
   );
 }
