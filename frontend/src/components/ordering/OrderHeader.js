@@ -730,7 +730,7 @@ function OrderHeader(props) {
           fontStyle: "italic",
           fontSize: "24px",
         }}>Thanks for your order ...</p>
-        </Modal>
+      </Modal>
     </div>
   );
 }

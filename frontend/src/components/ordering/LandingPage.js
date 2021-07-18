@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import OrderHeader from "./OrderHeader";
-import OrderFooter from "./OrderFooter";
-import { Card, Row, Col, BackTop, Button, Input, Tooltip } from "antd";
+import { Card, Row, Col, BackTop, Button, Input, Image, Tooltip } from "antd";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { trackPromise } from 'react-promise-tracker';
 import { Spinner } from './../../common/spinner';
+
+import OrderHeader from "./OrderHeader";
+import OrderFooter from "./OrderFooter";
 
 import {
   actionGetSuppliers,
@@ -172,7 +173,7 @@ function LandingPage() {
     minHeight: "250px",
     maxHeight: "250px",
     width: "auto",
-    maxWidth: "300px",
+    maxWidth: "400px",   // 300
     textAlign: "center",
     margin: "10px auto",
   };
@@ -227,7 +228,7 @@ function LandingPage() {
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
             <Tooltip title={item.description}>
-              <img
+              <Image
                 style={imageStyel}
                 alt={item.code}
                 //src={`/images/${item.abbr}/${item.code}.jpg`}
