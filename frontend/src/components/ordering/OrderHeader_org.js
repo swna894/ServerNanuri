@@ -1,17 +1,10 @@
 import * as config from "../../Config";
 import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Layout, Select, Space, Input, Drawer, Modal, Tooltip, } from "antd";
+import { Button, Layout, Select, Space, Input, Drawer, Modal } from "antd";
 import { withRouter, Link } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { MenuOutlined } from "@ant-design/icons";
-import newProduct from "../../images/new1_24.ico";
-import sales from "../../images/sale_24.ico";
-import history from "../../images/history2_16.ico";
-import cart from "../../images/cart1_16.ico";
-import report from "../../images/report_16.ico";
-import logout from "../../images/exit_16.ico";
-import checkout from "../../images/checkout_24.ico";
 
 import {
   FaHome,
@@ -240,7 +233,10 @@ function OrderHeader(props) {
   };
   const styleSupplier = { width: "100%", fontSize:"24px", fontWeight: "bold" };
   const styleCategory = { width: "100%", fontSize:"20px", fontWeight: "bold"};
-
+  const styleButton = {
+    display: "inline-block",
+    width: "110px",
+  };
 
   const onClickCart = () => {
     onChangeButton(config.CART);
@@ -364,183 +360,150 @@ function OrderHeader(props) {
     document.documentElement.scrollTop = 0;
   };
 
-  const onClickHistory = () => {
+  const onClickOrdered = () => {
     onChangeButton("ORDERED");
     onClose();
     dispatch(getInitCartInform());
     document.documentElement.scrollTop = 0;
   };
 
-  const stylesButton = image => ( {
-    backgroundImage:`url(${image})`,
-    backgroundRepeat  : 'no-repeat',
-    backgroundPosition: 'center',
-    borderRadius: '4px',
-    border: '1px solid black',
-    display: "inline-block",
-    width: "50px",
-  } );
-
-  const stylesHanbger = {
-    display: "inline-block",
-    width: "100%",
-    marginTop: "10px",
-    marginBottom: "5px",
-  } 
-
   const buttonCart = (
-    width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Show carted product'>
-        <Button
-          type="primary"
-          style={ isCart || !cartInform? { display: "none" } : stylesButton(cart) }
-          onClick={onClickCart}
-        > &nbsp; </Button>
-      </Tooltip>
-    :
-      <Button
-        type="primary"
-        style={ isCart ? { display: "none" } : stylesHanbger }
-        onClick={onClickCart}
-      >
-        <FaShoppingCart size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; CART
-      </Button>
+    <Button
+      type="primary"
+      style={
+        isCart === true || cartInform === undefined || cartInform === ""
+          ? { display: "none" }
+          : width > config.WIDTH_BIG
+          ? styleButton
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginTop: "10px",
+              marginBottom: "5px",
+            }
+      }
+      onClick={onClickCart}
+    >
+      <FaShoppingCart size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; CART
+    </Button>
   );
 
   const buttonCheckout = (
-    width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Checkout product'>
-        <Button
-          type="primary"
-          style={ isCart ? stylesButton(checkout)  : { display: "none" } }
-          onClick={onClickCheckout}
-        > &nbsp; </Button>
-      </Tooltip>
-    :
-      <Button
-        type="primary"
-        style={ stylesHanbger }
-        onClick={onClickCheckout}
-      >
-        <FaCalendarCheck size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; CHECKOUT
-      </Button>
+    <Button
+      type="primary"
+      style={
+        isCart === true
+          ? width > config.WIDTH_BIG
+            ? styleButton
+            : {
+                display: "inline-block",
+                width: "100%",
+                marginTop: "10px",
+                marginBottom: "5px",
+              }
+          : { display: "none" }
+      }
+      onClick={onClickCheckout}
+    >
+      <FaCalendarCheck size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; CHECKOUT
+    </Button>
   );
 
+  const buttonOrdered = (
+    <Button
+      type="primary"
+      style={
+        //isCart === true
+        width > config.WIDTH_BIG
+          ? styleButton
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginTop: "10px",
+              marginBottom: "5px",
+            }
+        // : { display: "none" }
+      }
+      onClick={onClickOrdered}
+    >
+      <FaTruck size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; HISTORY
+    </Button>
+  );
 
   const buttonHistory = (
-    width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Show ordered product'>
-        <Button
-          type="primary"
-          style={  stylesButton(history) }
-          onClick={onClickHistory}
-        > &nbsp; </Button>
-      </Tooltip>
-    : 
+    <Link to="/history">
       <Button
         type="primary"
-        style={ stylesHanbger }
-        onClick={onClickHistory}
+        style={
+          //isCart === true
+          width > config.WIDTH_BIG
+            ? styleButton
+            : {
+                display: "inline-block",
+                width: "100%",
+                marginTop: "10px",
+                marginBottom: "5px",
+              }
+          // : { display: "none" }
+        }
+        //onClick={onClickHistory}
       >
-        <FaTruck size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; HISTORY
+        <FaChartLine size={16} style={{ marginBottom: "-4px" }} />
+        &nbsp; REPORT
       </Button>
-
+    </Link>
   );
 
-  const buttonReport = (
-    width > config.WIDTH_BIG ?
-      <Link to="/history">
-        <Tooltip placement="top" title= 'GoTo ordered report'>
-          <Button
-            type="primary"
-            style={ stylesButton(report) }
-          > &nbsp; </Button>
-        </Tooltip>
-      </Link>
-    : 
-      <Link to="/history">
-        <Button
-            type="primary"
-            style={ stylesHanbger }
-            onClick={onClickHistory}
-          >
-            <FaChartLine size={16} style={{ marginBottom: "-4px" }} />
-            &nbsp; REPORT
-        </Button>
-      </Link>
-      
+  const buttonIsNew = isNew ? (
+    <Button
+      type="primary"
+      style={
+        isCart === true
+          ? { display: "none" }
+          : width > config.WIDTH_BIG
+          ? styleButton
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginBottom: "5px",
+              marginTop: "5px",
+            }
+      }
+      onClick={onClickNew}
+    >
+      <FaTags size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; NEW
+    </Button>
+  ) : (
+    ""
   );
 
-  const buttonIsNew = 
-    isNew ? (
-        width > config.WIDTH_BIG ?
-        <Tooltip placement="top" title= 'Show new products'>
-          <Button
-            type="primary"
-            style={ isCart ? { display: "none" } : stylesButton(newProduct)  }
-            onClick={onClickNew}
-          > &nbsp; </Button>
-        </Tooltip>
-      : 
-        <Button
-        type="primary"
-        style={ stylesHanbger }
-        onClick={onClickNew}
-        >
-          <FaTags size={16} style={{ marginBottom: "-4px" }} />
-            &nbsp; NEW
-        </Button>
-    ) : (
-      ""
-    );
-
-  const buttonIsSpecial = 
-    isSpecial ? (
-      width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Show sales products'>
-        <Button
-          type="primary"
-          style={ isCart ? { display: "none" } :  stylesButton(sales) }
-          onClick={onClickSpecial}
-        > &nbsp; </Button>
-       </Tooltip> 
-      :
-        <Button
-          type="primary"
-          style={ stylesHanbger }
-          onClick={onClickNew}
-        >
-          <FaGifts size={16} style={{ marginBottom: "-4px" }} />
-           &nbsp; SPECIAL
-        </Button>
-    ) : (
-      ""
-    );
-
-  const buttonSignout = (
-    width > config.WIDTH_BIG  ?
-      <Tooltip placement="top" title= 'Sign out'>
-        <Button
-          type="primary"
-          style={ stylesButton(logout)}
-          onClick={onClickSignout}
-        > &nbsp; </Button>
-      </Tooltip>
-    :
-      <Button
-        type="primary"
-        style={ stylesHanbger }
-        onClick={onClickSignout}
-      >
-        <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; SIGNOUT
-      </Button>
-
+  const buttonIsSpecial = isSpecial ? (
+    <Button
+      type="primary"
+      style={
+        isCart === true
+          ? { display: "none" }
+          : width > config.WIDTH_BIG
+          ? styleButton
+          : {
+              display: "inline-block",
+              width: "100%",
+              marginBottom: "5px",
+              marginTop: "5px",
+            }
+      }
+      onClick={onClickSpecial}
+    >
+      <FaGifts size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; SPECIAL
+    </Button>
+  ) : (
+    ""
   );
-
 
   function onClickHead(e) {
     e.preventDefault();
@@ -559,7 +522,16 @@ function OrderHeader(props) {
     </a>
   );
 
- 
+  const buttonSignout = (
+    <Button
+      onClick={onClickSignout}
+      type="primary"
+      style={width > config.WIDTH_BIG ? styleButton : stylePersent}
+    >
+      <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
+      &nbsp; LOGOUT
+    </Button>
+  );
 
   // function success() {
   //   Modal.success({
@@ -591,10 +563,10 @@ function OrderHeader(props) {
               <div>
                 {buttonIsNew}
                 {buttonIsSpecial}
-                {buttonHistory}
+                {buttonOrdered}
                 {buttonCheckout}
                 {buttonCart}
-                {buttonReport}
+                {buttonHistory}
                 {buttonSignout}
               </div>
             </Space>
@@ -623,10 +595,10 @@ function OrderHeader(props) {
                 {searchInput}
                 {buttonIsNew}
                 {buttonIsSpecial}
-                {buttonHistory}
+                {buttonOrdered}
                 {buttonCheckout}
                 {buttonCart}
-                {buttonReport}
+                {buttonHistory}
                 {buttonSignout}
               </div>
             </Drawer>
@@ -653,10 +625,10 @@ function OrderHeader(props) {
                 {searchInput}
                 {buttonIsNew}
                 {buttonIsSpecial}
-                {buttonHistory}
+                {buttonOrdered}
                 {buttonCheckout}
                 {buttonCart}
-                {buttonReport}
+                {buttonHistory}
                 {buttonSignout}
               </div>
             </Drawer>
@@ -691,7 +663,7 @@ function OrderHeader(props) {
           position: "fixed",
           zIndex: 1,
           width:"30%",
-  //        backgroundColor: "#bfbfbf",
+          backgroundColor: "#bfbfbf",
           color:'#3455eb',
           textAlign: "left",
           fontWeight: "bold",
