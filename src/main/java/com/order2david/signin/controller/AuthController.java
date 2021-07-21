@@ -1,4 +1,4 @@
-package com.order2david.jwt.controller;
+package com.order2david.signin.controller;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,15 +20,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.order2david.jwt.JwtFilter;
-import com.order2david.jwt.TokenProvider;
-import com.order2david.jwt.dto.LoginDto;
-import com.order2david.jwt.dto.TokenDto;
-import com.order2david.jwt.service.UserService;
+import com.order2david.exception.TokenRefreshException;
 import com.order2david.model.Address;
+import com.order2david.shop.model.RefreshToken;
 import com.order2david.shop.model.Roles;
 import com.order2david.shop.model.Shop;
 import com.order2david.shop.repository.ShopRepository;
+import com.order2david.shop.service.RefreshTokenService;
+import com.order2david.signin.JwtFilter;
+import com.order2david.signin.TokenProvider;
+import com.order2david.signin.payload.LoginDto;
+import com.order2david.signin.payload.TokenDto;
+import com.order2david.signin.payload.TokenRefreshResponse;
+import com.order2david.signin.service.UserService;
 
 @RestController
 @RequestMapping("/api")
@@ -39,6 +43,10 @@ public class AuthController {
 	@Autowired
 	ShopRepository shopRepository;
 
+	@Autowired
+	RefreshTokenService refreshTokenService;
+	
+	
 	private UserService userService;
 	private final TokenProvider tokenProvider;
 	private final AuthenticationManagerBuilder authenticationManagerBuilder;
@@ -64,17 +72,18 @@ public class AuthController {
 			Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 
-			String jwt = tokenProvider.createToken(authentication);
-
 			Shop shop = userService.getMyUserWithAuthorities().get();
-
+			
+			String jwt = tokenProvider.createToken(authentication);
+			RefreshToken refreshToken = refreshTokenService.createRefreshToken(shop.getId());
+			
 			HttpHeaders httpHeaders = new HttpHeaders();
 			httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
-			TokenDto tokenDto = getTokenDto(shop, jwt);
+			TokenDto tokenDto = getTokenDto(shop, jwt, refreshToken.getToken());
 
 			return new ResponseEntity<>(tokenDto, httpHeaders, HttpStatus.OK);
 		} catch (Exception e) {
-			TokenDto tokenDto = getTokenDto(null, null);
+			TokenDto tokenDto = getTokenDto(null, null, null);
 			System.err.println(e.getMessage());
 			//e.printStackTrace(); // 오류 출력(방법은 여러가지)
 			// throw e; //최상위 클래스가 아니라면 무조건 던져주자
@@ -88,10 +97,10 @@ public class AuthController {
 	public ResponseEntity<TokenDto> signout() {
 
 		try {
-			TokenDto tokenDto = getTokenDto(null, null);
+			TokenDto tokenDto = getTokenDto(null, null, null);
 			return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
 		} catch (Exception e) {
-			TokenDto tokenDto = getTokenDto(null, null);
+			TokenDto tokenDto = getTokenDto(null, null, null);
 			System.err.println(e.getMessage());
 			//e.printStackTrace(); // 오류 출력(방법은 여러가지)
 			// throw e; //최상위 클래스가 아니라면 무조건 던져주자
@@ -123,19 +132,34 @@ public class AuthController {
 		return shopRepository.save(shop);
 	}
 
+    @PostMapping("/refreshtoken")
+	public ResponseEntity<?> refreshtoken(@Valid @RequestBody String freshToken) {
+	    String requestRefreshToken = freshToken;
+
+	    return refreshTokenService.findByToken(requestRefreshToken)
+	        .map(refreshTokenService::verifyExpiration)
+	        .map(RefreshToken::getShop)
+	        .map(shop -> {
+	          String token = tokenProvider.generateTokenFromUsername(shop.getEmail());
+	          return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+	        })
+	        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
+	            "Refresh token is not in database!"));
+	  }
+	  
 	@GetMapping("/auth")
 	public ResponseEntity<TokenDto> auth() {
 		TokenDto tokenDto;
 		try {
 			if (userService.getMyUserWithAuthorities().isPresent()) {
 				Shop shop = userService.getMyUserWithAuthorities().get();
-				tokenDto = getTokenDto(shop, null);
+				tokenDto = getTokenDto(shop, null, null);
 			} else {
-				tokenDto = getTokenDto(null, null);		
+				tokenDto = getTokenDto(null, null, null);		
 			}
 			return new ResponseEntity<>(tokenDto, null, HttpStatus.OK);
 		} catch (Exception e) {
-			tokenDto = getTokenDto(null, null);
+			tokenDto = getTokenDto(null, null, null);
 			// System.err.println(e.getMessage());
 			e.printStackTrace(); // 오류 출력(방법은 여러가지)
 			// throw e; //최상위 클래스가 아니라면 무조건 던져주자
@@ -145,11 +169,12 @@ public class AuthController {
 		}
 	}
 
-	private TokenDto getTokenDto(Shop shop, String jwt) {
+	private TokenDto getTokenDto(Shop shop, String jwt, String refreshToken) {
 		TokenDto tokenDto = new TokenDto();
 		if (shop != null) {
 			tokenDto.setIsAuth(true);
 			tokenDto.setToken(jwt);
+			tokenDto.setRefreshToken(refreshToken);
 			tokenDto.setId(shop.getAbbr());
 			//System.err.println(shop.getRoles());
 			tokenDto.setIsAdmin(shop.getRoles().contains(new Roles("ROLE_USER")) ? true : false);

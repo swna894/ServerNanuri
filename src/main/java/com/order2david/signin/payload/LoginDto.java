@@ -1,5 +1,4 @@
-package com.order2david.jwt.dto;
-
+package com.order2david.signin.payload;
 
 import lombok.*;
 
@@ -11,15 +10,13 @@ import javax.validation.constraints.Size;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDto {
+public class LoginDto {
 
    @NotNull
    @Size(min = 3, max = 50)
-   private String username;
+   private String email;
 
- 
    @NotNull
    @Size(min = 3, max = 100)
    private String password;
-
 }

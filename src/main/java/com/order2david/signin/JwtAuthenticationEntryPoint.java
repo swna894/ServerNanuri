@@ -1,4 +1,4 @@
-package com.order2david.jwt;
+package com.order2david.signin;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

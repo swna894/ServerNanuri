@@ -1,4 +1,4 @@
-package com.order2david.jwt;
+package com.order2david.signin;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -29,15 +29,18 @@ public class TokenProvider implements InitializingBean {
 
    private final String secret;
    private final long tokenValidityInMilliseconds;
-
+   private final long refleshtokenValidityInSeconds;
+   
    private Key key;
 
 
    public TokenProvider(
       @Value("${jwt.secret}") String secret,
-      @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds) {
+      @Value("${jwt.token-validity-in-seconds}") long tokenValidityInSeconds,
+      @Value("${jwt.refresh-validity-in-seconds}") long refleshtokenValidityInSeconds) {
       this.secret = secret;
       this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
+      this.refleshtokenValidityInSeconds = tokenValidityInSeconds * 1000;
    }
 
    @Override
@@ -55,13 +58,25 @@ public class TokenProvider implements InitializingBean {
       Date validity = new Date(now + this.tokenValidityInMilliseconds);
 
       return Jwts.builder()
-         .setSubject(authentication.getName())
+         .setSubject(authentication.getName())  // 결과 : shop.getEmail() 
          .claim(AUTHORITIES_KEY, authorities)
          .signWith(key, SignatureAlgorithm.HS512)
          .setExpiration(validity)
          .compact();
    }
 
+   public String generateTokenFromUsername(String email) {
+	   	long now = (new Date()).getTime();
+	    Date validity = new Date(now + this.tokenValidityInMilliseconds);
+	      
+	    return Jwts.builder()
+	            .setSubject(email)
+	            .claim(AUTHORITIES_KEY, refleshtokenValidityInSeconds)
+	            .signWith(key, SignatureAlgorithm.HS512)
+	            .setExpiration(validity)
+	            .compact();
+	  }
+   
    public Authentication getAuthentication(String token) {
       Claims claims = Jwts
               .parserBuilder()

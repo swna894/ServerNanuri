@@ -11,10 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 
-import com.order2david.jwt.JwtAccessDeniedHandler;
-import com.order2david.jwt.JwtAuthenticationEntryPoint;
-import com.order2david.jwt.JwtSecurityConfig;
-import com.order2david.jwt.TokenProvider;
+import com.order2david.signin.JwtAccessDeniedHandler;
+import com.order2david.signin.JwtAuthenticationEntryPoint;
+import com.order2david.signin.JwtSecurityConfig;
+import com.order2david.signin.TokenProvider;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)

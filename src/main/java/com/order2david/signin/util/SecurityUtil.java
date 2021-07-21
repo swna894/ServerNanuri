@@ -1,4 +1,4 @@
-package com.order2david.jwt.util;
+package com.order2david.signin.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

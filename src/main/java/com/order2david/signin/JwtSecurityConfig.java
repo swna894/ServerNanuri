@@ -1,4 +1,4 @@
-package com.order2david.jwt;
+package com.order2david.signin;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

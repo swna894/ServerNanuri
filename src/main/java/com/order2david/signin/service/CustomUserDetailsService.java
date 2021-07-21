@@ -1,4 +1,4 @@
-package com.order2david.jwt.service;
+package com.order2david.signin.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

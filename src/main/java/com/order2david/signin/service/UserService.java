@@ -1,14 +1,14 @@
-package com.order2david.jwt.service;
+package com.order2david.signin.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.order2david.jwt.dto.UserDto;
-import com.order2david.jwt.util.SecurityUtil;
 import com.order2david.shop.model.Roles;
 import com.order2david.shop.model.Shop;
 import com.order2david.shop.repository.ShopRepository;
+import com.order2david.signin.payload.UserDto;
+import com.order2david.signin.util.SecurityUtil;
 
 import java.util.Collections;
 import java.util.Optional;

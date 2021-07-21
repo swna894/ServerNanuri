@@ -173,9 +173,9 @@ function LandingPage() {
     minHeight: "250px",
     maxHeight: "250px",
     width: "auto",
-    maxWidth: "400px",   // 300
+    maxWidth: "300px",   // 300
     textAlign: "center",
-    margin: "10px auto",
+    margin: "2px auto",
   };
   const specialStyle = { position: "absolute", top: "20px", left: "25px" };
   const newStyle = { position: "absolute", top: "200px", left: "25px" };

@@ -1,4 +1,4 @@
-package com.order2david.jwt.controller;
+package com.order2david.signin.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.order2david.jwt.service.UserService;
 import com.order2david.shop.model.Shop;
+import com.order2david.signin.service.UserService;
 
 @RestController
 @RequestMapping("/api")
