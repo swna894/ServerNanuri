@@ -19,20 +19,6 @@ axiosInstance.interceptors.request.use(
 
 //const refresh = Cookies.get("refresh");
 
-
-//request interceptor to add the auth token header to requests
-// axios.interceptors.request.use(
-//   (config) => {
-//     const accessToken = localStorage.getItem("accessToken");
-//     if (accessToken) {
-//       config.headers["x-auth-token"] = accessToken;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     Promise.reject(error);
-//   }
-// );
 //response interceptor to refresh token on receiving token expired error
 // let isRefreshing = false;
 // let failedQueue = [];
@@ -78,10 +64,12 @@ axiosInstance.interceptors.request.use(
 //                 axios
 //                     .post('/api/refresh', {refresh})
 //                     .then(({ data }) => {
-//                         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.refreshToken;
-//                         originalRequest.headers['Authorization'] = 'Bearer ' + data.refreshToken;
+//                         console.log(JSON.stringify(data))
+//                         axios.defaults.headers.common['Authorization'] = 'Bearer ' + data.asccessToken;
+//                         originalRequest.headers['Authorization'] = 'Bearer ' + data.asccessToken;
+//                         localStorage.setItem("jwtToken", data.accessToken);
 //                         Cookies.set("refresh", data.refreshToken);
-//                         processQueue(null, data.refreshToken);
+//                         processQueue(null, data.asccessToken);
 //                         resolve(axios(originalRequest));
 //                     })
 //                     .catch(err => {
@@ -119,12 +107,11 @@ axiosInstance.interceptors.response.use((response) => {
 }, async function (error) {
   console.log("response" + error)
   const {
-    config,
     response: { status },
   } = error;
   const originalRequest = error.config;
   if (status === 401 ) {
-    console.log('토큰 만료')
+    //console.log('토큰 만료')
     if (!isTokenRefreshing) {
       // isTokenRefreshing이 false인 경우에만 token refresh 요청
       isTokenRefreshing = true;

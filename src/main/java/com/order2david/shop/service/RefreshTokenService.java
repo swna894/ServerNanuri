@@ -31,8 +31,11 @@ public class RefreshTokenService {
   }
 
   public RefreshToken createRefreshToken(Long shopId) {
+    Optional<RefreshToken> refreshOption = refreshTokenRepository.findByShopId(shopId);  
+    if(refreshOption.isPresent()) {
+    	refreshTokenRepository.deleteByShopId(shopId);
+    }
     RefreshToken refreshToken = new RefreshToken();
-
     refreshToken.setShop(shopRepository.findById(shopId).get());
     refreshToken.setExpiryDate(Instant.now().plusMillis(refreshTokenDurationMs));
     refreshToken.setToken(UUID.randomUUID().toString());
