@@ -1,4 +1,4 @@
-import axios from "axios";
+//import axios from "axios";
 import {
   GET_SUPPLIER_REQUEST,
   // GET_SUPPLIERS_REQUEST,
@@ -13,6 +13,8 @@ import {
   GET_CART_INFORM,
 } from "../service/types";
 
+import axiosInstance from "../service/axiosInstance";
+
 export const actionUpdateSuppliers = (suppliers) => {
   return (dispatch) => {
         dispatch(getSuppliersSucess(suppliers));
@@ -24,7 +26,7 @@ export const actionGetSuppliers = (cart = '') => {
   return (dispatch) => {
     //dispatch(getSuppliersRequest());
     let url = cart ? "/api/suppliers/cart" : "/api/suppliers/order";
-    axios
+    axiosInstance
       .get(url)
       .then((response) => {
         dispatch(getSuppliersSucess(response.data));
@@ -38,7 +40,7 @@ export const actionGetSuppliers = (cart = '') => {
 export const actionGetSupplier = () => {
   return (dispatch) => {
     //dispatch(getSuppliersRequest());
-    axios
+    axiosInstance
       .get("/api/supplier")
       .then((response) => {
         dispatch(getSupplierRequest(response.data));
@@ -107,7 +109,7 @@ const changeCategoryRequest = (category) => {
 };
 
 const changeSupplierRequest = (abbr) => {
-  const request = axios
+  const request = axiosInstance
     .get(`/api/supplier/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {
@@ -149,7 +151,7 @@ const getSuppliersFailusre = (error) => {
 };
 
 export const getCartInform = (abbr = "") => {
-  const request = axios
+  const request = axiosInstance
     .get(`/api/order/cart/inform/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {

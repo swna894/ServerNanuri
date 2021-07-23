@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Form, Input, Button, Row, Col, Card } from "antd";
 import { useDispatch } from "react-redux";
-import { signupUser } from "../../_actions/user_action";
+import { signupUser } from "../../_actions/signin_action";
 
 function SignupPage(props) {
   const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { auth } from "../_actions/user_action";
+import { auth } from "../_actions/signin_action";
 
 export default function authenticate( SpecificComponent, option, adminRoute = null ) {
   //null    =>  아무나 출입이 가능한 페이지
@@ -24,7 +24,7 @@ export default function authenticate( SpecificComponent, option, adminRoute = nu
             //props.history.push("/");
             window.location.href = "/";
           } else {
-            if (option === false) props.history.push("/order");
+            if (option === true) props.history.push("/order");
           }
         }
       });

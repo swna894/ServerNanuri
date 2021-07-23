@@ -1,4 +1,6 @@
 import axios from "axios";
+import axiosInstance from "../service/axiosInstance";
+
 import {
   SIGNIN_USER,
   SIGNUP_USER,
@@ -7,7 +9,7 @@ import {
 } from "../service/types";
 
 export function signinUser(dataToSubmit) {
-  const request = axios
+  const request = axiosInstance
     .post("/api/signin", dataToSubmit)
     .then((response) => response.data)
     .catch((error) => {
@@ -43,7 +45,7 @@ export function signoutUser() {
 }
 
 export function auth() {
-  const request = axios.get("/api/auth")
+  const request = axiosInstance.get("/api/auth")
   .then((response) => response.data);
 
   return {

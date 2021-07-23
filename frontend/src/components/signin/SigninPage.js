@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 import { Form, Input, Button, Checkbox, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { signinUser } from "../../_actions/user_action";
+import { signinUser } from "../../_actions/signin_action";
 import { withRouter } from "react-router-dom";
 import { Layout } from "antd";
+import Cookies from "js-cookie";
 import "./SignInPage.css";
 
 function SignPagePage(props) {
@@ -29,17 +30,19 @@ function SignPagePage(props) {
   };
 
   const onClickSingin = (event) => {
-    let body = {
+    let param = {
       email: Email,
       password: Password,
     };
 
     if (Email && Password && Password.length > 3) {
-      dispatch(signinUser(body))
+      dispatch(signinUser(param))
         .then((response) => {
           if (response.payload.isAuth) {
             let token = response.payload.token;
+            let refresh= response.payload.refresh;
             localStorage.setItem("jwtToken", token);
+            Cookies.set("refresh", refresh);
             props.history.push("/order");
           } else {
             form.resetFields();

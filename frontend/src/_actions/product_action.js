@@ -7,21 +7,16 @@ import {
   SET_ORDERING_REQUEST,
 } from "../service/types";
 
-import axios from "axios";
-//import authToken from "../utils/authToken";
-function authToken(token) {
-  if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common["Authorization"];
-  }
-}
+//import axios from "axios";
+import axiosInstance from "../service/axiosInstance";
 
 export function getCategoriesAction(params) {
-  authToken(localStorage.jwtToken);
-  const request = axios
+  const request = axiosInstance
     .get("/api/categorys", params)
-    .then((response) => response.data)
+    .then((response) => {
+         return response.data
+        }
+      )
     .catch((error) => {
       console.log("Problem !!! Get Categoies", error);
     });
@@ -33,8 +28,7 @@ export function getCategoriesAction(params) {
 }
 
 export function getProductsAction(abbr, category, params) {
-  authToken(localStorage.jwtToken);
-  const request = axios
+  const request = axiosInstance
     .get(`/api/products/${abbr}/${category}`, params)
     .then((response) => response.data)
     .catch((error) => {
@@ -47,13 +41,14 @@ export function getProductsAction(abbr, category, params) {
 }
 
 export function getProductsInitAction() {
-  authToken(localStorage.jwtToken);
-  const request = axios
+  //axios.defaults.headers.Authorization = `Bearer ${localStorage.jwtToken}`;
+  const request = axiosInstance
     .get(`/api/products/init`)
-    .then((response) => response.data)
+    .then((response) => {
+      return response.data})
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
-       window.location.href = "/";
+       // window.location.href = "/";
     });
 
   return {
@@ -63,8 +58,8 @@ export function getProductsInitAction() {
 }
 
 export async function changeCart(products, pageable, param) {
-  authToken(localStorage.jwtToken);
-  const request = await axios
+  //authToken(localStorage.jwtToken);
+  const request = await axiosInstance
     .post(`/api/order/cart`, param)
     .then((response) => response.data)
     .catch((error) => {
@@ -78,7 +73,7 @@ export async function changeCart(products, pageable, param) {
 }
 
 export const getInitCartInform = (abbr = "") => {
-  const request = axios
+  const request = axiosInstance
     .get(`/api/order/cart/inform/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {
@@ -92,7 +87,7 @@ export const getInitCartInform = (abbr = "") => {
 };
 
 export const setOrderRequest = (abbr) => {
-  const request =  axios
+  const request =  axiosInstance
     .put(`/api/order/confirm/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {

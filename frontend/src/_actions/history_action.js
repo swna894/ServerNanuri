@@ -2,19 +2,10 @@ import {
   GET_ORDER_HISTORY,
 } from "../service/types";
 
-import axios from "axios";
-
-function authToken(token) {
-  if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common["Authorization"];
-  }
-}
+import axiosInstance from "../service/axiosInstance";
 
 export const getHistoryOrder = (abbr = '') => {
-  authToken(localStorage.jwtToken);
-  const request = axios
+  const request = axiosInstance
     .get(`/api/orders/history/${abbr}`)
     .then((response) => response.data)
     .catch((error) => {

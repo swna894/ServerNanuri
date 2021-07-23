@@ -34,4 +34,10 @@ public class TokenRefreshResponse {
     this.tokenType = tokenType;
   }
 
+@Override
+public String toString() {
+	return "TokenRefreshResponse [accessToken=" + accessToken + ", refreshToken=" + refreshToken + ", tokenType="
+			+ tokenType + "]\n";
+}
+
 }

@@ -54,4 +54,10 @@ public class RefreshTokenService {
   public int deleteByshopId(Long shopId) {
     return refreshTokenRepository.deleteByShop(shopRepository.findById(shopId).get());
   }
+
+  @Transactional
+  public void deleteByToken(String refreshToken) {
+	refreshTokenRepository.deleteByToken(refreshToken);
+	
+  }
 }

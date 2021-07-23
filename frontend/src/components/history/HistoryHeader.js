@@ -3,7 +3,7 @@ import { withRouter, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Space, Select, Tooltip } from "antd";
 import { FaHome } from "react-icons/fa";
-import { signoutUser } from "../../_actions/user_action";
+import { signoutUser } from "../../_actions/signin_action";
 import { FaSignOutAlt, FaGifts, FaRedoAlt } from "react-icons/fa";
 import { getHistoryOrder } from "../../_actions/history_action";
 import { actionChangeSupplier, } from "../../_actions/supplier_action";

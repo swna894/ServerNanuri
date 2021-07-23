@@ -42,7 +42,7 @@ import {
   setOrderRequest,
 } from "../../_actions/product_action";
 
-import { signoutUser } from "../../_actions/user_action";
+import { signoutUser } from "../../_actions/signin_action";
 
 import "./OrderPage.css";
 

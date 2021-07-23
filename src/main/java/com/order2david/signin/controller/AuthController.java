@@ -132,16 +132,23 @@ public class AuthController {
 		return shopRepository.save(shop);
 	}
 
-    @PostMapping("/refreshtoken")
-	public ResponseEntity<?> refreshtoken(@Valid @RequestBody String freshToken) {
-	    String requestRefreshToken = freshToken;
-
+    @PostMapping("/refresh")
+	public ResponseEntity<?> refreshtoken(@Valid @RequestBody TokenDto tokenDto) {
+    	//System.err.println("refresh token 시작" + tokenDto);
+	    //System.err.println("reflesh = " + requestRefreshToken);
+	    //Optional<RefreshToken> ref = refreshTokenService.findByToken(requestRefreshToken);
+	    //System.err.println("reflesh = " + ref);
+    	String requestRefreshToken = tokenDto.getRefresh();
 	    return refreshTokenService.findByToken(requestRefreshToken)
 	        .map(refreshTokenService::verifyExpiration)
 	        .map(RefreshToken::getShop)
 	        .map(shop -> {
 	          String token = tokenProvider.generateTokenFromUsername(shop.getEmail());
-	          return ResponseEntity.ok(new TokenRefreshResponse(token, requestRefreshToken));
+	          RefreshToken refreshToken = refreshTokenService.createRefreshToken(shop.getId());
+	          TokenRefreshResponse tokenRefreshResponse = new TokenRefreshResponse(token, refreshToken.getToken());
+	          refreshTokenService.deleteByToken(requestRefreshToken);
+	          //System.err.println(tokenRefreshResponse);
+	          return ResponseEntity.ok(tokenRefreshResponse);
 	        })
 	        .orElseThrow(() -> new TokenRefreshException(requestRefreshToken,
 	            "Refresh token is not in database!"));
@@ -174,7 +181,7 @@ public class AuthController {
 		if (shop != null) {
 			tokenDto.setIsAuth(true);
 			tokenDto.setToken(jwt);
-			tokenDto.setRefreshToken(refreshToken);
+			tokenDto.setRefresh(refreshToken);
 			tokenDto.setId(shop.getAbbr());
 			//System.err.println(shop.getRoles());
 			tokenDto.setIsAdmin(shop.getRoles().contains(new Roles("ROLE_USER")) ? true : false);

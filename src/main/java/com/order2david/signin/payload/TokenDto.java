@@ -12,7 +12,7 @@ public class TokenDto {
 	private Boolean isAuth;
 	private Boolean isAdmin;
     private String token;
-    private String refreshToken;
+    private String refresh;
     private String id;
     private String company;
 }
