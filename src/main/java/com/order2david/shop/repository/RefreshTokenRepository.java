@@ -1,5 +1,6 @@
 package com.order2david.shop.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -21,7 +22,7 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
   
   void deleteByToken(String refreshToken);
 
-  Optional<RefreshToken> findByShopId(Long shopId);
+  List<RefreshToken> findByShopId(Long shopId);
 
   @Transactional
   void deleteByShopId(Long shopId);

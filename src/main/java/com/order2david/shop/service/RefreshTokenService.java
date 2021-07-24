@@ -1,6 +1,7 @@
 package com.order2david.shop.service;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import com.order2david.exception.TokenRefreshException;
 import com.order2david.shop.model.RefreshToken;
 import com.order2david.shop.repository.RefreshTokenRepository;
 import com.order2david.shop.repository.ShopRepository;
+
 
 
 @Service
@@ -31,8 +33,8 @@ public class RefreshTokenService {
   }
 
   public RefreshToken createRefreshToken(Long shopId) {
-    Optional<RefreshToken> refreshOption = refreshTokenRepository.findByShopId(shopId);  
-    if(refreshOption.isPresent()) {
+    List<RefreshToken> refreshOption = refreshTokenRepository.findByShopId(shopId);  
+    if(refreshOption.size() > 0) {
     	refreshTokenRepository.deleteByShopId(shopId);
     }
     RefreshToken refreshToken = new RefreshToken();

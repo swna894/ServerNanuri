@@ -132,6 +132,7 @@ public class OrderController {
 	
 	@GetMapping("orders/f")
 	public List<Order> findAllByParm(@RequestParam Map<String, String> paramater) {
+		//System.err.println(paramater);
 		OrderType status = OrderType.valueOf(paramater.get("status"));
 		LocalDateTime start = LocalDate.parse(paramater.get("start")).atStartOfDay();
 		LocalDateTime end = LocalDate.parse(paramater.get("end")).atStartOfDay().plusDays(1).minusSeconds(1);
