@@ -72,7 +72,7 @@ public class Product {
 	private boolean isCheck;
 	@Transient
 	private String orderedDate;
-	
+	private String comment;
 
 	// 0423
 	// == 연관 관계 == //

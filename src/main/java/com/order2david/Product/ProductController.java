@@ -14,8 +14,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.transaction.Transactional;
 
+import org.qlrm.mapper.JpaResultMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.Product.model.Product;
+import com.order2david.Product.model.ProductManage;
 import com.order2david.Product.model.ProductStatus;
 import com.order2david.Product.repository.ProductRepository;
 import com.order2david.Product.repository.ProductStatusRepository;
@@ -61,7 +66,7 @@ public class ProductController {
 
 	@Autowired
 	ProductRepository productRepository;
-
+	
 	@Autowired
 	OrderRepository orderRepository;
 
@@ -77,6 +82,9 @@ public class ProductController {
 	@Autowired
 	OrderItemRepository orderItemRepository;
 
+	@PersistenceContext
+	EntityManager em;
+	
 	@PostMapping("/products")
 	@Transactional
 	public List<Product> postAll(@RequestBody List<Product> products) {
@@ -257,12 +265,6 @@ public class ProductController {
 		return orderRepository.findByInvoice(invoice);
 	}
 
-	@GetMapping("/products/abbr/{abbr}")
-	public List<Product> findByAbbr(@PathVariable String abbr) {
-		List<Product> products = productRepository.findByAbbrOrderByCodeAsc(abbr);
-		return products;
-	}
-
 	@GetMapping("/products/elements/{abbr}")
 	public Long findByAbbrElements(@PathVariable String abbr) {
 		Pageable paging = PageRequest.of(0, 100, Sort.by("code"));
@@ -395,4 +397,23 @@ public class ProductController {
 		}
 		return productStatusRepository.save(status);
 	}
+	
+	// NanuriManagemt product 지원
+	@GetMapping("/products/abbr/{abbr}")
+	public List<ProductManage> findByAbbr(@PathVariable String abbr) {
+
+		String query = "SELECT id, seq, code, abbr, company, category, barcode, description, "
+				+ " price, special_price, pack, stock, is_photo, is_show, is_special, is_new, comment "; 
+		   query = query +	" FROM product WHERE abbr = :abbr  ";
+		   query = query +	" ORDER BY code ASC";
+
+		   Query nativeQuery = em.createNativeQuery(query);
+		   nativeQuery.setParameter("abbr", abbr);
+		   JpaResultMapper jpaResultMapper = new JpaResultMapper();
+		   List<ProductManage> products = jpaResultMapper.list(nativeQuery, ProductManage.class);
+		   
+		return products;
+	}
+	
+
 }
