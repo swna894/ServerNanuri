@@ -89,6 +89,18 @@ public class Order {
 	@OrderBy("code")
 	private List<OrderItem> orderItems = new ArrayList<OrderItem>(); // 주문 ITEM
 
+	public Order( ) {
+		
+	}
+	public Order(Shop shop, Supplier supplier) {
+		this.setShop(shop);
+		this.setShopAbbr(shop.getAbbr());
+		// order.setSupplier(supplier);
+		this.setStatus(OrderType.CART);
+		this.setOrderDate(LocalDateTime.now());
+		invoice = getInvoice();
+		amount = 0.0;
+	}
 	// ==생성 메서드==//
 	public Order createOrder(Shop shop, Supplier supplier) {
 		Order order = new Order();
@@ -187,12 +199,14 @@ public class Order {
 		Double doubleSum = orderItems.stream().mapToDouble(OrderItem::getAmount).sum();
 		this.setAmount(doubleSum);
 	}
-
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", supplier=" + supplier + ", shop=" + shop + ", status=" + status + ", amount="
-				+ amount + ", invoice=" + invoice + ", shopAbbr=" + shopAbbr + ", orderDate=" + orderDate + ", created="
-				+ created + ", updated=" + updated + "]\n\n";
+		return "Order [id=" + id + ", created=" + created + ", updated=" + updated + ", status=" + status + ", amount="
+				+ amount + ", invoice=" + invoice + ", shopAbbr=" + shopAbbr + ", comment=" + comment + ", company="
+				+ company + ", orderDate=" + orderDate + ", supplier=" + supplier + ", shop=" + shop + ", orderItems="
+				+ orderItems + "]\n";
 	}
+
+
 
 }

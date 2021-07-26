@@ -84,12 +84,18 @@ public class SupplierController {
 		return supplierRepository.findAllByOrderByCompanyAsc();
 	}
 
+	@GetMapping("/pos/suppliers")
+	public List<Supplier> findAllForPos() {
+		return supplierRepository.findAllByOrderByCompanyAsc();
+	}
+	
 	
 	@GetMapping("/supplier")
 	public Supplier find() {
 		return supplierRepository.findFirstByOrderByCompanyAsc();
 	}
 
+	
 	@GetMapping("/supplier/{abbr}")
 	public Supplier findByAbbr(@PathVariable String abbr) {
 		return supplierRepository.findByAbbr(abbr);

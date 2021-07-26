@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -67,6 +68,10 @@ public class OrderItem {
 	private String abbr;
 	private int qty; // 주문 수량
 	
+	@Transient
+	private String shop;
+	@Transient
+	private String shopId;
 	// ==연관 관계== //
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -121,9 +126,10 @@ public class OrderItem {
 
 	@Override
 	public String toString() {
-		return "OrderItem [id=" + id + ", order=" + order + ", invoice=" + invoice + ", code="
-				+ code + ", price=" + price + ", amount=" + amount + ", qty=" + qty + ", created=" + created
-				+ ", updated=" + updated + "]\n\n";
+		return "OrderItem [id=" + id + ", created=" + created + ", updated=" + updated + ", status=" + status
+				+ ", invoice=" + invoice + ", code=" + code + ", description=" + description + ", price=" + price
+				+ ", amount=" + amount + ", abbr=" + abbr + ", qty=" + qty + ", shop=" + shop + ", shopId=" + shopId
+				+ "]\n";
 	}
 
 
