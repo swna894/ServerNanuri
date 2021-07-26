@@ -382,4 +382,12 @@ public class OrderController {
 		return orders;
 		// return null;
 	}
+	
+	@PutMapping("orders/server")
+	@Transactional
+	public List<Order> putFromPos(@PathVariable List<OrderItem> orderItems ) {
+		System.err.println(orderItems);
+		return null;
+		// return null;
+	}
 }
