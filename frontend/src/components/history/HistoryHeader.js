@@ -4,13 +4,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Layout, Space, Select, Tooltip } from "antd";
 import { FaHome } from "react-icons/fa";
 import { signoutUser } from "../../_actions/signin_action";
-import { FaSignOutAlt, FaGifts, FaRedoAlt } from "react-icons/fa";
+import { FaSignOutAlt, FaRedoAlt, FaQrcode } from "react-icons/fa";
 import { getHistoryOrder } from "../../_actions/history_action";
 import { actionChangeSupplier, } from "../../_actions/supplier_action";
 import * as config from "../../Config";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
-
-import logout from "../../images/exit_16.ico";
 
 
 
@@ -49,11 +47,13 @@ function HistoryHeader() {
           <Link to="/order">
               <Space>
                 <FaHome size={28} style={{ color: "#000" }} />
-                <h2 style={{ display: "inline-block", color: "#000" }}>ORDER HISTORY</h2>
+                <h2 style={{ display: "inline-block", color: "#000" }}>REPORT</h2>
               </Space> 
           </Link>
         :
+        <Link to="/order">
           <FaHome size={28} style={{ color: "#000",  paddingTop: "5px",}} />
+        </Link>
     );
 
   const listSupplierSelect = (
@@ -100,12 +100,12 @@ function HistoryHeader() {
     width > config.WIDTH_BIG ?
       <Button onClick={onClickSignout} type="primary" style={styleButton}>
         <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; LOGOUT
+        &nbsp; SIGNOUT
       </Button>
     : 
       <Tooltip placement="top" title= 'Sign out'>
-        <Button onClick={onClickSignout} type="primary" style={stylesSmallButton(logout)}>
-          &nbsp;
+        <Button onClick={onClickSignout} type="primary" style={stylesSmallButton('')}>
+        <FaSignOutAlt size={16} style={{ marginBottom: "-4px" }} />
         </Button>
       </Tooltip>
   );
@@ -114,16 +114,15 @@ function HistoryHeader() {
     width > config.WIDTH_BIG ?
       <Button type="primary" style={styleButton}>
         <Link to="/order">
-          <FaGifts size={16} style={{ marginBottom: "-4px" }} />
-          &nbsp; To ORDER
+          <FaQrcode size={16} style={{ marginBottom: "-4px" }} />
+          &nbsp; ORDER
         </Link>
       </Button>
     :   
-    <Tooltip placement="top" title= 'GoTo Ordering'>
-      <Button type="primary" style={stylesSmallButton(logout)}>
+    <Tooltip placement="top" title= 'Order'>
+      <Button type="primary" style={stylesSmallButton('')}>
         <Link to="/order">
-          <FaGifts size={16} style={{ marginBottom: "-4px" }} />
-          &nbsp;
+          <FaQrcode size={16} style={{ marginBottom: "-4px" }} /> 
         </Link>
       </Button>
     </Tooltip>
@@ -136,8 +135,8 @@ function HistoryHeader() {
           &nbsp; RELOAD
         </Button>
       :       
-      <Tooltip placement="top" title= 'Reloading'>
-        <Button type="primary" style={stylesSmallButton(logout)} onClick={onClickReload}>
+      <Tooltip placement="top" title= 'Reload'>
+        <Button type="primary" style={stylesSmallButton('')} onClick={onClickReload}>
           <FaRedoAlt size={16} style={{ marginBottom: "-4px" }} />
           &nbsp;
         </Button>

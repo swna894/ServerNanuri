@@ -67,9 +67,10 @@ function SignPagePage(props) {
           position: "fixed",
           zIndex: 1,
           width: "100%",
+          backgroundColor: '#333',
         }}
       >
-        <h2 style={{ color: "#fff" }}>Welcome to David Na's Ordering System</h2>
+        <h2 style={{  color: "#fff", textAlign: "center" }}>Welcome to David Na's Ordering System</h2>
       </Header>
       <Row
         type="flex"
@@ -152,9 +153,10 @@ function SignPagePage(props) {
           zIndex: 1,
           width: "100%",
           bottom: "0",
+          backgroundColor: '#333',
         }}
       >
-        <h2 style={{ color: "#fff" }}>
+        <h2 style={{ color: "#fff", textAlign: "center" }}>
           Enquiry ? Please Contact : David Na 027-652-1111
         </h2>
       </Header>

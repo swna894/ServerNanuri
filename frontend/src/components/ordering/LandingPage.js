@@ -224,14 +224,14 @@ function LandingPage() {
           bodyStyle={{ padding: "0" }}
           style={item.qty > 0 ? cardOrderStyle : cardNormalStyle}
           cover={
-            <Tooltip title={item.description}>
+            // <Tooltip title={item.description}>  </Tooltip>
               <Image
                 style={imageStyel}
                 alt={item.code}
                 //src={`/images/${item.abbr}/${item.code}.jpg`}
                 src={"data:image/jpg;base64," + item.image}
               />
-            </Tooltip>
+          
           }
         >
           <div

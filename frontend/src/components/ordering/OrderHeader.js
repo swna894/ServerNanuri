@@ -163,12 +163,14 @@ function OrderHeader(props) {
   }
 
   function onChangeButton(category) {
-    setCategoryPrompt(category);
+    
+    setCategoryPrompt(category === "ORDERED" ? 'HISTORY' : category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, 0, size);
     onClose();
   }
+
 
   const onSearchInput = (search) => {
     if (search === "") {
@@ -390,7 +392,7 @@ function OrderHeader(props) {
 
   const buttonCart = (
     width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Show carted product'>
+      <Tooltip placement="top" title= 'Cart'>
         <Button
           type="primary"
           style={ isCart || !cartInform? { display: "none" } : stylesButton(cart) }
@@ -400,7 +402,7 @@ function OrderHeader(props) {
     :
       <Button
         type="primary"
-        style={ isCart ? { display: "none" } : stylesHanbger }
+        style={ isCart || !cartInform ? { display: "none" } : stylesHanbger }
         onClick={onClickCart}
       >
         <FaShoppingCart size={16} style={{ marginBottom: "-4px" }} />
@@ -410,7 +412,7 @@ function OrderHeader(props) {
 
   const buttonCheckout = (
     width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Checkout product'>
+      <Tooltip placement="top" title= 'Checkout'>
         <Button
           type="primary"
           style={ isCart ? stylesButton(checkout)  : { display: "none" } }
@@ -420,7 +422,7 @@ function OrderHeader(props) {
     :
       <Button
         type="primary"
-        style={ stylesHanbger }
+        style={ isCart ? stylesHanbger  : { display: "none" } }
         onClick={onClickCheckout}
       >
         <FaCalendarCheck size={16} style={{ marginBottom: "-4px" }} />
@@ -431,7 +433,7 @@ function OrderHeader(props) {
 
   const buttonHistory = (
     width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Show ordered product'>
+      <Tooltip placement="top" title= 'History'>
         <Button
           type="primary"
           style={  stylesButton(history) }
@@ -453,7 +455,7 @@ function OrderHeader(props) {
   const buttonReport = (
     width > config.WIDTH_BIG ?
       <Link to="/history">
-        <Tooltip placement="top" title= 'GoTo ordered report'>
+        <Tooltip placement="top" title= 'Rreport'>
           <Button
             type="primary"
             style={ stylesButton(report) }
@@ -477,7 +479,7 @@ function OrderHeader(props) {
   const buttonIsNew = 
     isNew ? (
         width > config.WIDTH_BIG ?
-        <Tooltip placement="top" title= 'Show new products'>
+        <Tooltip placement="top" title= 'New'>
           <Button
             type="primary"
             style={ isCart ? { display: "none" } : stylesButton(newProduct)  }
@@ -500,7 +502,7 @@ function OrderHeader(props) {
   const buttonIsSpecial = 
     isSpecial ? (
       width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Show sales products'>
+      <Tooltip placement="top" title= 'Sales'>
         <Button
           type="primary"
           style={ isCart ? { display: "none" } :  stylesButton(sales) }
@@ -708,17 +710,17 @@ function OrderHeader(props) {
           onCancel={handleCancel}
           footer={ suppliers.length > 1 ? [
             <Button key="back" onClick={handleCancel}>
-              Return
+              Cancel
             </Button>,
             <Button type="primary"  onClick={gotoCart}>
-              Continue Cart
+            Continue Cart
             </Button>,     
             <Button type="primary" onClick={gotoOrder}>
-              Go to ordering
+            Go to ordering
             </Button>,
           ] : [
             <Button key="back" onClick={handleCancel}>
-              Return
+              Cancel
             </Button>,   
             <Button type="primary" onClick={gotoOrder}>
               Go to ordering

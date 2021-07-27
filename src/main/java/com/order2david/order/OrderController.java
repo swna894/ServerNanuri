@@ -285,7 +285,7 @@ public class OrderController {
 		if(count == 0) {
 			return null;
 		}
-		return String.valueOf(count) + " items Total " + String.format("$%,.2f",amount);
+		return String.valueOf(count) + " items | Total " + String.format("$%,.2f",amount);
 	}
 	
 	@GetMapping("order/cart/inform/{abbr}")
@@ -302,7 +302,7 @@ public class OrderController {
 			if(count == 0) {
 				return null;
 			} 
-				return String.valueOf(count) + " items   Total " + String.format("$%,.2f",order.getAmount());	
+				return String.valueOf(count) + " items | Total " + String.format("$%,.2f",order.getAmount());	
 		} else {
 			return null;
 		}	
@@ -324,7 +324,7 @@ public class OrderController {
 			if(count == 0) {
 				return null;
 			} 
-			return String.valueOf(count) + " items   Total " + String.format("$%,.2f",amount);	
+			return String.valueOf(count) + " items | Total " + String.format("$%,.2f",amount);	
 		} else {
 			return null;
 		}	
