@@ -158,6 +158,9 @@ public class Order {
 		return false;
 	}
 
+	public OrderItem getCartOrderItem(Cart cart) {
+		return orderItems.stream().filter(item -> item.getCode().equals(cart.getCode())).findAny().orElse(null);
+	}
 	public void removeOrderItem(Cart cart) {
 		for (OrderItem orderItem : orderItems) {
 			if (orderItem.getCode().equals(cart.code)) {
@@ -195,6 +198,8 @@ public class Order {
 		}
 	}
 
+
+	
 	private void updateAmount() {
 		Double doubleSum = orderItems.stream().mapToDouble(OrderItem::getAmount).sum();
 		this.setAmount(doubleSum);
@@ -206,6 +211,7 @@ public class Order {
 				+ company + ", orderDate=" + orderDate + ", supplier=" + supplier + ", shop=" + shop + ", orderItems="
 				+ orderItems + "]\n";
 	}
+
 
 
 

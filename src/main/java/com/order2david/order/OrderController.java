@@ -247,18 +247,33 @@ public class OrderController {
 	
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
 		Order order = null;
-		if(!orderOptional.isPresent() && cart.getQty() != 0) {	
+		// 재고 수량 정리 방법 개선 필요 21-08-02
+		if(!orderOptional.isPresent() && cart.getQty() != 0) {
+			// cart가 없을 경우
 			order = new Order();
 
+			order.setShop(shop);
+			if(supplier == null ) {	
+				System.err.println("supplier null =============");
+			}
+			order.setSupplier(supplier);
 			order.setShopAbbr(shop.getAbbr());
 			order.setStatus(OrderType.CART);
 			order.setInvoice(invoice);
 			order.addOrderItem(new OrderItem(cart));
 			order.setOrderDate(LocalDateTime.now());	
+			product.removeStock(cart.getQty());	
 		} else {
+			// cart가 있는 경우
 			if(product != null) {
-				product.removeStock(cart.getQty());			
 				order = orderOptional.get();
+				OrderItem orderItem = order.getCartOrderItem(cart);
+				if(orderItem != null) {
+					product.removeStock(cart.getQty() - orderItem.getQty());
+				} else {
+					product.removeStock(cart.getQty());	// <= 수량 차이만 재고 감소
+				}
+				
 				order.setOrderDate(LocalDateTime.now());
 				if(cart.getQty() == 0) {
 					order.removeOrderItem(cart);
@@ -269,15 +284,11 @@ public class OrderController {
 				}		
 			}
 		}
-		order.setShop(shop);
-		if(supplier == null ) {	
-			System.err.println("supplier null =============");
-		}
-		order.setSupplier(supplier);
+
 		order.setAmount(order.getTotalPrice());
 		order = orderRepository.save(order);
 		//카트에서의 수매 내역을 제품의 재고 반영시 논리적 bug 발생 주의해야함
-		//productRepository.save(product);
+		productRepository.save(product);
 		
 		List<OrderItem> items = order.getOrderItems();
 		int count = items.size();
