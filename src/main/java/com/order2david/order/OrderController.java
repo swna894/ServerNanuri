@@ -183,6 +183,26 @@ public class OrderController {
 		// return null;
 	}
 
+	@PostMapping("orders/update")
+	@Transactional
+	public List<Order> updateOrder(@RequestBody List<Order> orders) {
+		List<Supplier> suppliers = supplierRepository.findAll();
+		List<Shop> shops = shopRepository.findAll();
+
+		for (Order order : orders) {
+			Shop shop = shops.stream().filter(item -> item.getAbbr().equals(order.getShopAbbr())).findAny()
+					.orElse(null);
+
+			String supplierAbbr = order.getInvoice().substring(0, 4);
+			Supplier supplier = suppliers.stream().filter(item -> item.getAbbr().equals(supplierAbbr)).findAny()
+					.orElse(null);
+			order.setShop(shop);
+			order.setSupplier(supplier);
+		}
+		return orderRepository.saveAll(orders);
+		// return null;
+	}
+	
 	@PostMapping("orders/migration/s")
 	@Transactional
 	public Order migration(@RequestBody Order order) {
