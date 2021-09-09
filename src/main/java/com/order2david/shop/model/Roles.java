@@ -23,4 +23,6 @@ public class Roles {
    @Id
    @Column(name = "role_name", length = 50)
    private String roleName;
+   
+
 }
