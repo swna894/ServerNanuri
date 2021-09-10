@@ -133,7 +133,8 @@ function LandingPage() {
     overflow: "hidden",
     fontSize: "20px",
     marginBottom: "7px",
-    //marginLeft: "32px",
+    marginLeft: " 20px",
+    marginRight: " 20px",
     fontWeight: "bold",
     fontStyle: "italic",
     whiteSpace: "nowrap",
@@ -247,7 +248,9 @@ function LandingPage() {
             <div style={item.special ? specialStyle : hiddenStyle}>
               <img src={discount} alt="special"></img>
             </div>
-            <div style={descriptionStyle}>{item.description}</div>
+            <Tooltip placement="top" title={item.description}>
+              <div style={descriptionStyle}>{item.description}</div>
+            </Tooltip>
             <span style={item.special ? priceStyle : { display: "none" }}>
               ${item.specialPrice}
             </span>
