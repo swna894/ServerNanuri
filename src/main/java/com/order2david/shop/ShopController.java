@@ -103,7 +103,8 @@ public class ShopController {
 		for (Shop shop : shops) {
 			List<Order> orders = orderRepository.findByShopAbbr(shop.getAbbr());
 			if(orders != null) {
-				orders.forEach(item -> item.setShop(null));
+				Shop dummyshop = shopRepository.findByCompany("Deleted shop");
+				orders.forEach(item -> item.setShop(dummyshop));
 			}
 			shopRepository.deleteById(shop.getId());
 		}
