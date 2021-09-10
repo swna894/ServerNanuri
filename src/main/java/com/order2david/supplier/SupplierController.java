@@ -54,6 +54,7 @@ public class SupplierController {
 
 	@PostMapping("/suppliers")
 	public List<Supplier> postAll(@RequestBody List<Supplier> suppliers) {
+
 		return supplierRepository.saveAll(suppliers);
 	}
 
@@ -81,18 +82,18 @@ public class SupplierController {
 
 	@GetMapping("/suppliers")
 	public List<Supplier> findAll() {
-		return supplierRepository.findAllByOrderByCompanyAsc();
+		return supplierRepository.findAllByOrderBySeqAsc();
 	}
 
 	@GetMapping("/pos/suppliers")
 	public List<Supplier> findAllForPos() {
-		return supplierRepository.findAllByOrderByCompanyAsc();
+		return supplierRepository.findAllByOrderBySeqAsc();
 	}
 	
 	
 	@GetMapping("/supplier")
 	public Supplier find() {
-		return supplierRepository.findFirstByOrderByCompanyAsc();
+		return supplierRepository.findFirstByOrderBySeqAsc();
 	}
 
 	
@@ -105,7 +106,7 @@ public class SupplierController {
 	@GetMapping("/suppliers/order")
 	public List<Supplier> findSuppliersOfOrder(Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
-		List<Supplier> suppliers = supplierRepository.findAllByOrderByAbbrAsc();
+		List<Supplier> suppliers = supplierRepository.findAllByOrderBySeqAsc();
 		Map<String, List<IsShow>> maps = shopJdbcRepository.findAllAbbrs();
 		List<IsShow> shows = maps.get(shop.getCompany());
 		List<Supplier> list = new ArrayList<>();

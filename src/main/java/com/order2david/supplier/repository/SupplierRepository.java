@@ -20,6 +20,10 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
 	List<Supplier> findByIsActiveOrderByCompanyAsc(boolean b);
 
+	List<Supplier> findAllByOrderBySeqAsc();
+
+	Supplier findFirstByOrderBySeqAsc();
+
 
 
     

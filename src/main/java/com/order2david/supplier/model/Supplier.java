@@ -40,7 +40,8 @@ public class Supplier {
 	private String name;
 	@Column(unique=true)
 	private String abbr;
-	@Column(unique=true)
+	
+	private Integer seq;
 	private String company;
 	private String cellphone;
 	private String phone;
@@ -111,10 +112,15 @@ public class Supplier {
 
 	@Override
 	public String toString() {
-		return "Supplier [id=" + id + ", name=" + name + ", abbr=" + abbr + ", company=" + company + ", cellphone="
-				+ cellphone + ", phone=" + phone + ", email=" + email + ", comment=" + comment + ", isNew=" + isNew
-				+ ", isSpecial=" + isSpecial + ", isActive=" + isActive + ", address=" + address + "]\n";
+		return "Supplier [id=" + id + ", name=" + name + ", abbr=" + abbr + ", seq=" + seq + ", company=" + company
+				+ ", cellphone=" + cellphone + ", phone=" + phone + ", email=" + email + ", comment=" + comment
+				+ ", isNew=" + isNew + ", isSpecial=" + isSpecial + ", isActive=" + isActive + ", address=" + address
+				+ "]\n";
 	}
+
+
+
+
 	
 
 }

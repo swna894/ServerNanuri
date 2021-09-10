@@ -298,7 +298,7 @@ function OrderHeader(props) {
          // style={{ borderStyle: "ridge" }}
         >
           <Option value="All">All</Option>
-          <Option value="Co">Co</Option>
+          <Option value="Co">One</Option>
         </Select>
         <Search
           placeholder="input search text"
@@ -680,7 +680,7 @@ function OrderHeader(props) {
           paddingTop: "3px",
         }}
       >
-        Welcome to {userData ? userData.company : ""}
+        Welcome  {userData ? userData.company : ""}
       </div>
       <div
         xxl={6}

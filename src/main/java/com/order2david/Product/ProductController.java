@@ -123,7 +123,7 @@ public class ProductController {
 
 	@GetMapping("/products/init")
 	public Page<Product> getInit(Principal principal) {
-		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
+		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
 		Pageable sortedBySeq = PageRequest.of(0, 100, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		updateCartQty(page, principal);
