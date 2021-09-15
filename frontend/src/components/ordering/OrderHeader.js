@@ -713,17 +713,17 @@ function OrderHeader(props) {
               Cancel
             </Button>,
             <Button type="primary"  onClick={gotoCart}>
-            Continue Cart
+              Checkout, Another Cart
             </Button>,     
             <Button type="primary" onClick={gotoOrder}>
-            Go to ordering
+              GoTo Order
             </Button>,
           ] : [
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>,   
             <Button type="primary" onClick={gotoOrder}>
-              Go to ordering
+              Checkout, GoTo Order
             </Button>,
           ]}
         >
