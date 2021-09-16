@@ -28,7 +28,6 @@ import com.order2david.etc.model.Company;
 import com.order2david.etc.repository.CompanyRepository;
 import com.order2david.order.excel.ExcelInvoicePrint;
 import com.order2david.order.model.Order;
-import com.order2david.shop.model.Shop;
 
 @Component
 public class EmailService {
@@ -59,10 +58,6 @@ public class EmailService {
 	private String name;
 	private String smtp_auth_pwd;
 
-	private Shop shop;
-	// private Supplier supplier;
-	private Order order;
-	// private List<OrderItem> orderItem;
 
 	public EmailService(CompanyRepository companyRepository) {
 		super();
@@ -73,46 +68,45 @@ public class EmailService {
 		// this.from_mail = company.getCcEmail();
 		// this.smtp_auth_pwd = company.getGMailPassword();
 		// this.smtp_auth_user = company.getCcEmail();
-		this.to_mail = "nave8934@naver.com";
+		this.to_mail = "nave8934@naver.com"; // "nzdavidna@gmail.com";
 		this.from_mail = "swna8934@gmail.com";
 		this.smtp_auth_pwd = "cjhm skgo hrlp mncp";
 		this.smtp_auth_user = "swna8934@gmail.com";
-		;
 		this.smtp_host_port = company.getMailPort();
 
 	}
 
 	public void sendMail(Order order) {
-		this.order = order;
-		this.shop = order.getShop();
-		// this.supplier = order.getSupplier();
-		// this.orderItem = order.getOrderItems();
-
 		try {
-			// new Thread(() -> {
-			sendMyShopMail();
-			sendShopMail();
-			sendSupplyMail();
-			// }).start();
+			//new Thread(() -> {
+				sendMyShopMail(order);
+			//}).start();
+			//new Thread(() -> {
+				sendShopMail(order);
+			//}).start();
+			//new Thread(() -> {
+				sendSupplyMail(order);
+			//}).start();
 
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void sendMyShopMail() {
-		String subject = "Order Inform : " + shop.getCompany() + "  [ " + order.getInvoice() + " ]  ";
+	public void sendMyShopMail(Order order) {
+		String subject = "Order Inform : " + order.getShop().getCompany() + "  [ " + order.getInvoice() + " ]  ";
 		String message = emailMessage.myMessage(order);
 
 		List<String> toMailList = Arrays.asList(to_mail);
 		sending(toMailList, "", subject, message, null, from_mail);
 	}
 
-	public void sendShopMail() {
+	public void sendShopMail(Order order) {
 
-		String file = excelInvoicePrint.printingShop(order);
+		String fileName = excelInvoicePrint.printingShop(order);
+		File file = new File(fileName);
 		List<File> files = new ArrayList<File>();
-		files.add(new File(file));
+		files.add(file);
 
 		List<String> toMailList = Arrays.asList(to_mail);
 
@@ -121,14 +115,17 @@ public class EmailService {
 				+ ") at dollarshopsuppliers.co.nz ";
 		String message = emailMessage.shopMessage(order);
 
-		sending(toMailList, "", subject, message, files, from_mail);
+		sending(toMailList, "", subject, message, null, from_mail);
+		file.delete();
+		//Arrays.stream(new File("/nanuri7788/tomcat/temp/shop").listFiles()).forEach(File::delete);
 	}
 
-	public void sendSupplyMail() {
+	public void sendSupplyMail(Order order) {
 
-		String file = excelInvoicePrint.printing(order);
+		String fileName = excelInvoicePrint.printing(order);
+		File file = new File(fileName);
 		List<File> files = new ArrayList<File>();
-		files.add(new File(file));
+		files.add(file);
 
 		List<String> toMailList = Arrays.asList(to_mail);
 
@@ -138,7 +135,8 @@ public class EmailService {
 
 		sending(toMailList, "", subject, message, files, from_mail);
 
-		Arrays.stream(new File("/nanuri7788/tomcat/temp").listFiles()).forEach(File::delete);
+		file.delete();
+		//Arrays.stream(new File("/nanuri7788/tomcat/temp").listFiles()).forEach(File::delete);
 	}
 
 	public Boolean sending(List<String> toMailList, String cc, String title, String content, List<File> toFileList,

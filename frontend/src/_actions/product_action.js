@@ -101,7 +101,7 @@ export const setOrderRequest =  async (abbr) => {
   };
 };
 
-export const getCheckout =  async (abbr, size) => {
+export  const getCheckout =  async (abbr, size) => {
   const request =  await axiosInstance
     .get(`/api/order/checkout/${abbr}/${size}`)
     .then( (response) => response.data)

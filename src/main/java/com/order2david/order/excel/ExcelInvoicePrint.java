@@ -10,8 +10,6 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JOptionPane;
-
 import org.apache.poi.hssf.usermodel.HeaderFooter;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Footer;
@@ -46,9 +44,8 @@ public class ExcelInvoicePrint {
 	@Autowired
 	ExcelCellStyle excelCellStyle;
 
-	@SuppressWarnings("resource")
 	public String printing(Order order) {
-		String fileName = "/nanuri7788/tomcat/temp" + File.separator + order.getInvoice() + "_" + order.getShop().getCompany() + ".xlsx";
+		String fileName = "/nanuri7788/tomcat/temp/" + order.getInvoice() + "_" + order.getShop().getCompany() + ".xlsx";
 	
 		String sheetName = LocalDate.now().toString();			
 		isReportFolder();
@@ -59,14 +56,17 @@ public class ExcelInvoicePrint {
 			Sheet sheet = workbook.createSheet(sheetName);
 			workbook.setSheetOrder(sheetName, 0);
 
+			//System.err.println(fileName);
+			
 			int index = 0;
 			index = creatOrderHeader(order,  workbook, sheet, index);
 			index = createOrderList(order, columnHeader, workbook, sheet, index);
 			createOrderFooter(workbook, sheet, index);
 			writeExcelToFile(fileName, sheetName, workbook);
-
+			
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "\n파일을 사용 중이거나 또는 출력 경로의 오류 입니다...\n\nFile Path : " + fileName + "\n\n");
+			System.err.println("\n파일을 사용 중이거나 또는 출력 경로의 오류 입니다...\n\nFile Path : " + fileName + "\n\n");
+			//JOptionPane.showMessageDialog(null, "\n파일을 사용 중이거나 또는 출력 경로의 오류 입니다...\n\nFile Path : " + fileName + "\n\n");
 			e.printStackTrace();
 			//return false;
 		}
@@ -76,9 +76,10 @@ public class ExcelInvoicePrint {
 	
 	public String printingShop(Order order) {
 		
-		String fileName = "/nanuri7788/tomcat/temp" + File.separator + order.getInvoice() + "_" + order.getShop().getCompany() + ".xlsx";
+		String fileName = "/nanuri7788/tomcat/temp/shop/" + order.getInvoice() + "_" + order.getShop().getCompany() + ".xlsx";
 	
-		String sheetName = LocalDate.now().toString();			
+		String sheetName = LocalDate.now().toString();
+		
 		isReportFolder();
 
 		try {
@@ -87,6 +88,8 @@ public class ExcelInvoicePrint {
 			Sheet sheet = workbook.createSheet(sheetName);
 			workbook.setSheetOrder(sheetName, 0);
 
+			//System.err.println(fileName);
+			
 			int index = 0;
 			index = creatOrderShopHeader(order,  workbook, sheet, index);
 			index = createOrderList(order, columnHeader, workbook, sheet, index);
@@ -94,7 +97,8 @@ public class ExcelInvoicePrint {
 			writeExcelToFile(fileName, sheetName, workbook);
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "\n파일을 사용 중이거나 또는 출력 경로의 오류 입니다...\n\nFile Path : " + fileName + "\n\n");
+			System.err.println("\n파일을 사용 중이거나 또는 출력 경로의 오류 입니다...\n\nFile Path : " + fileName + "\n\n");
+			//JOptionPane.showMessageDialog(null, "\n파일을 사용 중이거나 또는 출력 경로의 오류 입니다...\n\nFile Path : " + fileName + "\n\n");
 			e.printStackTrace();
 			//return false;
 		}
@@ -372,7 +376,7 @@ public class ExcelInvoicePrint {
 
 
 	private void isReportFolder() {
-	File reportFolder = new File("/nanuri7788/tomcat/temp");
+	File reportFolder = new File("/nanuri7788/tomcat/temp/shop");
 	if (!reportFolder.exists()) {
 		reportFolder.mkdirs();
 	}

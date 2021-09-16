@@ -254,7 +254,7 @@ public class OrderController {
 		String invoice = abbr + cart.getId() + "_CART"; 
 	
 		Shop shop = shopRepository.findByAbbr(String.valueOf(cart.getId()));
-		Supplier supplier = supplierRepository.findByAbbr(cart.getAbbr());
+		Supplier supplier = supplierRepository.findByAbbr(abbr);
 		
 		Product product = productRepository.findByCodeAndAbbr(cart.getCode(), abbr);
 		//product.removeStock(cart.getQty());
@@ -266,7 +266,7 @@ public class OrderController {
 		}
 		cart.setDecription(product.getDescription());
 		cart.setInvoice(invoice);
-		cart.setAbbr(shop.getAbbr());
+		//cart.setAbbr(shop.getAbbr());
 		
 	
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
