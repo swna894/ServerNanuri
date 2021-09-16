@@ -124,7 +124,7 @@ public class ProductController {
 	@GetMapping("/products/init")
 	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
-		Pageable sortedBySeq = PageRequest.of(0, 100, Sort.by("seq"));
+		Pageable sortedBySeq = PageRequest.of(0, 36, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
 		updateCartQty(page, principal);
 		updateCartHistory(page, principal);
@@ -134,7 +134,7 @@ public class ProductController {
 	@GetMapping("/products/{abbr}/{category}")
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, @PathVariable String category,
 			Pageable pageable, @RequestParam(required = false) String search,
-			@RequestParam(required = false) String condition, Principal principal) {
+			@RequestParam(required = false) String condition, Boolean noCheckCart, Principal principal) {
 		Page<Product> page = null;
 
 		if (category.equals(NEW)) {

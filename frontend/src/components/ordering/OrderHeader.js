@@ -40,6 +40,7 @@ import {
   getProductsAction,
   getInitCartInform,
   setOrderRequest,
+  getCheckout,
 } from "../../_actions/product_action";
 
 import { signoutUser } from "../../_actions/signin_action";
@@ -123,6 +124,10 @@ function OrderHeader(props) {
   const formRef = React.useRef();
 
   useEffect(() => {
+    return  window.scrollTo(0, 0);
+  }, [headTitle, condition, page, size, isCart, isNew, isSpecial, categories]); 
+
+  useEffect(() => {
     document.body.style.background = "#f0f0f0";
     let parm = { params: { abbr: headTitle } };
     dispatch(getCategoriesAction(parm));
@@ -142,8 +147,20 @@ function OrderHeader(props) {
     pageProducts(abbr, "", 0, size);
     dispatch(getInitCartInform(abbr));
     onClose();
-    // }
+    //console.log(`selected ${value}`);
+  }
 
+  function onCheckout(abbr) {
+    dispatch(actionChangeSupplier(abbr));
+    setCategoryPrompt(config.SELECT_CATEGORY);
+      //dispatch(actionChangeTitle(searchValue.children)); 
+    dispatch(actionChangeCategory(""));
+    dispatch(changeIsCartRequest(false));
+    let parm = { params: { abbr: abbr } };
+    dispatch(getCategoriesAction(parm));
+    dispatch(getCheckout(abbr, size)); 
+    dispatch(getInitCartInform(abbr));
+    onClose();
     //console.log(`selected ${value}`);
   }
 
@@ -182,7 +199,6 @@ function OrderHeader(props) {
       dispatch(actionChangeSearch(search));
       pageProducts(abbr, "SEARCH", 0, size, search, condition);
       onClose();
-      document.documentElement.scrollTop = 0;
     }
   };
 
@@ -216,7 +232,6 @@ function OrderHeader(props) {
       dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
     }
 
-    document.documentElement.scrollTop = 0;
   };
 
   const listSelectOptions = suppliers.map((item) => (
@@ -249,7 +264,7 @@ function OrderHeader(props) {
     dispatch(actionGetSuppliers("cart"));
     dispatch(changeIsCartRequest(true));
     onClose();
-    document.documentElement.scrollTop = 0;
+
   };
 
   const listSupplierSelect = (
@@ -330,16 +345,17 @@ function OrderHeader(props) {
     dispatch(changeIsCartRequest(false));
     dispatch(setOrderRequest(abbr));
     onClose();
-    onChangeSuppiler(abbr, headTitle);
+    //onChangeSuppiler(abbr);
+    onCheckout(abbr);
   };
 
   const gotoCart = () => {
     setVisibleCart(false);
-      const newList = suppliers.filter((item) => item.abbr !== abbr);
-      dispatch(setOrderRequest(abbr));
-      dispatch(actionUpdateSuppliers(newList));
-      dispatch(actionChangeSupplier(newList[0].abbr));
-      onChangeCart(newList[0].abbr)
+    const newList = suppliers.filter((item) => item.abbr !== abbr);
+    dispatch(setOrderRequest(abbr));
+    dispatch(actionUpdateSuppliers(newList));
+    dispatch(actionChangeSupplier(newList[0].abbr));
+    onChangeCart(newList[0].abbr)
   
   };
 
@@ -351,26 +367,26 @@ function OrderHeader(props) {
     if (!error) {
       setVisibleCart(true);
     }
-    document.documentElement.scrollTop = 0;
+
   };
 
   const onClickNew = () => {
     onChangeButton("NEW");
     onClose();
-    document.documentElement.scrollTop = 0;
+
   };
 
   const onClickSpecial = () => {
     onChangeButton("SPECIAL");
     onClose();
-    document.documentElement.scrollTop = 0;
+
   };
 
   const onClickHistory = () => {
     onChangeButton("ORDERED");
     onClose();
     dispatch(getInitCartInform());
-    document.documentElement.scrollTop = 0;
+
   };
 
   const stylesButton = image => ( {
@@ -716,7 +732,7 @@ function OrderHeader(props) {
               Checkout, Another Cart
             </Button>,     
             <Button type="primary" onClick={gotoOrder}>
-              GoTo Order
+             Checkout, GoTo Order
             </Button>,
           ] : [
             <Button key="back" onClick={handleCancel}>

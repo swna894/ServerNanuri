@@ -64,8 +64,7 @@ function LandingPage() {
   useEffect(() => {
     dispatch(actionGetSupplier());
     dispatch(actionGetSuppliers());
-    trackPromise(
-    dispatch(getProductsInitAction()));
+    trackPromise(dispatch(getProductsInitAction()));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onClickIncrease = (abbr, code, pack, qty) => {

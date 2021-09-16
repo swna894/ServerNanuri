@@ -5,6 +5,7 @@ import {
   CHANGE_CART,
   GET_CART_INFORM,
   SET_ORDERING_REQUEST,
+  GET_CHECKOUT_REQUEST
 } from "../service/types";
 
 const initialState = {
@@ -31,6 +32,9 @@ export default function reducerProduct(state = initialState, action) {
 
     case SET_ORDERING_REQUEST:
       return { ...state, error: action.payload };
+
+    case GET_CHECKOUT_REQUEST:
+      return { ...state, products: action.payload };
 
     default:
       return state;

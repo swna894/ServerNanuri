@@ -1,5 +1,5 @@
 import * as config from "../../Config";
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Pagination } from "antd";
 import { getProductsAction } from "../../_actions/product_action";
@@ -20,8 +20,8 @@ function OrderFooter() {
     (state) => state.product.products.totalElements
   );
 
-  useEffect(() => {
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+ // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChange(pageNumber, pageSize = config.PAGE_SIZE) {
     if (category === "SEARCH") {
@@ -44,7 +44,6 @@ function OrderFooter() {
         ? dispatch(getProductsAction(abbr, category, param))
         : dispatch(getProductsAction(abbr, "", param));
     }
-    document.documentElement.scrollTop = 0;
     //console.log("Page: ", pageNumber-1);
     //console.log("pageSize: ", pageSize);
   }

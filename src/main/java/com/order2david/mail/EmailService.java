@@ -1,6 +1,7 @@
 package com.order2david.mail;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
@@ -20,67 +21,126 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.order2david.etc.model.Company;
 import com.order2david.etc.repository.CompanyRepository;
+import com.order2david.order.excel.ExcelInvoicePrint;
 import com.order2david.order.model.Order;
+import com.order2david.shop.model.Shop;
 
 @Component
-public class EmailService{
+public class EmailService {
+
+	@Autowired
+	EmailMessage emailMessage;
+
+	@Autowired
+	ExcelInvoicePrint excelInvoicePrint;
 
 	private Company company;
-	
+
 	CompanyRepository companyRepository;
-	
-//	private String to_mail = "nave8934@naver.com";
-//	private String from_mail = "swna8934@gmail.com";
-//	private String smtp_host_name = "smtp.gmail.com";
-//	private String smtp_host_port = "587"; // 465
-//	private String smtp_auth_user = "swna8934@gmail.com"; 
-//	private String name = "sangwoon na"; 
-//	private String smtp_auth_pwd  = "woon098)(*";
-	
+
+	// private String to_mail = "nave8934@naver.com";
+	// private String from_mail = "swna8934@gmail.com";
+	// private String smtp_host_name = "smtp.gmail.com";
+	// private String smtp_host_port = "587"; // 465
+	// private String smtp_auth_user = "swna8934@gmail.com";
+	// private String name = "sangwoon na";
+	// private String smtp_auth_pwd = "woon098)(*";
+
 	private String to_mail;
 	private String from_mail;
 	private String smtp_host_name = "smtp.gmail.com";
 	private String smtp_host_port; // 465
-	private String smtp_auth_user; 
-	private String name; 
+	private String smtp_auth_user;
+	private String name;
 	private String smtp_auth_pwd;
-	
-	
+
+	private Shop shop;
+	// private Supplier supplier;
+	private Order order;
+	// private List<OrderItem> orderItem;
+
 	public EmailService(CompanyRepository companyRepository) {
 		super();
 		this.companyRepository = companyRepository;
 		company = companyRepository.findAll().get(0);
 		this.name = company.getName();
-		this.to_mail = company.getEmail();
-		this.from_mail = company.getCcEmail();
-		this.smtp_auth_pwd = company.getGMailPassword();
-		this.smtp_auth_user = company.getCcEmail();
+		// this.to_mail = company.getEmail();
+		// this.from_mail = company.getCcEmail();
+		// this.smtp_auth_pwd = company.getGMailPassword();
+		// this.smtp_auth_user = company.getCcEmail();
+		this.to_mail = "nave8934@naver.com";
+		this.from_mail = "swna8934@gmail.com";
+		this.smtp_auth_pwd = "cjhm skgo hrlp mncp";
+		this.smtp_auth_user = "swna8934@gmail.com";
+		;
 		this.smtp_host_port = company.getMailPort();
-		
-		
-	}
-	
-	public void sendMail(Order order) {
-		String shop = order.getShop().getCompany();
-		String supplier = order.getSupplier().getCompany();
-		String invoice = order.getInvoice();
-		Double amount = order.getAmount();
-		
-		String subject = "Order Inform : " + shop + "  [ " + invoice + " ]  ";
-		String message = "<p> - Shop : " + shop + "</p>";
-		message = message + "<p> - Invoice : " + invoice + "</p>";
-		message = message + "<p> - Amount : $ " + String.format("%.2f", amount) + "</p>";
-		message = message + "<p> - Supplier : " + supplier;
-		
-	  	List<String> toMailList = Arrays.asList(to_mail);
-    	sending(toMailList, "", subject, message, null, from_mail);
 
 	}
-	
+
+	public void sendMail(Order order) {
+		this.order = order;
+		this.shop = order.getShop();
+		// this.supplier = order.getSupplier();
+		// this.orderItem = order.getOrderItems();
+
+		try {
+			// new Thread(() -> {
+			sendMyShopMail();
+			sendShopMail();
+			sendSupplyMail();
+			// }).start();
+
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendMyShopMail() {
+		String subject = "Order Inform : " + shop.getCompany() + "  [ " + order.getInvoice() + " ]  ";
+		String message = emailMessage.myMessage(order);
+
+		List<String> toMailList = Arrays.asList(to_mail);
+		sending(toMailList, "", subject, message, null, from_mail);
+	}
+
+	public void sendShopMail() {
+
+		String file = excelInvoicePrint.printingShop(order);
+		List<File> files = new ArrayList<File>();
+		files.add(new File(file));
+
+		List<String> toMailList = Arrays.asList(to_mail);
+
+		// Shop Mail
+		String subject = "You placed an order to (" + order.getSupplier().getCompany()
+				+ ") at dollarshopsuppliers.co.nz ";
+		String message = emailMessage.shopMessage(order);
+
+		sending(toMailList, "", subject, message, files, from_mail);
+	}
+
+	public void sendSupplyMail() {
+
+		String file = excelInvoicePrint.printing(order);
+		List<File> files = new ArrayList<File>();
+		files.add(new File(file));
+
+		List<String> toMailList = Arrays.asList(to_mail);
+
+		// Shop Mail
+		String subject = "Orders for : " + order.getShop().getCompany() + ", Order No : " + order.getInvoice();
+		String message = emailMessage.supplyMessage(order);
+
+		sending(toMailList, "", subject, message, files, from_mail);
+
+		Arrays.stream(new File("/nanuri7788/tomcat/temp").listFiles()).forEach(File::delete);
+	}
+
 	public Boolean sending(List<String> toMailList, String cc, String title, String content, List<File> toFileList,
 			String from) {
 
@@ -96,7 +156,6 @@ public class EmailService{
 			props.put("mail.smtp.port", smtp_host_port);
 			props.put("mail.smtp.auth", "true");
 
-			
 			MyAuthenticator auth = new MyAuthenticator(smtp_auth_user, smtp_auth_pwd);
 			Session sess = Session.getInstance(props, auth);
 			sess.setDebug(false);
@@ -147,18 +206,18 @@ public class EmailService{
 			result = true;
 
 		} catch (NoSuchProviderException e) {
-			 System.err.println("NoSuchProviderException");
-		     e.printStackTrace();
-		     return result;
-		  } catch (MessagingException e) {
-			  System.err.println("MessagingException");
-		     e.printStackTrace();
-		     return result;
-		  } catch (Exception e) {
-			 System.err.println("Exception");
-		     e.printStackTrace();
-		     return result;
-		  }
+			System.err.println("NoSuchProviderException");
+			e.printStackTrace();
+			return result;
+		} catch (MessagingException e) {
+			System.err.println("MessagingException");
+			e.printStackTrace();
+			return result;
+		} catch (Exception e) {
+			System.err.println("Exception");
+			e.printStackTrace();
+			return result;
+		}
 
 		return result;
 	}

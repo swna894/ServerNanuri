@@ -5,13 +5,14 @@ import {
   CHANGE_CART,
   GET_CART_INFORM,
   SET_ORDERING_REQUEST,
+  GET_CHECKOUT_REQUEST,
 } from "../service/types";
 
 //import axios from "axios";
 import axiosInstance from "../service/axiosInstance";
 
 export function getCategoriesAction(params) {
-  const request = axiosInstance
+  const request =  axiosInstance
     .get("/api/categorys", params)
     .then((response) => {
          return response.data
@@ -86,16 +87,30 @@ export const getInitCartInform = (abbr = "") => {
   };
 };
 
-export const setOrderRequest = (abbr) => {
-  const request =  axiosInstance
+export const setOrderRequest =  async (abbr) => {
+  const request =  await axiosInstance
     .put(`/api/order/confirm/${abbr}`)
-    .then((response) => response.data)
+    .then( (response) => response.data)
     .catch((error) => {
       console.log("Problem !!! Get Supplier", error);
       //dispatch(getSuppliersFailusre(error.message));
     });
   return {
     type: SET_ORDERING_REQUEST,
+    payload: request,
+  };
+};
+
+export const getCheckout =  async (abbr, size) => {
+  const request =  await axiosInstance
+    .get(`/api/order/checkout/${abbr}/${size}`)
+    .then( (response) => response.data)
+    .catch((error) => {
+      console.log("Problem !!! Get Supplier", error);
+      //dispatch(getSuppliersFailusre(error.message));
+    });
+  return {
+    type: GET_CHECKOUT_REQUEST,
     payload: request,
   };
 };

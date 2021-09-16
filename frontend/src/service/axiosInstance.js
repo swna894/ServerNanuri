@@ -5,7 +5,7 @@ const axiosInstance = axios.create();
  
 //Request interceptor for API calls
 axiosInstance.interceptors.request.use(
-   config => {
+  async config => {
     const accessToken = localStorage.jwtToken;
     if (accessToken) {
         config.headers.Authorization = `Bearer ${accessToken}`;

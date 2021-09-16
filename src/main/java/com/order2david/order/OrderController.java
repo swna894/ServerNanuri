@@ -14,6 +14,10 @@ import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -363,7 +367,7 @@ public class OrderController {
 	@Autowired
 	EmailService service;
 	
-	@PutMapping("order/confirm/{abbr}")
+	@PutMapping("order/confirm/{abbr}") 
 	public Boolean putOrderConfirm(@PathVariable String abbr, Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		String cart = abbr + shop.getAbbr() + "_CART";
@@ -394,6 +398,16 @@ public class OrderController {
 			return true;
 		}	
 	}
+	
+	
+	@GetMapping("order/checkout/{abbr}/{size}") 
+	public Page<Product> getCheckout(@PathVariable String abbr, @PathVariable Integer size, Principal principal) {
+		Pageable sortedBySeq = PageRequest.of(0, size, Sort.by("seq"));
+		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, sortedBySeq);
+		
+		return page;
+	}
+	
 	
 	@GetMapping("orders/history")
 	@Transactional
