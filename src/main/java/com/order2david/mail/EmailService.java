@@ -42,18 +42,10 @@ public class EmailService {
 
 	CompanyRepository companyRepository;
 
-	// private String to_mail = "nave8934@naver.com";
-	// private String from_mail = "swna8934@gmail.com";
-	// private String smtp_host_name = "smtp.gmail.com";
-	// private String smtp_host_port = "587"; // 465
-	// private String smtp_auth_user = "swna8934@gmail.com";
-	// private String name = "sangwoon na";
-	// private String smtp_auth_pwd = "woon098)(*";
-
 	private String to_mail;
 	private String from_mail;
 	private String smtp_host_name = "smtp.gmail.com";
-	private String smtp_host_port; // 465
+	private String smtp_host_port; 
 	private String smtp_auth_user;
 	private String name;
 	private String smtp_auth_pwd;
@@ -62,17 +54,19 @@ public class EmailService {
 	public EmailService(CompanyRepository companyRepository) {
 		super();
 		this.companyRepository = companyRepository;
-		company = companyRepository.findAll().get(0);
+		company = companyRepository.findFirstByOrderById();
+		
 		this.name = company.getName();
-		// this.to_mail = company.getEmail();
-		// this.from_mail = company.getCcEmail();
-		// this.smtp_auth_pwd = company.getGMailPassword();
-		// this.smtp_auth_user = company.getCcEmail();
-		this.to_mail = "nave8934@naver.com"; // "nzdavidna@gmail.com";
-		this.from_mail = "swna8934@gmail.com";
-		this.smtp_auth_pwd = "cjhm skgo hrlp mncp";
-		this.smtp_auth_user = "swna8934@gmail.com";
 		this.smtp_host_port = company.getMailPort();
+		this.to_mail = company.getCcEmail();
+		this.from_mail = company.getCcEmail();
+		this.smtp_auth_pwd = company.getGMailPassword();
+		this.smtp_auth_user = company.getEmail();
+		//this.to_mail = "nave8934@naver.com"; // "nzdavidna@gmail.com";
+		//this.from_mail = "swna8934@gmail.com";
+		//this.smtp_auth_pwd = "cjhm skgo hrlp mncp";
+		//this.smtp_auth_user = "swna8934@gmail.com";
+		
 
 	}
 
@@ -80,11 +74,7 @@ public class EmailService {
 		try {
 			//new Thread(() -> {
 				sendMyShopMail(order);
-			//}).start();
-			//new Thread(() -> {
 				sendShopMail(order);
-			//}).start();
-			//new Thread(() -> {
 				sendSupplyMail(order);
 			//}).start();
 
@@ -102,37 +92,35 @@ public class EmailService {
 	}
 
 	public void sendShopMail(Order order) {
-
+		String  toShop = order.getShop().getEmail();
 		String fileName = excelInvoicePrint.printingShop(order);
 		File file = new File(fileName);
 		List<File> files = new ArrayList<File>();
 		files.add(file);
-
-		List<String> toMailList = Arrays.asList(to_mail);
 
 		// Shop Mail
 		String subject = "You placed an order to (" + order.getSupplier().getCompany()
 				+ ") at dollarshopsuppliers.co.nz ";
 		String message = emailMessage.shopMessage(order);
 
-		sending(toMailList, "", subject, message, null, from_mail);
+		List<String> toMailList = Arrays.asList(toShop);
+		sending(toMailList, "", subject, message, files, from_mail);
 		file.delete();
 		//Arrays.stream(new File("/nanuri7788/tomcat/temp/shop").listFiles()).forEach(File::delete);
 	}
 
 	public void sendSupplyMail(Order order) {
-
+		String  toSupplier = order.getSupplier().getEmail();
 		String fileName = excelInvoicePrint.printing(order);
 		File file = new File(fileName);
 		List<File> files = new ArrayList<File>();
 		files.add(file);
 
-		List<String> toMailList = Arrays.asList(to_mail);
-
 		// Shop Mail
 		String subject = "Orders for : " + order.getShop().getCompany() + ", Order No : " + order.getInvoice();
 		String message = emailMessage.supplyMessage(order);
 
+		List<String> toMailList = Arrays.asList(toSupplier);
 		sending(toMailList, "", subject, message, files, from_mail);
 
 		file.delete();

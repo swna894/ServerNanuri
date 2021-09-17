@@ -7,5 +7,7 @@ import com.order2david.etc.model.Company;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
 
+	Company findFirstByOrderById();
+
    
 }
