@@ -19,7 +19,7 @@ public class EmailMessage{
 		Double amount = order.getAmount();
 		
 		String message = "<p><strong> - Shop : " + shop + "</strong></p>";
-		message = message + "<p><strong> - Invoice : " + invoice + "</strong></p>";
+		message = message + "<p><strong> - Order No : " + invoice + "</strong></p>";
 		message = message + "<p><strong> - Amount : $ " + String.format("%.2f", amount) + "</strong></p>";
 		message = message + "<p><strong> - Supplier : " + supplier + "</strong></p>";
 		

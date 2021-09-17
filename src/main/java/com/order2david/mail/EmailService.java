@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -103,7 +105,7 @@ public class EmailService {
 				+ ") at dollarshopsuppliers.co.nz ";
 		String message = emailMessage.shopMessage(order);
 
-		List<String> toMailList = Arrays.asList(toShop);
+		List<String> toMailList = Stream.of(toShop.split(";")).collect(Collectors.toList());;
 		sending(toMailList, "", subject, message, files, from_mail);
 		file.delete();
 		//Arrays.stream(new File("/nanuri7788/tomcat/temp/shop").listFiles()).forEach(File::delete);
@@ -120,7 +122,7 @@ public class EmailService {
 		String subject = "Orders for : " + order.getShop().getCompany() + ", Order No : " + order.getInvoice();
 		String message = emailMessage.supplyMessage(order);
 
-		List<String> toMailList = Arrays.asList(toSupplier);
+		List<String> toMailList = Stream.of(toSupplier.split(";")).collect(Collectors.toList());;
 		sending(toMailList, "", subject, message, files, from_mail);
 
 		file.delete();
