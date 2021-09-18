@@ -346,7 +346,7 @@ public class OrderController {
 	@GetMapping("order/cart/inform")
 	public String getInitCartInfrom(Principal principal) {
 
-		Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
+		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		String invoice = supplier.getAbbr() + shop.getAbbr() + "_CART";
 
