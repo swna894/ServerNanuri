@@ -44,7 +44,7 @@ import {
 } from "../../_actions/product_action";
 
 import { signoutUser } from "../../_actions/signin_action";
-import { getHistoryOrder } from "../../_actions/history_action";
+import { getIsHistory} from "../../_actions/history_action";
 
 import "./OrderPage.css";
 
@@ -135,7 +135,7 @@ function OrderHeader(props) {
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
     dispatch(changeIsCartRequest(false));
-    dispatch(getHistoryOrder(abbr));
+    dispatch(getIsHistory(abbr));
     dispatch(getInitCartInform());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -147,7 +147,7 @@ function OrderHeader(props) {
     dispatch(changeIsCartRequest(false));
     let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
-    dispatch(getHistoryOrder(abbr));
+    dispatch(getIsHistory(abbr));
     pageProducts(abbr, "", 0, size);
     dispatch(getInitCartInform(abbr));
     onClose();
@@ -164,7 +164,7 @@ function OrderHeader(props) {
     dispatch(getCategoriesAction(parm));
     dispatch(getCheckout(abbr, size)); 
     dispatch(getInitCartInform(abbr));
-    dispatch(getHistoryOrder(abbr));
+    dispatch(getIsHistory(abbr));
     onClose();
     //console.log(`selected ${value}`);
   }

@@ -418,7 +418,27 @@ public class OrderController {
 	
 	@GetMapping("orders/history")
 	@Transactional
-	public Long history( Principal principal) {
+	public List<Order> history( Principal principal) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		List<Order> orders = orderRepository.findByShopAbbrAndStatusOrderByOrderDateDesc(shop.getAbbr(), OrderType.ORDER);
+		orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
+		return orders;
+	}
+	
+	@GetMapping("orders/history/{abbr}")
+	@Transactional
+	public List<Order> historyByAbbr(@PathVariable String abbr, Principal principal) {
+		Shop shop = shopRepository.findByEmail(principal.getName());
+		List<Order> orders = orderRepository.findByShopAbbrAndInvoiceContainsAndStatusOrderByOrderDateDesc(shop.getAbbr(), abbr, OrderType.ORDER);
+		
+		orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
+		return orders;
+		// return null;
+	}
+	
+	@GetMapping("orders/ishistory")
+	@Transactional
+	public Long historyCount( Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
 		String com = supplier.getAbbr();
@@ -427,9 +447,9 @@ public class OrderController {
 		return count;
 	}
 	
-	@GetMapping("orders/history/{abbr}")
+	@GetMapping("orders/ishistory/{abbr}")
 	@Transactional
-	public Long historyByAbbr(@PathVariable String abbr, Principal principal) {
+	public Long historyByAbbrCount(@PathVariable String abbr, Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		if(abbr.equals("init")) {
 			Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
