@@ -1,5 +1,5 @@
 import * as config from "../../Config";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Pagination } from "antd";
 import { getProductsAction } from "../../_actions/product_action";
@@ -20,10 +20,17 @@ function OrderFooter() {
     (state) => state.product.products.totalElements
   );
 
+  // eslint-disable-line react-hooks/exhaustive-deps
+  function onShowSizeChange(pageSize) {
+    // let param = {
+    //   params: { page: 0, size: pageSize, sort: "seq" },
+    // };
+    // category
+    //   ? dispatch(getProductsAction(abbr, category, param))
+    //   : dispatch(getProductsAction(abbr, "", param));
+  }
 
- // eslint-disable-line react-hooks/exhaustive-deps
-
-  function onChange(pageNumber, pageSize = config.PAGE_SIZE) {
+  function onChange(pageNumber, pageSize) {
     if (category === "SEARCH") {
       let param = {
         params: {
@@ -90,6 +97,7 @@ function OrderFooter() {
             defaultCurrent={1}
             total={totalElements}
             showTotal={(total) => `Total ${total} items`}
+            onShowSizeChange={onShowSizeChange}
             onChange={onChange}
           />
         ) : (

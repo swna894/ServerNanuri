@@ -43,7 +43,7 @@ public class EmailMessage{
 		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "</strong></p>";
 		message = message + "<br>";
 		message = message + "<p><strong><em> Order Details </em></strong></p>";
-		message = message + "<p><strong> Amount (exclude GST) : $" + amount  + "</strong></p>";
+		message = message + "<p><strong> Amount (exclude GST) : $" + String.format("%.2f", amount)  + "</strong></p>";
 		
 		message = message + "<table border=\"1\" >";
 		message = message + "<tr>"
@@ -98,7 +98,7 @@ public class EmailMessage{
 		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "</strong></p>";
 		message = message + "<br>";
 		message = message + "<p><strong><em> Order Details </em></strong></p>";
-		message = message + "<p><strong> Amount (exclude GST) : $" + amount  + "</strong></p>";
+		message = message + "<p><strong> Amount (exclude GST) : $" + String.format("%.2f", amount)  + "</strong></p>";
 		
 		message = message + "<table border=\"1\" >";
 		message = message + "<tr>"
