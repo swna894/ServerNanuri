@@ -418,20 +418,28 @@ public class OrderController {
 	
 	@GetMapping("orders/history")
 	@Transactional
-	public List<Order> history( Principal principal) {
+	public Long history( Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
-		List<Order> orders = orderRepository.findByShopAbbrAndStatusOrderByOrderDateDesc(shop.getAbbr(), OrderType.ORDER);
-		orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
-		return orders;
+		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
+		String com = supplier.getAbbr();
+		//List<Order> orders = orderRepository.findByInvoiceContainsAndStatusOrderByOrderDateDesc(com+shop.getAbbr(), OrderType.ORDER);
+		Long count  = orderRepository.countByInvoiceContainsAndStatusOrderByOrderDateDesc(com+shop.getAbbr(), OrderType.ORDER);
+		return count;
 	}
 	
 	@GetMapping("orders/history/{abbr}")
 	@Transactional
-	public List<Order> historyByAbbr(@PathVariable String abbr, Principal principal) {
+	public Long historyByAbbr(@PathVariable String abbr, Principal principal) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
-		List<Order> orders = orderRepository.findByShopAbbrAndInvoiceContainsAndStatusOrderByOrderDateDesc(shop.getAbbr(), abbr, OrderType.ORDER);
-		orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
-		return orders;
+		if(abbr.equals("init")) {
+			Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
+			abbr = supplier.getAbbr();
+		}
+		//List<Order> orders = orderRepository.findByShopAbbrAndInvoiceContainsAndStatusOrderByOrderDateDesc(shop.getAbbr(), abbr, OrderType.ORDER);
+		Long count  = orderRepository.countByShopAbbrAndInvoiceContainsAndStatusOrderByOrderDateDesc(shop.getAbbr(), abbr, OrderType.ORDER);
+		
+		//orders.stream().forEach(item -> item.setCompany(item.getSupplier().getCompany()));
+		return count;
 		// return null;
 	}
 	

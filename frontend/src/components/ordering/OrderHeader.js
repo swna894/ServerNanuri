@@ -44,6 +44,7 @@ import {
 } from "../../_actions/product_action";
 
 import { signoutUser } from "../../_actions/signin_action";
+import { getHistoryOrder } from "../../_actions/history_action";
 
 import "./OrderPage.css";
 
@@ -119,6 +120,7 @@ function OrderHeader(props) {
   const cartInform = useSelector((state) => state.product.cart);
   const error = useSelector((state) => state.product.error);
   const userData = useSelector((state) => state.user.userData);
+  const isHitory = useSelector((state) => state.history.history);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -133,6 +135,7 @@ function OrderHeader(props) {
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
     dispatch(changeIsCartRequest(false));
+    dispatch(getHistoryOrder(abbr));
     dispatch(getInitCartInform());
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -144,6 +147,7 @@ function OrderHeader(props) {
     dispatch(changeIsCartRequest(false));
     let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
+    dispatch(getHistoryOrder(abbr));
     pageProducts(abbr, "", 0, size);
     dispatch(getInitCartInform(abbr));
     onClose();
@@ -160,6 +164,7 @@ function OrderHeader(props) {
     dispatch(getCategoriesAction(parm));
     dispatch(getCheckout(abbr, size)); 
     dispatch(getInitCartInform(abbr));
+    dispatch(getHistoryOrder(abbr));
     onClose();
     //console.log(`selected ${value}`);
   }
@@ -452,14 +457,14 @@ function OrderHeader(props) {
       <Tooltip placement="top" title= 'History'>
         <Button
           type="primary"
-          style={  stylesButton(history) }
+          style={ isHitory ? stylesButton(history)  : { display: "none" } }
           onClick={onClickHistory}
         > &nbsp; </Button>
       </Tooltip>
     : 
       <Button
         type="primary"
-        style={ stylesHanbger }
+        style={  isHitory ? stylesHanbger : { display: "none" } }
         onClick={onClickHistory}
       >
         <FaTruck size={16} style={{ marginBottom: "-4px" }} />
