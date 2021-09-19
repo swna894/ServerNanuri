@@ -126,6 +126,7 @@ public class ProductController {
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
 		Pageable sortedBySeq = PageRequest.of(0, 36, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
+		
 		updateCartQty(page, principal);
 		updateCartHistory(page, principal);
 		return page;
@@ -173,10 +174,12 @@ public class ProductController {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, category, pageable);
 		}
+		
 		if (!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
 			updateCartHistory(page, principal);
 		}
+		
 		return page;
 	}
 
@@ -195,7 +198,7 @@ public class ProductController {
 	// return page;
 	// }
 
-	private Page<Product> updateCartHistory(Page<Product> page, Principal principal) {
+	public Page<Product> updateCartHistory(Page<Product> page, Principal principal) {
 		List<Product> products = page.getContent();
 
 		Shop shop = shopRepository.findByEmail(principal.getName());
@@ -411,6 +414,7 @@ public class ProductController {
 		   nativeQuery.setParameter("abbr", abbr);
 		   JpaResultMapper jpaResultMapper = new JpaResultMapper();
 		   List<ProductManage> products = jpaResultMapper.list(nativeQuery, ProductManage.class);
+		   
 		   
 		return products;
 	}

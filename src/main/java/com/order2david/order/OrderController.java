@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.order2david.Product.ProductController;
 import com.order2david.Product.model.Product;
 import com.order2david.Product.repository.ProductRepository;
 import com.order2david.mail.EmailService;
@@ -65,6 +66,9 @@ public class OrderController {
 
 	@Autowired
 	ProductRepository productRepository;
+	
+	@Autowired
+	ProductController productController;
 	
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -383,6 +387,7 @@ public class OrderController {
 			order.setInvoice(invoice);
 			order.getOrderItems().forEach(item -> { 
 				item.setInvoice(invoice);
+				item.setAbbr(shop.getAbbr());
 				item.setStatus(OrderType.ORDER);
 			});
 			order.setStatus(OrderType.ORDER);
@@ -404,6 +409,8 @@ public class OrderController {
 	public Page<Product> getCheckout(@PathVariable String abbr, @PathVariable Integer size, Principal principal) {
 		Pageable sortedBySeq = PageRequest.of(0, size, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, sortedBySeq);
+		
+		productController.updateCartHistory(page, principal);
 		
 		return page;
 	}
