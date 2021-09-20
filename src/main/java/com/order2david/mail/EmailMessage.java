@@ -72,7 +72,7 @@ public class EmailMessage{
 		message = message + "<br>";
 		message = message + "<br>";
 		message = message + "<p><em> Your order will be arrived within 2 - 5 working days. </em></p>";
-		message = message + "<p><em> If you have any concerns, please email to </em><a href=\"mailto:davidna@xtra.co.nz\"> davidna@xtra.co.nz </a><em>or contact to David Na 027-652-1111. </em></p>";
+		message = message + "<p><em> If you have any concerns, please email to </em><a href=\"mailto:davidna@xtra.co.nz\"> davidna@xtra.co.nz </a><em>or contact David Na 027-652-1111. </em></p>";
 		message = message + "<br>";
 		message = message + "<p><strong>Best Regards</strong></p>";
 		message = message + "<p><strong>David Na</strong></p>";
@@ -125,7 +125,7 @@ public class EmailMessage{
 		
 		message = message + "<br>";
 		message = message + "<br>";
-		message = message + "<p><em> If you have any concerns, please email to </em><a href=\"mailto:davidna@xtra.co.nz\"> davidna@xtra.co.nz </a><em>or contact to David Na 027-652-1111. </em></p>";
+		message = message + "<p><em> If you have any concerns, please email to </em><a href=\"mailto:davidna@xtra.co.nz\"> davidna@xtra.co.nz </a><em>or contact David Na 027-652-1111. </em></p>";
 		message = message + "<br>";
 		message = message + "<p><strong>Best Regards</strong></p>";
 		message = message + "<p><strong>David Na</strong></p>";

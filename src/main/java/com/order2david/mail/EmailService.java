@@ -75,7 +75,7 @@ public class EmailService {
 	public void sendMail(Order order) {
 		try {
 			//new Thread(() -> {
-				sendMyShopMail(order);
+				//sendMyShopMail(order);
 				sendShopMail(order);
 				sendSupplyMail(order);
 			//}).start();
@@ -101,8 +101,8 @@ public class EmailService {
 		files.add(file);
 
 		// Shop Mail
-		String subject = "You placed an order to (" + order.getSupplier().getCompany()
-				+ ") at dollarshopsuppliers.co.nz ";
+		String subject = "You placed an order to " + order.getSupplier().getCompany()
+				+ " at dollarshopsuppliers.co.nz ";
 		String message = emailMessage.shopMessage(order);
 
 		List<String> toMailList = Stream.of(toShop.split(";")).collect(Collectors.toList());;
@@ -122,7 +122,8 @@ public class EmailService {
 		String subject = "Orders for : " + order.getShop().getCompany() + ", Order No : " + order.getInvoice();
 		String message = emailMessage.supplyMessage(order);
 
-		List<String> toMailList = Stream.of(toSupplier.split(";")).collect(Collectors.toList());;
+		List<String> toMailList = Stream.of(toSupplier.split(";")).collect(Collectors.toList());
+		toMailList.add(to_mail);
 		sending(toMailList, "", subject, message, files, from_mail);
 
 		file.delete();
