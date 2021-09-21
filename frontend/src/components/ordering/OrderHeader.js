@@ -41,6 +41,7 @@ import {
   getInitCartInform,
   setOrderRequest,
   getCheckout,
+  setInitCartInform,
 } from "../../_actions/product_action";
 
 import { signoutUser } from "../../_actions/signin_action";
@@ -129,6 +130,7 @@ function OrderHeader(props) {
     return  window.scrollTo(0, 0);
   }, [headTitle, condition, page, size, isCart, isNew, isSpecial, categories]); 
 
+
   useEffect(() => {
     document.body.style.background = "#f0f0f0";
     let parm = { params: { abbr: headTitle } };
@@ -163,7 +165,7 @@ function OrderHeader(props) {
     let parm = { params: { abbr: abbr } };
     dispatch(getCategoriesAction(parm));
     dispatch(getCheckout(abbr, size)); 
-    dispatch(getInitCartInform(abbr));
+    dispatch(setInitCartInform());
     dispatch(getIsHistory(abbr));
     onClose();
     //console.log(`selected ${value}`);
