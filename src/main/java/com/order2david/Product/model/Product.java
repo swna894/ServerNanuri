@@ -72,6 +72,9 @@ public class Product {
 	private boolean isCheck;
 	@Transient
 	private String orderedDate;
+	@Transient
+	private int myStock;
+	
 	private String comment;
 
 	// 0423

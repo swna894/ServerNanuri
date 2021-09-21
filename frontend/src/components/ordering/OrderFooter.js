@@ -101,15 +101,13 @@ function OrderFooter() {
             onChange={onChange}
           />
         ) : (
-          <Pagination
-            style={{width:"100%"}}
-            total={totalElements}
-            pageSizeOptions={[16, 24, 36, 60, 100]}
-            defaultPageSize={config.PAGE_SIZE}
+          <Pagination simple 
+            defaultCurrent={1} 
+            defaultCurrent={config.PAGE_SIZE} 
+            total={totalElements}     
             onChange={onChange}
-            defaultCurrent={1}
-            //showTotal={(total) => `Total ${total} items`}
           />
+  
         )}
       </Footer>
     </div>

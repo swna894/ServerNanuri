@@ -171,7 +171,12 @@ export function OrderWindowMin({item}) {
         dispatch(changeCart(goods, pageable, param));
     };
     return (
-        <div
+      <div
+        style={
+          item.price === 0
+            ? { width: "1em", display: "none" }
+            : { width: "1em", display: "inline" }
+        }
       >
         <div style={item.new ? newStyle : hiddenStyle}>
           <img src={newProduct} alt="new"></img>
@@ -183,7 +188,7 @@ export function OrderWindowMin({item}) {
         <Tooltip placement="top" title={item.description}>
           <div style={descriptionStyle}>{item.description}</div>
         </Tooltip>
-
+        <div>
         <span style={item.special ? priceStyle : { display: "none" }}>
           ${item.specialPrice}
         </span>
@@ -201,7 +206,7 @@ export function OrderWindowMin({item}) {
             {item.orderedDate}
           </p>
         </Tooltip>
-
+        </div>
         <div style={specDivStyle}>
           <span style={labelStyle}>&nbsp;CODE :&nbsp;</span>
           <span style={specStyle}> {item.code}</span> &nbsp;

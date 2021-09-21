@@ -97,8 +97,8 @@ public class PosController {
 		return 	result.getOrderItems();	
 	}
 	
-	private List<OrderItem> checkIsStock(List<OrderItem> orderItem, String invoice) {
 		List<OrderItem> chekedList = new ArrayList<OrderItem>();
+		private List<OrderItem> checkIsStock(List<OrderItem> orderItem, String invoice) {
 		for (OrderItem item : orderItem) {
 			Product product = productRepository.findByCodeAndAbbr(item.getCode(), item.getAbbr().toLowerCase());
 			//logger.debug(item.getCode() +  "제품확인 -->  " + product);

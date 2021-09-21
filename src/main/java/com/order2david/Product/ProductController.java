@@ -254,6 +254,7 @@ public class ProductController {
 				for (OrderItem orderItem : orderItems) {
 					if (product.getCode().equals(orderItem.getCode())) {
 						product.setQty(orderItem.getQty());
+						product.setMyStock(orderItem.getStock());
 						break;
 					}
 				}

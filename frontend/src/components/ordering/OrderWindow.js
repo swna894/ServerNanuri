@@ -158,12 +158,12 @@ export function OrderWindow({item}) {
     };
     return (
         <div
-        style={
-          item.price === 0
-            ? { width: "1em", display: "none" }
-            : { width: "1em", display: "inline" }
-        }
-      >
+          style={
+            item.price === 0
+              ? { width: "1em", display: "none" }
+              : { width: "1em", display: "inline" }
+          }
+        >
         <div style={item.new ? newStyle : hiddenStyle}>
           <img src={newProduct} alt="new"></img>
         </div>
@@ -193,29 +193,34 @@ export function OrderWindow({item}) {
           <span style={labelStyle}>&nbsp;&nbsp;STOCK : &nbsp;</span>
           <span style={specStyle}>{item.stock}</span>
         </div>
-
-        <Tooltip placement="right" title="last ordered date">
+        <div>
+          <Tooltip placement="right" title="last ordered date">
+            <p
+              style={{
+                color: "#f5222d",
+                marginLeft: "32px",
+                marginBottom: "5px",
+                fontWeight: "bold",
+                width: "100%",
+              }}
+            >
+              {item.orderedDate}            
+            </p>
+          </Tooltip>
           <p
-            style={{
-              color: "#f5222d",
-              marginLeft: "32px",
-              marginBottom: "5px",
-              fontWeight: "bold",
-              width: "150px"
-            }}
+            style={
+              condition === "All" && category === "SEARCH"
+                ? companyStyle
+                : { display: "none" }
+            }
           >
-            {item.orderedDate}
+            {item.company} &nbsp;&nbsp;&nbsp;
           </p>
-        </Tooltip>
-        <p
-          style={
-            condition === "All" && category === "SEARCH"
-              ? companyStyle
-              : { display: "none" }
-          }
-        >
-          {item.company}
-        </p>
+          <p style={item.myStock == 0 ? {display: "none"} : companyStyle}>
+                 My Stork : {item.myStock}
+          </p>
+ 
+        </div>
         <p style={{ color: "#fff", margin: "50px" }}>&nbsp; </p>
         <div style={buttonGroupStyle}>
           <Button

@@ -67,6 +67,7 @@ public class OrderItem {
 	private double amount;
 	private String abbr;
 	private int qty; // 주문 수량
+	private int stock; // shop 보유 수량  21년 09월 21일 추가
 	
 	@Transient
 	private String shop;
@@ -126,11 +127,11 @@ public class OrderItem {
 
 	@Override
 	public String toString() {
-		return "OrderItem [id=" + id + ", created=" + created + ", updated=" + updated + ", status=" + status
-				+ ", invoice=" + invoice + ", code=" + code + ", description=" + description + ", price=" + price
-				+ ", amount=" + amount + ", abbr=" + abbr + ", qty=" + qty + ", shop=" + shop + ", shopId=" + shopId
-				+ "]\n";
+		return "OrderItem [status=" + status + ", invoice=" + invoice + ", code=" + code + ", description="
+				+ description + ", price=" + price + ", amount=" + amount + ", abbr=" + abbr + ", qty=" + qty
+				+ ", stock=" + stock + ", shop=" + shop + ", shopId=" + shopId + "]\n";
 	}
+
 
 
 
