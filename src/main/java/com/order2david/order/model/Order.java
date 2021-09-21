@@ -94,8 +94,8 @@ public class Order {
 	}
 	public Order(Shop shop, Supplier supplier) {
 		this.setShop(shop);
+		this.setSupplier(supplier);
 		this.setShopAbbr(shop.getAbbr());
-		// order.setSupplier(supplier);
 		this.setStatus(OrderType.CART);
 		this.setOrderDate(LocalDateTime.now());
 		invoice = getInvoice();

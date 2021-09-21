@@ -13,3 +13,6 @@
 body .ant-pagination-item-active {
   background: "#ccc";
 }
+
+.hiddenStyle { display: none }
+.newStyle { position: absolute; top: 200px; left:25px }

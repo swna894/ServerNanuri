@@ -260,9 +260,45 @@ function OrderHeader(props) {
     marginBottom: "5px",
     borderStyle: "ridge",
   };
+
+  const styleHeader = {
+    position: "fixed",
+    zIndex: 1,
+    width: "100%",
+    backgroundColor: "#bfbfbf",
+    height: "70px",
+    paddingTop: "10px",
+
+  };
+
   const styleSupplier = { width: "100%", fontSize:"24px", fontWeight: "bold" };
   const styleCategory = { width: "100%", fontSize:"20px", fontWeight: "bold"};
 
+  const styleKeySupplier = 
+  {  position: "fixed",
+      zIndex: 1,
+      width:"30%",
+    //        backgroundColor: "#bfbfbf",
+      color:'#3455eb',
+      textAlign: "left",
+      fontWeight: "bold",
+      fontStyle: "italic",
+      padding: "5px 0px 0px 100px",
+      marginBottom: "-10px" 
+  };
+
+  const styleKeyOrder = 
+  {  position: "fixed",
+      zIndex: 1,
+    //  width:"30%",
+    //        backgroundColor: "#bfbfbf",
+      color:'#3455eb',
+      textAlign: "left",
+      fontWeight: "bold",
+      fontStyle: "italic",
+      padding: "5px 0px 0px 40px",
+      marginBottom: "-10px" 
+  };
 
   const onClickCart = () => {
     onChangeButton(config.CART);
@@ -318,14 +354,14 @@ function OrderHeader(props) {
          // style={{ borderStyle: "ridge" }}
         >
           <Option value="All">All</Option>
-          <Option value="Co">One</Option>
+          <Option value="Co">one</Option>
         </Select>
         <Search
           placeholder="input search text"
           allowClear
           enterButton
           onSearch={onSearchInput}
-          style={{ width: "70%" }}
+          style={{ width: "68%" }}
         />
       </Input.Group>
     </div>
@@ -574,9 +610,9 @@ function OrderHeader(props) {
   }
 
   const headH2 = (
-    <a href="order2david.com" onClick={onClickHead}>
+    <a href="#" onClick={onClickHead}>
       <Space>
-        <FaHome size={28} style={{ color: "#000" }} />
+        <FaHome size={40} style={{ color: "#000", paddingTop:'10px' }} />
         {/* <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2> */}
       </Space>
     </a>
@@ -593,14 +629,7 @@ function OrderHeader(props) {
   return (
     <div>
       <Header
-        style={{
-          position: "fixed",
-          zIndex: 1,
-          width: "100%",
-          backgroundColor: "#bfbfbf",
-          height: "70px",
-          paddingTop: "6px",
-        }}
+        style={styleHeader}
       >
         {width > config.WIDTH_BIG ? (
           <div>
@@ -632,9 +661,9 @@ function OrderHeader(props) {
             <Button
               type="primary"
               onClick={showDrawer}
-              style={{ float: "right", margin: "18px 0" }}
+              style={{ float: "right", margin: "0px 0" }}
             >
-              <MenuOutlined />
+             <MenuOutlined />
             </Button>
             <Drawer
               placement="right"
@@ -660,7 +689,7 @@ function OrderHeader(props) {
             <Button
               type="primary"
               onClick={showDrawer}
-              style={{ float: "right", margin: "18px 0" }}
+              style={{ float: "right", marginTop: "10px" }}
             >
               <MenuOutlined />
             </Button>
@@ -670,7 +699,7 @@ function OrderHeader(props) {
               onClose={onClose}
               visible={visible}
             >
-              <div style={{ display: "block", color: "#fff"}}>
+              <div style={{ display: "block", color: "#fff", marginTop:"20px"}}>
                 {listSupplierSelect}
                 {listCategorySelect}
                 {searchInput}
@@ -703,28 +732,15 @@ function OrderHeader(props) {
       >
         Welcome  {userData ? userData.company : ""}
       </div>
-      <div
-        xxl={6}
-        xl={8}
-        lg={10}
-        md={12}
-        sm={24}
-        xs={24}
-        style={{
-          position: "fixed",
-          zIndex: 1,
-          width:"30%",
-  //        backgroundColor: "#bfbfbf",
-          color:'#3455eb',
-          textAlign: "left",
-          fontWeight: "bold",
-          fontStyle: "italic",
-          padding: "5px 0px 0px 100px",
-          marginBottom: "-10px"
-        }}
+      <div xxl={6} xl={8} lg={10} md={12} sm={24} xs={24}
+        style={width > config.WIDTH_SMALL ? styleKeySupplier : { display: "none" }}
       >
         Key Suppliers
       </div>
+      <div style={width > 1000 ? { display: "none" } : styleKeyOrder } >
+          {cartInform}
+      </div>
+
       <Modal
           visible={visibleCart}
           onOk={gotoOrder}

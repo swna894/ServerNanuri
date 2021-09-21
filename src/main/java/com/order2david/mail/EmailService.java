@@ -75,7 +75,7 @@ public class EmailService {
 	public void sendMail(Order order) {
 		try {
 			//new Thread(() -> {
-				//sendMyShopMail(order);
+			//	sendMyShopMail(order);
 				sendShopMail(order);
 				sendSupplyMail(order);
 			//}).start();
