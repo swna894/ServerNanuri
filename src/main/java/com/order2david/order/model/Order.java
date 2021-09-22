@@ -98,6 +98,7 @@ public class Order {
 		this.setShopAbbr(shop.getAbbr());
 		this.setStatus(OrderType.CART);
 		this.setOrderDate(LocalDateTime.now());
+		this.getOrderItems().clear();
 		invoice = getInvoice();
 		amount = 0.0;
 	}
@@ -132,13 +133,15 @@ public class Order {
 	/** 전체 주문 가격 조회 */
 
 	public Double getTotalPrice() {
-		Double totalPrice = 0.0;
-		for (OrderItem orderItem : orderItems) {
-			totalPrice += orderItem.getTotalPrice();
-		}
-		return Double.valueOf(String.format("%.2f", totalPrice));
+		Double sum = orderItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+		return Double.valueOf(String.format("%.2f", sum));
 	}
 
+	public void updateTotalPrice() {
+		Double sum = orderItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+		setAmount(sum);
+	}
+	
 	// ==연관관계 메서드==//
 	public void addOrderItem(OrderItem orderItem) {
 		orderItems.add(orderItem);

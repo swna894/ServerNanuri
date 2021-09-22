@@ -208,7 +208,8 @@ public class ExcelInvoicePrint {
 			cell.setCellValue(columnHeader.get(i));
 			cell.setCellStyle(excelCellStyle.getTitleStyle(workbook));
 		}
-
+		
+		int rowStart = row.getRowNum() + 2;
 		for (int i = 0; i < orderDetailsList.size(); i++) {
 			OrderItem item = orderDetailsList.get(i);
 
@@ -235,7 +236,9 @@ public class ExcelInvoicePrint {
 			cell.setCellStyle(excelCellStyle.getCurrencyDotStyle(workbook));
 			
 			cell = row.createCell(5);
-			cell.setCellValue(item.getAmount());
+			String sumFormula = "(D" + (row.getRowNum() + 1) + "*E" + (row.getRowNum() + 1) + ")";
+			cell.setCellFormula(sumFormula);
+			//cell.setCellValue(item.getAmount());
 			cell.setCellStyle(excelCellStyle.getCurrencyDotStyle(workbook));
 
 			cell = row.createCell(6);
@@ -255,7 +258,7 @@ public class ExcelInvoicePrint {
 				cell.setCellValue("Total");
 				cell.setCellStyle(excelCellStyle.getTitleStyle(workbook));
 			} else if (i == 5) {
-				String sumFormula = "SUM(F9:F" + (row.getRowNum()) + ")";
+				String sumFormula = "SUM(F" + rowStart + ":F" + (row.getRowNum()) + ")";
 				cell.setCellFormula(sumFormula);
 				cell.setCellStyle(excelCellStyle.getCurrencyMediumStyle(workbook));
 			} 

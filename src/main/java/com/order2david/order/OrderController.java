@@ -111,6 +111,7 @@ public class OrderController {
 		order.setStatus(OrderType.ORDER);
 		order.setSupplier(supplier);
 		order.setShop(shop);
+		order.setAmount(order.getTotalPrice());
 		
 		updateProductStock(order);
 	

@@ -2,6 +2,7 @@ package com.order2david.pos;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,13 +39,13 @@ public class PosController {
 
 	@Autowired
 	ShopRepository shopRepository;
-	
+
 	@Autowired
 	OrderRepository orderRepository;
-	
+
 	@Autowired
 	ProductRepository productRepository;
-	
+
 	@GetMapping("/suppliers")
 	public List<Supplier> findAll() {
 		return supplierRepository.findAllByOrderByCompanyAsc();
@@ -54,54 +55,65 @@ public class PosController {
 	public List<OrderItem> postOrderItems(@RequestBody List<OrderItem> orderItems) {
 		String abbr = orderItems.get(0).getAbbr();
 		String shopId = orderItems.get(0).getShopId();
-		String invoice = abbr + shopId + "_CART"; 
-		
-		Shop shop = shopRepository.findByAbbr(orderItems.get(0).getShopId());
+		String invoice = abbr + shopId + "_CART";
+		Order order = new Order();
+			
+		Shop shop = shopRepository.findByAbbr(shopId);
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
-		
+
 		orderItems = checkIsStock(orderItems, invoice);
-	    if(orderItems.isEmpty()) {
-	    	return null;
-	    }
+		if (orderItems.isEmpty()) {
+			return null;
+		}
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
-		Order order;
-		if (!orderOptional.isPresent()) {  // order가 없으면
-			Double sum = orderItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+		if (!orderOptional.isPresent()) { // order가 없으면
+			
 			order = new Order(shop, supplier);
-	
 			order.setInvoice(invoice);
-			for (OrderItem orderItem : orderItems) {
+			
+			ArrayList<OrderItem> newlist = new ArrayList<OrderItem>(new HashSet<OrderItem>(orderItems));
+			Double sum = newlist.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+			
+			for (OrderItem orderItem : newlist) {			
 				orderItem.setOrder(order);
-				order.addOrderItem(orderItem);	
+				orderItem.setAmount(orderItem.getTotalPrice());
+				orderItem.setId(null);
 			}
+			order.setId(null);
+
+			order.setOrderItems(newlist);
 			order.setAmount(sum);
-			//orderRepository.save(order);
+
 		} else {
+			
 			order = orderOptional.get();
 			List<OrderItem> serverList = orderOptional.get().getOrderItems();
 
 			for (OrderItem clientItem : orderItems) {
-					
-				OrderItem findOrder =serverList.stream().filter(item -> item.getCode().equals(clientItem.getCode()))
-				               .findFirst().orElse(null);
-				if(findOrder != null) {
+
+				OrderItem findOrder = serverList.stream().filter(item -> item.getCode().equals(clientItem.getCode()))
+						.findFirst().orElse(null);
+				if (findOrder != null) {
 					findOrder.setQty(clientItem.getQty());
 				} else {
 					order.addOrderItem(clientItem);
 				}
 			}
 			order.setOrderDate(LocalDateTime.now());
-			//orderRepository.save(order);
-		}
-		Order result = orderRepository.save(order);
-		return 	result.getOrderItems();	
+			Double sum = orderItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+			order.setAmount(sum);
+		}		
+		Order tmp = orderRepository.save(order);
+		return tmp.getOrderItems();
+
 	}
-	
-		List<OrderItem> chekedList = new ArrayList<OrderItem>();
-		private List<OrderItem> checkIsStock(List<OrderItem> orderItem, String invoice) {
+
+	List<OrderItem> chekedList = new ArrayList<OrderItem>();
+
+	private List<OrderItem> checkIsStock(List<OrderItem> orderItem, String invoice) {
 		for (OrderItem item : orderItem) {
 			Product product = productRepository.findByCodeAndAbbr(item.getCode(), item.getAbbr().toLowerCase());
-			//logger.debug(item.getCode() +  "제품확인 -->  " + product);
+			// logger.debug(item.getCode() + "제품확인 --> " + product);
 			if (product != null && product.getStock() > 0) {
 				item.setStatus(OrderType.CART);
 				item.setInvoice(invoice);
@@ -110,5 +122,5 @@ public class PosController {
 		}
 		return chekedList;
 	}
-	
+
 }

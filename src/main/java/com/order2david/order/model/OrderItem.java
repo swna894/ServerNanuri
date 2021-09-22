@@ -36,11 +36,13 @@ import lombok.ToString;
 @Table(
 	uniqueConstraints={
         @UniqueConstraint(
-            columnNames={"code", "invoice"}
+            columnNames={"code", "invoice", "status"}
         )
     }	
 )
 public class OrderItem {
+
+
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -125,11 +127,44 @@ public class OrderItem {
 		return amount;
 	}
 
+	
+	
 	@Override
 	public String toString() {
 		return "OrderItem [status=" + status + ", invoice=" + invoice + ", code=" + code + ", description="
 				+ description + ", price=" + price + ", amount=" + amount + ", abbr=" + abbr + ", qty=" + qty
 				+ ", stock=" + stock + ", shop=" + shop + ", shopId=" + shopId + "]\n";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((code == null) ? 0 : code.hashCode());
+		result = prime * result + ((invoice == null) ? 0 : invoice.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		OrderItem other = (OrderItem) obj;
+		if (code == null) {
+			if (other.code != null)
+				return false;
+		} else if (!code.equals(other.code))
+			return false;
+		if (invoice == null) {
+			if (other.invoice != null)
+				return false;
+		} else if (!invoice.equals(other.invoice))
+			return false;
+		return true;
 	}
 
 
