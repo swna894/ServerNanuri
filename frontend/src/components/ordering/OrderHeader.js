@@ -190,15 +190,16 @@ function OrderHeader(props) {
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, page, size);
     onClose();
+    setInputValue("");
   }
 
-  function onChangeButton(category) {
-    
+  function onChangeButton(category) { 
     setCategoryPrompt(category === "ORDERED" ? 'HISTORY' : category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, 0, size);
     onClose();
+    setInputValue("");
   }
 
 
