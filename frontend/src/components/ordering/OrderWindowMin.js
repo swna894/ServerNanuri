@@ -16,9 +16,7 @@ const hiddenStyle = { display: "none" };
 const descriptionStyle = {
     overflow: "hidden",
     fontSize: "20px",
-    marginBottom: "7px",
-    marginLeft: " 20px",
-    marginRight: " 20px",
+    margin: "-5px, 20px",
     fontWeight: "bold",
     fontStyle: "italic",
     whiteSpace: "nowrap",
@@ -93,8 +91,9 @@ const descriptionStyle = {
   const buttonGroupStyle = {
     display: "inline",
     position: "absolute",
-    top: "359px",
-    left: "88px",
+    top: "91%",
+    left: "30%",
+
   };
 
 

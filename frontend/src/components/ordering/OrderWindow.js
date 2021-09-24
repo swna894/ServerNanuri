@@ -57,17 +57,24 @@ const descriptionStyle = {
     fontWeight: "bold",
   };
 
+  const stockStyle =  {
+    display: "inline",
+    color: "#40a9ff",
+    marginLeft: "32px",
+    fontWeight: "bold",
+  };
+
   const buttonGroupStyle = {
     display: "inline",
     position: "absolute",
     top: "350px",
-    right: "-117px",
+    right: "-112px",
   };
 
   const specDivStyle = {
     display: "inline-flex",
     float: "right",
-    marginRight: "40px",
+    marginRight: "30px",
     paddingTop: "13px",
   };
 
@@ -199,7 +206,7 @@ export function OrderWindow({item}) {
               style={{
                 color: "#f5222d",
                 marginLeft: "32px",
-                marginBottom: "5px",
+                marginBottom: "-5px",
                 fontWeight: "bold",
                 width: "100%",
               }}
@@ -216,14 +223,14 @@ export function OrderWindow({item}) {
           >
             {item.company} &nbsp;&nbsp;&nbsp;
           </p>
-          <p style={ !item.server ? {display: "none"} : companyStyle}>
+          <p style={ !item.server ? {display: "none"} : stockStyle}>
                  My Stock : {item.myStock} 
           </p>
  
         </div>
         <p style={{ color: "#fff", margin: "50px" }}>&nbsp; </p>
         <div style={buttonGroupStyle}>
-          <Button
+          <Button style={{width:70}}
             type="primary"
             icon={<MinusOutlined />}
             onClick={() =>
@@ -238,7 +245,7 @@ export function OrderWindow({item}) {
               onChangeInputHandler(item.abbr, item.code, e.target.value)
             }
           ></Input>
-          <Button
+          <Button style={{width:75}}
             type="primary"
             icon={<PlusOutlined />}
             onClick={() =>
