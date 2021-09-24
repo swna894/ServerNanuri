@@ -137,7 +137,6 @@ public class ProductController {
 			Pageable pageable, @RequestParam(required = false) String search,
 			@RequestParam(required = false) String condition, Boolean noCheckCart, Principal principal) {
 		Page<Product> page = null;
-
 		if (category.equals(NEW)) {
 			page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, true, true, pageable);
 
@@ -179,7 +178,7 @@ public class ProductController {
 			updateCartQty(page, principal);
 			updateCartHistory(page, principal);
 		}
-		
+
 		return page;
 	}
 

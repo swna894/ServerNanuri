@@ -44,7 +44,7 @@ public class CategoryController {
 	public List<String> findByAbbr(@RequestParam String abbr) {
 		// 초기 카테고리 필요시
 		if (abbr.isEmpty()) {
-			Supplier supplier = supplierRepository.findFirstByOrderByCompanyAsc();
+			Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
 			abbr = supplier.getAbbr();
 		}
 		List<Category> products = catetoryRepository.findByAbbrOrderByCategoryAsc(abbr);
