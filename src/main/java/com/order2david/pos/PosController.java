@@ -77,6 +77,7 @@ public class PosController {
 			for (OrderItem orderItem : newlist) {			
 				orderItem.setOrder(order);
 				orderItem.setAmount(orderItem.getTotalPrice());
+				orderItem.setServer(true);
 				orderItem.setId(null);
 			}
 			order.setId(null);
@@ -90,7 +91,7 @@ public class PosController {
 			List<OrderItem> serverList = orderOptional.get().getOrderItems();
 
 			for (OrderItem clientItem : orderItems) {
-
+				clientItem.setServer(true);
 				OrderItem findOrder = serverList.stream().filter(item -> item.getCode().equals(clientItem.getCode()))
 						.findFirst().orElse(null);
 				if (findOrder != null) {

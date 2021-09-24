@@ -254,6 +254,7 @@ public class ProductController {
 					if (product.getCode().equals(orderItem.getCode())) {
 						product.setQty(orderItem.getQty());
 						product.setMyStock(orderItem.getStock());
+						product.setServer(orderItem.isServer());
 						break;
 					}
 				}

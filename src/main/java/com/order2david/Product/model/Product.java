@@ -74,6 +74,8 @@ public class Product {
 	private String orderedDate;
 	@Transient
 	private int myStock;
+	@Transient
+	private boolean server;
 	
 	private String comment;
 
