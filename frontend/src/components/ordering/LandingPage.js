@@ -69,7 +69,7 @@ function LandingPage() {
     width: "auto",
     maxWidth: "300px",   // 300
     textAlign: "center",
-    margin: "2px auto",
+    margin: "10px auto",
   };
  
   const cardNormalStyle = {

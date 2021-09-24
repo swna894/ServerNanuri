@@ -217,7 +217,7 @@ export function OrderWindow({item}) {
             {item.company} &nbsp;&nbsp;&nbsp;
           </p>
           <p style={ !item.server ? {display: "none"} : companyStyle}>
-                 My Stork : {item.myStock} 
+                 My Stock : {item.myStock} 
           </p>
  
         </div>
