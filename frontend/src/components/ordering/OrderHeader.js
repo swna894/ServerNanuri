@@ -78,17 +78,21 @@ function OrderHeader(props) {
       abbr,
       categoryPrompt === config.SELECT_CATEGORY ? "" : categoryPrompt,
       page === totalPages - 1 ? page : page + 1,
-      size
+      size,
+      search,
+      condition
     );
   }
-
+ // pageProducts(abbr, "SEARCH", 0, size, search, condition);
   // 오른쪽 버튼 처리
   function handleEnterLeft() {
     pageProducts(
       abbr,
       categoryPrompt === config.SELECT_CATEGORY ? "" : categoryPrompt,
       page === 0 ? 0 : page - 1,
-      size
+      size,
+      search,
+      condition
     );
   }
 
@@ -114,6 +118,7 @@ function OrderHeader(props) {
   const isNew = useSelector((state) => state.supplier.isNew);
   const isSpecial = useSelector((state) => state.supplier.isSpecial);
   const categories = useSelector((state) => state.product.categories);
+  const search = useSelector((state) => state.supplier.search);
   //const category = useSelector((state) => state.supplier.category);
   const page = useSelector((state) => state.product.products.number);
   const size = useSelector((state) => state.product.products.size);
@@ -152,6 +157,7 @@ function OrderHeader(props) {
     dispatch(getIsHistory(abbr));
     pageProducts(abbr, "", 0, size);
     dispatch(getInitCartInform(abbr));
+    setInputValue("");
     onClose();
     //console.log(`selected ${value}`);
   }
@@ -347,6 +353,10 @@ function OrderHeader(props) {
     dispatch(changeSearchCondition(value));
   };
 
+  const onInputChange = (e) => {
+    setInputValue(e.target.value)
+  }
+  const [inputValue, setInputValue] = useState("");
   const searchInput = (
     <div style={{ width: "103%" }}>
       <Input.Group compact>
@@ -359,10 +369,12 @@ function OrderHeader(props) {
           <Option value="Co">one</Option>
         </Select>
         <Search
+          value = {inputValue}
           placeholder="input search text"
           allowClear
           enterButton
           onSearch={onSearchInput}
+          onChange={onInputChange}
           style={{ width: "68%" }}
         />
       </Input.Group>
