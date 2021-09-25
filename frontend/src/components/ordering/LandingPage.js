@@ -31,8 +31,8 @@ const backMobileTopstyle = {
   textAlign: "center",
   fontSize: 14,
   position: "absolute",
-  top: "-10px",
-  left: "55px",
+  bottom: "150px",
+  left: "5px",
 };
 
 const backTopstyle = {
@@ -122,7 +122,7 @@ function LandingPage() {
           //display: "flex",
           width: "100%",
           //height: "100vh",
-          padding: "80px 10px 10px 10px",
+          padding: "80px 10px 50px 10px",
           //backgroundColor: "#f0f0f0",
         }}
       >

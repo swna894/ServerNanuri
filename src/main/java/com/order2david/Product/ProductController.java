@@ -92,7 +92,13 @@ public class ProductController {
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
 		// 0423 supplier.getOrders().clear();
 		products.forEach(item -> item.setCompany(supplier.getCompany()));
-
+		for (Product product : products) {
+			Optional<Product> server = productRepository.findById(product.getId());
+			if(server.isPresent()) {
+				product.setImage(server.get().getImage());
+			}
+			
+		}
 		if (products.get(0).isCheck()) {
 			productRepository.deleteAllByAbbr(abbr);
 		}
@@ -105,8 +111,13 @@ public class ProductController {
 	@PutMapping("/products")
 	@Transactional
 	public List<Product> putAll(@RequestBody List<Product> products) {
-		// if (result > 0) {
-		// 0423 products.forEach(item -> item.setSupplier(supplier));
+		for (Product product : products) {
+			Optional<Product> server = productRepository.findById(product.getId());
+			if(server.isPresent()) {
+				product.setImage(server.get().getImage());
+			}
+			
+		}
 		products = productRepository.saveAll(products);
 		return null;
 	}

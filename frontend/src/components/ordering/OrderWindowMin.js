@@ -28,7 +28,7 @@ const descriptionStyle = {
     overflow: "hidden",
     fontSize: "22px",
     fontWeight: "bold",
-    marginLeft: "20px",
+    marginLeft: "18px",
   };
 
   const specialPriceStyle = {
@@ -46,7 +46,7 @@ const descriptionStyle = {
     float: "right",
     position: "relative",
     color: "#f5222d",
-    marginRight: "24px",
+    marginRight: "26px",
     marginBottom: "0px",
     paddingTop: "10px",
     fontWeight: "bold",
@@ -54,9 +54,10 @@ const descriptionStyle = {
   };
 
   const specDivStyle = {
-    display: "inline-flex",
+    display: "flex",
     float: "left",
-    marginLeft: "20px",
+    marginLeft: "18px",
+    marginBottom: "20px",
     // paddingBottom: "10px",
   };
 
@@ -68,7 +69,7 @@ const descriptionStyle = {
   const labelStyle = {
     fontWeight: "bold",
     color: "#8c8c8c",
-    fontSize: "10px",
+    fontSize: "11px",
     fontStyle: "italic",
     paddingTop: "4px",
   };
@@ -81,6 +82,15 @@ const descriptionStyle = {
     fontWeight: "bold",
   };
 
+  const stockStyle =  {
+    display: "inline",
+    position: "absolute",
+    top: "91%",
+    left: "5%",
+    color: "#40a9ff",
+    fontWeight: "bold",
+  };
+
   const inputQtyStyle = {
     width: "25%",
     fontSize: "14px",
@@ -89,10 +99,14 @@ const descriptionStyle = {
   };
 
   const buttonGroupStyle = {
+    // display: "inline",
+    // float: "right",
+    // position: "relative",
+    // marginTop: "-20px"
     display: "inline",
     position: "absolute",
     top: "91%",
-    left: "30%",
+    left: "48%",
 
   };
 
@@ -199,7 +213,7 @@ export function OrderWindowMin({item}) {
         <span style={item.special ? specialPriceStyle : priceStyle}>
           ${item.price}
         </span>
-
+ 
         <Tooltip placement="right" title="last ordered date">
           <p style={orderedDateStyle}>
             {item.orderedDate}
@@ -223,11 +237,12 @@ export function OrderWindowMin({item}) {
         >
           {item.company}
         </p>
-
-        <p style={{ color: "#fff", margin: "50px" }}>&nbsp; </p>
-
+        <p style={ !item.server ? {display: "none"} : stockStyle}>
+                 My Stock : {item.myStock} 
+        </p>
+ 
         <div style={buttonGroupStyle}>
-          <Button style={{width:50}}
+          <Button style={{width:55}}
             type="primary"
             icon={<MinusOutlined />}
             onClick={() =>
