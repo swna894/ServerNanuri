@@ -82,7 +82,7 @@ function OrderFooter() {
   return (
     <div>
       <Footer style={footerStyle}>
-        <div style={width > 1000 ? cartInformStyle : { display: "none" }} >
+        <div style={width > 600 ? cartInformStyle : { display: "none" }} >
           {cartInform}
         </div>
         {width > 1000 ? (
@@ -102,6 +102,7 @@ function OrderFooter() {
           />
         ) : (
           <Pagination simple 
+            current={current + 1}
             defaultCurrent={1} 
             defaultCurrent={config.PAGE_SIZE} 
             total={totalElements}     

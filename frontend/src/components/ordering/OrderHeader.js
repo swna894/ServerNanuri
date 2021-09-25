@@ -752,7 +752,7 @@ function OrderHeader(props) {
       >
         Key Suppliers
       </div>
-      <div style={width > 1000 ? { display: "none" } : styleKeyOrder } >
+      <div style={width > 500 ? { display: "none" } : styleKeyOrder } >
           {cartInform}
       </div>
 

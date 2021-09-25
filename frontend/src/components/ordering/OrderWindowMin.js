@@ -106,7 +106,7 @@ const descriptionStyle = {
     display: "inline",
     position: "absolute",
     top: "91%",
-    left: "48%",
+    left: "35%",
 
   };
 
@@ -242,7 +242,7 @@ export function OrderWindowMin({item}) {
         </p>
  
         <div style={buttonGroupStyle}>
-          <Button style={{width:55}}
+          <Button style={{width:70}}
             type="primary"
             icon={<MinusOutlined />}
             onClick={() =>
@@ -257,7 +257,7 @@ export function OrderWindowMin({item}) {
               onChangeInputHandler(item.abbr, item.code, e.target.value)
             }
           ></Input>
-          <Button style={{width:55}}
+          <Button style={{width:70}}
             type="primary"
             icon={<PlusOutlined />}
             onClick={() =>
