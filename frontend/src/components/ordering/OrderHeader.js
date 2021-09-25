@@ -676,7 +676,7 @@ function OrderHeader(props) {
             <Button
               type="primary"
               onClick={showDrawer}
-              style={{ float: "right", margin: "0px 0" }}
+              style={{ float: "right", margin: "20px 0" }}
             >
              <MenuOutlined />
             </Button>
@@ -686,7 +686,7 @@ function OrderHeader(props) {
               onClose={onClose}
               visible={visible}
             >
-              <div style={{ display: "block", color: "#fff" }}>
+              <div style={{ display: "block", color: "#fff", marginTop:"20px" }}>
                 {searchInput}
                 {buttonIsNew}
                 {buttonIsSpecial}
