@@ -72,7 +72,7 @@ const descriptionStyle = {
   };
 
   const specDivStyle = {
-    display: "inline-flex",
+    display: "flex",
     float: "right",
     marginRight: "30px",
     paddingTop: "13px",
