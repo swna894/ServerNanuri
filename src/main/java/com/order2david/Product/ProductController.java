@@ -143,19 +143,16 @@ public class ProductController {
 	@PostMapping("products/onlyphoto")
 	@Transactional
 	public List<Product> postAllOnlyPhoto(@RequestBody List<Product> products) {		
-		List<Product> serverProduct = new ArrayList<>();	
+		List<Product> serverProducts = new ArrayList<>();	
 		for (Product product : products) {
-			Optional<Product> serverOptional = productRepository.findByCode(product.getCode());
-			if (serverOptional.isPresent()) {
-				Product server = serverOptional.get();
-				server.setImage(product.getImage());
-				server.setPhoto(true);
-				serverProduct.add(server);
-		
+			Product serverProduct = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
+			if (serverProduct != null) {
+				serverProduct.setImage(product.getImage());
+				serverProduct.setPhoto(true);
+				serverProducts.add(serverProduct);
 			}
-		
 		}	
-		return productRepository.saveAll(serverProduct);
+		return productRepository.saveAll(serverProducts);
 	}
 	
 
