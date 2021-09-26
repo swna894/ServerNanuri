@@ -134,9 +134,8 @@ public class ProductController {
 	public List<Product> postAllDataWithPhoto(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
-		products.forEach(item -> item.setCompany(supplier.getCompany()));
-		
-		productRepository.deleteAllByAbbr(abbr);
+		products.forEach(item -> item.setCompany(supplier.getCompany()));	
+		//productRepository.deleteAllByAbbr(abbr);
 		return productRepository.saveAll(products);
 	}
 	
@@ -176,10 +175,17 @@ public class ProductController {
 	}
 
 	@DeleteMapping("/products")
+	@Transactional
 	public void deleteAll(@RequestBody List<Product> items) {
 		productRepository.deleteAll(items);
 	}
 
+	@DeleteMapping("/products/{abbr}")
+	@Transactional
+	public void deleteAllByAbbr(@PathVariable String abbr) {
+		productRepository.deleteAllByAbbr(abbr);
+	}
+	
 	@GetMapping("/products/init")
 	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
