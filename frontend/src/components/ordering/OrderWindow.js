@@ -201,14 +201,14 @@ export function OrderWindow({item}) {
           <span style={specStyle}>{item.stock}</span>
         </div>
         <div>
-          <Tooltip placement="right" title="last ordered date">
+          <Tooltip placement="top" title="last ordered date">
             <p
               style={{
                 color: "#f5222d",
                 marginLeft: "32px",
                 marginBottom: "-5px",
                 fontWeight: "bold",
-                width: "100%",
+                width: "25%",
               }}
             >
               {item.orderedDate}            

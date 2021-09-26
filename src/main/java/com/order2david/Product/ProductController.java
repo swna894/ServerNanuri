@@ -66,7 +66,7 @@ public class ProductController {
 
 	@Autowired
 	ProductRepository productRepository;
-	
+
 	@Autowired
 	OrderRepository orderRepository;
 
@@ -84,7 +84,7 @@ public class ProductController {
 
 	@PersistenceContext
 	EntityManager em;
-	
+
 	@PostMapping("/products")
 	@Transactional
 	public List<Product> postAll(@RequestBody List<Product> products) {
@@ -94,29 +94,80 @@ public class ProductController {
 		products.forEach(item -> item.setCompany(supplier.getCompany()));
 		for (Product product : products) {
 			Optional<Product> server = productRepository.findById(product.getId());
-			if(server.isPresent()) {
+			if (server.isPresent()) {
 				product.setImage(server.get().getImage());
 			}
-			
+
 		}
 		if (products.get(0).isCheck()) {
 			productRepository.deleteAllByAbbr(abbr);
 		}
-		System.err.println(products.size());
-		// if (result > 0) {
-		// 0423 products.forEach(item -> item.setSupplier(supplier));
 		return productRepository.saveAll(products);
 	}
+
+	@PostMapping("/products/onlydata")
+	@Transactional
+	public List<Product> postAllOnlyData(@RequestBody List<Product> products) {
+		String abbr = products.get(0).getAbbr();
+		Supplier supplier = supplierRepository.findByAbbr(abbr);
+		String company = supplier.getCompany();
+		for (Product product : products) {
+			product.setCompany(company);
+			if (product.getId() != null) {
+				Optional<Product> server = productRepository.findById(product.getId());
+				if (server.isPresent()) {
+					product.setImage(server.get().getImage());
+				}
+			} else {
+				Optional<Product> server = productRepository.findByCode(product.getCode());
+				if (server.isPresent()) {
+					product.setImage(server.get().getImage());
+					product.setId(server.get().getId());
+				}
+			}
+		}
+		return productRepository.saveAll(products);
+	}
+
+	@PostMapping("products/withphoto")
+	@Transactional
+	public List<Product> postAllDataWithPhoto(@RequestBody List<Product> products) {
+		String abbr = products.get(0).getAbbr();
+		Supplier supplier = supplierRepository.findByAbbr(abbr);
+		products.forEach(item -> item.setCompany(supplier.getCompany()));
+		
+		productRepository.deleteAllByAbbr(abbr);
+		return productRepository.saveAll(products);
+	}
+	
+	@PostMapping("products/onlyphoto")
+	@Transactional
+	public List<Product> postAllOnlyPhoto(@RequestBody List<Product> products) {		
+		List<Product> serverProduct = new ArrayList<>();	
+		for (Product product : products) {
+			Optional<Product> serverOptional = productRepository.findByCode(product.getCode());
+			if (serverOptional.isPresent()) {
+				Product server = serverOptional.get();
+				server.setImage(product.getImage());
+				server.setPhoto(true);
+				serverProduct.add(server);
+		
+			}
+		
+		}	
+		return productRepository.saveAll(serverProduct);
+	}
+	
 
 	@PutMapping("/products")
 	@Transactional
 	public List<Product> putAll(@RequestBody List<Product> products) {
 		for (Product product : products) {
 			Optional<Product> server = productRepository.findById(product.getId());
-			if(server.isPresent()) {
+			if (server.isPresent()) {
 				product.setImage(server.get().getImage());
 			}
-			
+
 		}
 		products = productRepository.saveAll(products);
 		return null;
@@ -137,7 +188,7 @@ public class ProductController {
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
 		Pageable sortedBySeq = PageRequest.of(0, 36, Sort.by("seq"));
 		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
-		
+
 		updateCartQty(page, principal);
 		updateCartHistory(page, principal);
 		return page;
@@ -184,7 +235,7 @@ public class ProductController {
 			category = category.replaceAll("_", "/");
 			page = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, category, pageable);
 		}
-		
+
 		if (!page.getContent().isEmpty()) {
 			updateCartQty(page, principal);
 			updateCartHistory(page, principal);
@@ -365,40 +416,40 @@ public class ProductController {
 	}
 
 	DecimalFormat formatter = (DecimalFormat) NumberFormat.getNumberInstance();
-	
+
 	@GetMapping("/products/status")
 	public List<ProductStatus> getcompanies() {
-	
+
 		List<ProductStatus> productStatus = new ArrayList<>();
 		// 2021-07-06 memeory heap 문제로 변경함
-		 List<Supplier> suppliers = supplierRepository.findAllByOrderByCompanyAsc();
+		List<Supplier> suppliers = supplierRepository.findAllByOrderByCompanyAsc();
 
-		 for (Supplier supplier : suppliers) {
-			 
-			 String abbr = supplier.getAbbr();
-			 ProductStatus status = new ProductStatus();
-			 status.setAbbr(abbr);
-			 status.setSupplier(supplier.getCompany());
-			 
-			 Double count = productRepository.countByAbbr(abbr);
-			 status.setProducts(formatter.format(count));
-			 
-			 count = productRepository.countByAbbrAndIsShow(abbr, true);
-			 status.setIsShow(formatter.format(count));
-			 
-			 count = productRepository.countByAbbrAndIsPhoto(abbr, true);
-			 status.setImages(formatter.format(count));
-			 
-			 count = productRepository.countByAbbrAndIsNew(abbr, true);
-			 status.setIsNew(formatter.format(count));
-			 
-			 count = productRepository.countByAbbrAndIsSpecial(abbr, true);
-			 status.setIsSpecial(formatter.format(count));
+		for (Supplier supplier : suppliers) {
 
-	         status.setActive(supplier.getIsActive());
-        	 productStatus.add(status);
-		 }
-		 
+			String abbr = supplier.getAbbr();
+			ProductStatus status = new ProductStatus();
+			status.setAbbr(abbr);
+			status.setSupplier(supplier.getCompany());
+
+			Double count = productRepository.countByAbbr(abbr);
+			status.setProducts(formatter.format(count));
+
+			count = productRepository.countByAbbrAndIsShow(abbr, true);
+			status.setIsShow(formatter.format(count));
+
+			count = productRepository.countByAbbrAndIsPhoto(abbr, true);
+			status.setImages(formatter.format(count));
+
+			count = productRepository.countByAbbrAndIsNew(abbr, true);
+			status.setIsNew(formatter.format(count));
+
+			count = productRepository.countByAbbrAndIsSpecial(abbr, true);
+			status.setIsSpecial(formatter.format(count));
+
+			status.setActive(supplier.getIsActive());
+			productStatus.add(status);
+		}
+
 		return productStatus;
 	}
 
@@ -412,24 +463,22 @@ public class ProductController {
 		}
 		return productStatusRepository.save(status);
 	}
-	
+
 	// NanuriManagemt product 지원
 	@GetMapping("/products/abbr/{abbr}")
 	public List<ProductManage> findByAbbr(@PathVariable String abbr) {
 
 		String query = "SELECT id, seq, code, abbr, company, category, barcode, description, "
-				+ " price, special_price, pack, stock, is_photo, is_show, is_special, is_new, comment "; 
-		   query = query +	" FROM product WHERE abbr = :abbr  ";
-		   query = query +	" ORDER BY code ASC";
+				+ " price, special_price, pack, stock, is_photo, is_show, is_special, is_new, comment ";
+		query = query + " FROM product WHERE abbr = :abbr  ";
+		query = query + " ORDER BY code ASC";
 
-		   Query nativeQuery = em.createNativeQuery(query);
-		   nativeQuery.setParameter("abbr", abbr);
-		   JpaResultMapper jpaResultMapper = new JpaResultMapper();
-		   List<ProductManage> products = jpaResultMapper.list(nativeQuery, ProductManage.class);
-		   
-		   
+		Query nativeQuery = em.createNativeQuery(query);
+		nativeQuery.setParameter("abbr", abbr);
+		JpaResultMapper jpaResultMapper = new JpaResultMapper();
+		List<ProductManage> products = jpaResultMapper.list(nativeQuery, ProductManage.class);
+
 		return products;
 	}
-	
 
 }
