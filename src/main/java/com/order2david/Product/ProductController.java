@@ -119,10 +119,10 @@ public class ProductController {
 					product.setImage(server.get().getImage());
 				}
 			} else {
-				Optional<Product> server = productRepository.findByCode(product.getCode());
-				if (server.isPresent()) {
-					product.setImage(server.get().getImage());
-					product.setId(server.get().getId());
+				Product server = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
+				if (server != null) {
+					product.setImage(server.getImage());
+					product.setId(server.getId());
 				}
 			}
 		}
