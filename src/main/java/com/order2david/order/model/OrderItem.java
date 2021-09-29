@@ -133,15 +133,6 @@ public class OrderItem {
 		return amount;
 	}
 
-	
-	
-	@Override
-	public String toString() {
-		return "OrderItem [status=" + status + ", invoice=" + invoice + ", code=" + code + ", description="
-				+ description + ", price=" + price + ", amount=" + amount + ", abbr=" + abbr + ", qty=" + qty
-				+ ", stock=" + stock + ", shop=" + shop + ", shopId=" + shopId + "]\n";
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -171,6 +162,14 @@ public class OrderItem {
 		} else if (!invoice.equals(other.invoice))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "OrderItem [id=" + id + ", status=" + status + ", invoice=" + invoice + ", code=" + code
+				+ ", description=" + description + ", price=" + price + ", amount=" + amount + ", abbr=" + abbr
+				+ ", qty=" + qty + ", stock=" + stock + ", server=" + server + ", seq=" + seq + ", shop=" + shop
+				+ ", shopId=" + shopId + "]\n";
 	}
 
 

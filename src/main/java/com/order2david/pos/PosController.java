@@ -2,7 +2,6 @@ package com.order2david.pos;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,56 +51,52 @@ public class PosController {
 	}
 
 	@PostMapping("/orderItems")
-	public List<OrderItem> postOrderItems(@RequestBody List<OrderItem> orderItems) {
-		String abbr = orderItems.get(0).getAbbr();
-		String shopId = orderItems.get(0).getShopId();
+	public List<OrderItem> postOrderItems(@RequestBody List<OrderItem> posItems) {
+		String abbr = posItems.get(0).getAbbr();
+		String shopId = posItems.get(0).getShopId();
 		String invoice = abbr + shopId + "_CART";
 		Order order = new Order();
 			
 		Shop shop = shopRepository.findByAbbr(shopId);
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
 
-		orderItems = checkIsStock(orderItems, invoice);
-		if (orderItems.isEmpty()) {
+		posItems = checkIsStock(posItems, invoice);
+		if (posItems.isEmpty()) {
 			return null;
 		}
+
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
 		if (!orderOptional.isPresent()) { // order가 없으면
 			
 			order = new Order(shop, supplier);
 			order.setInvoice(invoice);
-			
-			ArrayList<OrderItem> newlist = new ArrayList<OrderItem>(new HashSet<OrderItem>(orderItems));
-			Double sum = newlist.stream().mapToDouble(item -> item.getTotalPrice()).sum();
-			
-			for (OrderItem orderItem : newlist) {			
+	
+//			ArrayList<OrderItem> noDupPosItem = new ArrayList<OrderItem>(new HashSet<OrderItem>(posItems));			
+			for (OrderItem orderItem : posItems) {			
 				orderItem.setOrder(order);
 				orderItem.setAmount(orderItem.getTotalPrice());
 				orderItem.setServer(true);
-				orderItem.setId(null);
 			}
-			order.setId(null);
-
-			order.setOrderItems(newlist);
+			Double sum = posItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+			order.setOrderItems(posItems);
 			order.setAmount(sum);
 
-		} else {
-			
+		} else {		
 			order = orderOptional.get();
-			List<OrderItem> serverList = orderOptional.get().getOrderItems();
+			List<OrderItem> serveredList = orderOptional.get().getOrderItems();
 
-			for (OrderItem clientItem : orderItems) {
-				clientItem.setServer(true);
-				OrderItem findOrder = serverList.stream().filter(item -> item.getCode().equals(clientItem.getCode()))
+			for (OrderItem posItem : posItems) {
+				posItem.setServer(true);
+				OrderItem serverItem = serveredList.stream().filter(item -> item.getCode().equals(posItem.getCode()))
 						.findFirst().orElse(null);
-				if (findOrder != null) {
-					findOrder.setQty(clientItem.getQty());
+				if (serverItem != null) {
+					serverItem.setQty(posItem.getQty());
 				} else {
-					order.addOrderItem(clientItem);
+					order.addOrderItem(posItem);
 				}
 			}
 			order.setOrderDate(LocalDateTime.now());
-			Double sum = orderItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
+			Double sum = posItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
 			order.setAmount(sum);
 		}		
 		Order tmp = orderRepository.save(order);
@@ -112,12 +107,14 @@ public class PosController {
 	List<OrderItem> chekedList = new ArrayList<OrderItem>();
 
 	private List<OrderItem> checkIsStock(List<OrderItem> orderItem, String invoice) {
+		List<OrderItem> chekedList = new ArrayList<OrderItem>();
 		for (OrderItem item : orderItem) {
 			Product product = productRepository.findByCodeAndAbbr(item.getCode(), item.getAbbr().toLowerCase());
-			// logger.debug(item.getCode() + "제품확인 --> " + product);
-			if (product != null && product.getStock() > 0) {
+			
+			if (product != null && product.getStock() > 12) {
 				item.setStatus(OrderType.CART);
 				item.setInvoice(invoice);
+				item.setSeq(product.getSeq());
 				chekedList.add(item);
 			}
 		}
