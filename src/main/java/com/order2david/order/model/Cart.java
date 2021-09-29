@@ -15,5 +15,6 @@ public class Cart {
 	Double price;
 	Long id;
 	int qty;
+	int seq;
 
 }

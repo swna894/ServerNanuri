@@ -304,7 +304,7 @@ public class ProductController {
 	private Page<OrderItem> cartRepostory(String abbr, Principal principal, Pageable pageable) {
 		Shop shop = shopRepository.findByEmail(principal.getName());
 		String invoice = abbr + shop.getAbbr() + "_CART";
-		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("code"));
+		pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("seq"));
 		return orderRepository.findByInvoice(invoice, pageable);
 	}
 

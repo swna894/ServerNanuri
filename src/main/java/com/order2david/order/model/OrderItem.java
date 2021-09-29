@@ -73,6 +73,9 @@ public class OrderItem {
 	@Column(columnDefinition="tinyint(1) default 0")
 	private boolean server;
 	
+	@Column(columnDefinition = "integer default 1")
+	private int seq;  // 제품 cart 화면 사용하기 위해 추가  2021-09-29
+	
 	@Transient
 	private String shop;
 	@Transient
@@ -100,6 +103,7 @@ public class OrderItem {
 		this.invoice = cart.getInvoice();
 		this.amount = getTotalPrice();	
 		this.abbr = cart.getAbbr();
+		this.seq = cart.getSeq();
 		this.status = OrderType.CART;
 	}
 	

@@ -271,6 +271,7 @@ public class OrderController {
 		}
 		cart.setDecription(product.getDescription());
 		cart.setInvoice(invoice);
+		cart.setSeq(product.getSeq());
 		//cart.setAbbr(shop.getAbbr());
 		
 	
