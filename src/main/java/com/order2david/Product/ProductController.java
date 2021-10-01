@@ -109,10 +109,11 @@ public class ProductController {
 	@Transactional
 	public List<Product> postAllOnlyData(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
-		Supplier supplier = supplierRepository.findByAbbr(abbr);
-		String company = supplier.getCompany();
+		String company = supplierRepository.findByAbbr(abbr).getCompany();
+
 		for (Product product : products) {
 			product.setCompany(company);
+			product.setAbbr(abbr);
 			if (product.getId() != null) {
 				Optional<Product> server = productRepository.findById(product.getId());
 				if (server.isPresent()) {
@@ -125,7 +126,12 @@ public class ProductController {
 					product.setId(server.getId());
 				}
 			}
+			product.setShow(false);
+			if (product.getImage() != null && product.getStock() > 20) {
+				product.setShow(true);
+			}
 		}
+
 		return productRepository.saveAll(products);
 	}
 
@@ -134,26 +140,38 @@ public class ProductController {
 	public List<Product> postAllDataWithPhoto(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
-		products.forEach(item -> item.setCompany(supplier.getCompany()));	
-		//productRepository.deleteAllByAbbr(abbr);
+		for (Product product : products) {
+			product.setCompany(supplier.getCompany());
+			product.setAbbr(supplier.getAbbr());
+			product.setShow(false);
+			product.setPhoto(false);
+			if(product.getImage() != null && product.getQty() > 20) {
+				product.setShow(true);
+				product.setPhoto(true);
+			}
+		}
 		return productRepository.saveAll(products);
 	}
-	
+
 	@PostMapping("products/onlyphoto")
 	@Transactional
-	public List<Product> postAllOnlyPhoto(@RequestBody List<Product> products) {		
-		List<Product> serverProducts = new ArrayList<>();	
+	public List<Product> postAllOnlyPhoto(@RequestBody List<Product> products) {
+		List<Product> serverProducts = new ArrayList<>();
 		for (Product product : products) {
 			Product serverProduct = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
 			if (serverProduct != null) {
 				serverProduct.setImage(product.getImage());
 				serverProduct.setPhoto(true);
+				serverProduct.setShow(false);
+				if(serverProduct.getQty() > 20) {
+					serverProduct.setShow(true);
+				} 
+				
 				serverProducts.add(serverProduct);
 			}
-		}	
+		}
 		return productRepository.saveAll(serverProducts);
 	}
-	
 
 	@PutMapping("/products")
 	@Transactional
@@ -185,7 +203,7 @@ public class ProductController {
 	public void deleteAllByAbbr(@PathVariable String abbr) {
 		productRepository.deleteAllByAbbr(abbr);
 	}
-	
+
 	@GetMapping("/products/init")
 	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
@@ -227,11 +245,13 @@ public class ProductController {
 			if (condition.equals(ALL)) {
 				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
 						Sort.by("company").ascending().and(Sort.by("seq")));
-				page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShow(search, true, search,
-						true, pageable);
+				page = productRepository
+						.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShowOrTagContainsAndIsShow(
+								search, true, search,true, search,true, pageable);
 			} else {
-				page = productRepository.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShow(abbr,
-						search, true, abbr, search, true, pageable);
+				page = productRepository
+						.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShowAndTagContainsAndIsShow(
+								abbr,search, true, abbr, search, true, abbr, search, true, pageable);
 			}
 
 		} else {
@@ -471,7 +491,7 @@ public class ProductController {
 	@GetMapping("/products/abbr/{abbr}")
 	public List<ProductManage> findByAbbr(@PathVariable String abbr) {
 
-		String query = "SELECT id, seq, code, abbr, company, category, barcode, description, "
+		String query = "SELECT id, seq, code, abbr, company, category, barcode, description, tag, "
 				+ " price, special_price, pack, stock, is_photo, is_show, is_special, is_new, comment ";
 		query = query + " FROM product WHERE abbr = :abbr  ";
 		query = query + " ORDER BY code ASC";

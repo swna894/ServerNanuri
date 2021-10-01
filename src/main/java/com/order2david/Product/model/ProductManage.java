@@ -24,6 +24,7 @@ public class ProductManage {
 	private String description; // 제품설명
 	private String category;
 	private String comment;
+	private String tag;
 	private double price; // 가격
 	private double specialPrice;
 	private int stock; // 재고수량
@@ -38,7 +39,7 @@ public class ProductManage {
 	private String orderedDate;
 	
 	public ProductManage(BigInteger id, Integer seq, String code, String abbr, String company, String category, 
-			     String barcode, String descripton, Double price, Double special_price, Integer pack,
+			     String barcode, String descripton, String tag, Double price, Double special_price, Integer pack,
 			     Integer stock, Boolean is_photo, Boolean is_show,  Boolean is_special, Boolean is_new, String comment) {
 		this.id = id.longValue();
 		this.seq = seq;
@@ -48,6 +49,7 @@ public class ProductManage {
 		this.category = category;
 		this.barcode = barcode;
 		this.description = descripton;
+		this.tag = tag;
 		this.price = price;
 		this.specialPrice = special_price;
 		this.pack = pack;

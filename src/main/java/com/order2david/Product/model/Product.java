@@ -54,6 +54,7 @@ public class Product {
 	private String barcode;
 	private String description; // 제품설명
 	private String category;
+	private String tag;
 	//private String imagePath;
 	private double price; // 가격
 	private double specialPrice;

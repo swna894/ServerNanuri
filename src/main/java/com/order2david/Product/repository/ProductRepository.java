@@ -88,6 +88,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
 
 	List<Product> findByAbbrOrderByCodeAsc(String company);
+
+	Page<Product> findByDescriptionContainsAndIsShowOrCodeContainsAndIsShowOrTagContainsAndIsShow(String search,
+			boolean b, String search2, boolean c, String search3, boolean d, Pageable pageable);
+
+	Page<Product> findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShowAndTagContainsAndIsShow(
+			String abbr, String search, boolean b, String abbr2, String search2, boolean c, String abbr3,
+			String search3, boolean d, Pageable pageable);
 	
 	
 }
