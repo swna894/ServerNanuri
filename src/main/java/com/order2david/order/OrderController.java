@@ -97,6 +97,8 @@ public class OrderController {
 	
 	@PutMapping("order")
 	public Order put(@RequestBody Order order) {
+		Supplier supplier = supplierRepository.findByAbbr(order.getInvoice().substring(0,4));
+		order.setSupplier(supplier);
 		return orderRepository.save(order);
 	}
 
