@@ -127,9 +127,13 @@ public class ProductController {
 				}
 			}
 			product.setShow(false);
-			if (product.getImage() != null && product.getStock() > 20) {
-				product.setShow(true);
-			}
+			product.setPhoto(false);
+			if (product.getImage() != null) {
+				product.setPhoto(true);
+				if(product.getQty() > 20) {
+					product.setShow(true);
+				}
+			} 
 		}
 
 		return productRepository.saveAll(products);
@@ -145,9 +149,11 @@ public class ProductController {
 			product.setAbbr(supplier.getAbbr());
 			product.setShow(false);
 			product.setPhoto(false);
-			if(product.getImage() != null && product.getQty() > 20) {
-				product.setShow(true);
+			if (product.getImage() != null) {
 				product.setPhoto(true);
+				if(product.getQty() > 20) {
+					product.setShow(true);
+				}
 			}
 		}
 		return productRepository.saveAll(products);
