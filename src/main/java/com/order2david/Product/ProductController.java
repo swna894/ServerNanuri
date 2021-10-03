@@ -128,12 +128,14 @@ public class ProductController {
 			}
 			product.setShow(false);
 			product.setPhoto(false);
+						
 			if (product.getImage() != null) {
-				product.setPhoto(true);
-				if(product.getQty() > 20) {
-					product.setShow(true);
-				}
+				product.setPhoto(true);			
 			} 
+			System.err.println(product.getQty());
+			if(product.getImage() != null && product.getStock() > 20) {
+				product.setShow(true);
+			}
 		}
 
 		return productRepository.saveAll(products);
@@ -150,10 +152,11 @@ public class ProductController {
 			product.setShow(false);
 			product.setPhoto(false);
 			if (product.getImage() != null) {
-				product.setPhoto(true);
-				if(product.getQty() > 20) {
-					product.setShow(true);
-				}
+				product.setPhoto(true);			
+			} 
+			
+			if(product.getImage() != null && product.getStock() > 20) {
+				product.setShow(true);
 			}
 		}
 		return productRepository.saveAll(products);
