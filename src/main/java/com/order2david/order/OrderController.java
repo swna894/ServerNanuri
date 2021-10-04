@@ -257,8 +257,11 @@ public class OrderController {
 	
 	@GetMapping("order/{invoice}")
 	public Order getOrder(@PathVariable String invoice) {	
-		return orderRepository.findByInvoice(invoice).get();
-		//return null;
+		Optional<Order> order = orderRepository.findByInvoice(invoice);
+		if(order.isPresent()) {
+			return order.get();
+		}
+		return null;
 	}
 	
 	/*

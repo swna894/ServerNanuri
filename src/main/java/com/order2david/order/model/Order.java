@@ -195,15 +195,15 @@ public class Order {
 
 	public void deleteOrderItem(OrderItem item) {
 		if (this.orderItems.contains(item)) {
-			this.orderItems.remove(item);
 			item.setOrder(null);
+			this.orderItems.remove(item);			
 			updateAmount();
 		}
 	}
 
 
 	
-	private void updateAmount() {
+	public void updateAmount() {
 		Double doubleSum = orderItems.stream().mapToDouble(OrderItem::getAmount).sum();
 		this.setAmount(doubleSum);
 	}

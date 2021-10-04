@@ -80,12 +80,9 @@ public class OrderItemController {
 	@DeleteMapping("/orderItems")
 	@Transactional
 	public void deleteAll(@RequestBody List<OrderItem> items) {
+		Order order = orderRepository.findByInvoice(items.get(0).getInvoice()).get();
 		for (OrderItem orderItem : items) {
-			orderItem = orderItemRepository.getOne(orderItem.getId());
-			Order order = orderItem.getOrder();
-			order.deleteOrderItem(orderItem);
-			orderRepository.save(order);
-			orderItemRepository.delete(orderItem);
+			order.deleteOrderItem(orderItem);		
 		}
 
 	}
