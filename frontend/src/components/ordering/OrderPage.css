@@ -1,0 +1,18 @@
+.selectBoi > div > span {
+  color: rgb(104, 0, 179);
+  font-size: 19px !important;
+  font-weight: bolder;
+  right: 6px;
+  margin-top: -8px;
+}
+
+.products {
+  background-color: "#f0f0f0";
+}
+
+body .ant-pagination-item-active {
+  background: "#ccc";
+}
+
+.hiddenStyle { display: none }
+.newStyle { position: absolute; top: 200px; left:25px }

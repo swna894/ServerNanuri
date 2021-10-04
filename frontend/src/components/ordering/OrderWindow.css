@@ -1,0 +1,10 @@
+.hiddenStyle { display: none }
+.newStyle { position: absolute; top: 200px; left:25px }
+.red{ color:red; }
+.mainBody {
+    background-color: white;
+    color: blue;
+    margin: 10px;
+    font-family: Arial;
+    text-align: center;
+  }
