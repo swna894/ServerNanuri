@@ -69,9 +69,10 @@ public class OrderItem {
 	private double amount;
 	private String abbr;
 	private int qty; // 주문 수량
-	private int stock; // shop 보유 수량  21년 09월 21일 추가
+	
+	private int stock; // Pos upload시 사용 shop 보유 수량  21년 09월 21일 추가
 	@Column(columnDefinition="tinyint(1) default 0")
-	private boolean server;
+	private boolean server; // Pos upload시
 	
 	@Column(columnDefinition = "integer default 1")
 	private int seq;  // 제품 cart 화면 사용하기 위해 추가  2021-09-29
@@ -81,6 +82,7 @@ public class OrderItem {
 	@Transient
 	private String shopId;
 	// ==연관 관계== //
+	
 	@JsonBackReference
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ORDER_ID")

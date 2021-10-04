@@ -244,9 +244,23 @@ public class OrderController {
 	}
 
 	@PostMapping("order/copycart")
+	@Transactional
 	public Order postCopyCart(@RequestBody Order order) {	
+		Shop shop = shopRepository.findByAbbr(order.getInvoice().substring(4,7));
+		Supplier supplier = supplierRepository.findByAbbr(order.getInvoice().substring(0,4));
+		order.setShopAbbr(shop.getAbbr());
+		order.setShop(shop);
+		order.setSupplier(supplier);
 		return orderRepository.save(order);
+		//return null;
 	}
+	
+	@GetMapping("order/{invoice}")
+	public Order getOrder(@PathVariable String invoice) {	
+		return orderRepository.findByInvoice(invoice).get();
+		//return null;
+	}
+	
 	/*
 	 * -. order에 cart가 있는지 확인한다.
 	 *   1. 있음
