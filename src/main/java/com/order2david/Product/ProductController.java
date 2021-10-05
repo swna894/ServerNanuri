@@ -258,8 +258,10 @@ public class ProductController {
 						.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShowOrTagContainsAndIsShow(
 								search, true, search,true, search,true, pageable);
 			} else {
+				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+						Sort.by("company").ascending().and(Sort.by("seq")));
 				page = productRepository
-						.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShowAndTagContainsAndIsShow(
+						.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShowOrAbbrAndTagContainsAndIsShow(
 								abbr,search, true, abbr, search, true, abbr, search, true, pageable);
 			}
 
