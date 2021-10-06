@@ -31,13 +31,8 @@ public class CategoryController {
 	@PostMapping("/categorys")
 	@Transactional
 	public List<Category> postAll(@RequestBody List<Category> categorys) {
-
 		catetoryRepository.deleteAllByAbbr(categorys.get(0).getAbbr());
-//		if (result > 0) {
-			categorys = catetoryRepository.saveAll(categorys);
-//		}
-
-		return categorys;
+		return catetoryRepository.saveAll(categorys);
 	}
 
 	@GetMapping("/categorys")

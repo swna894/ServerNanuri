@@ -132,7 +132,7 @@ public class ProductController {
 			if (product.getImage() != null) {
 				product.setPhoto(true);			
 			} 
-			System.err.println(product.getQty());
+			//System.err.println(product.getQty());
 			if(product.getImage() != null && product.getStock() > 20) {
 				product.setShow(true);
 			}
@@ -167,16 +167,14 @@ public class ProductController {
 	public List<Product> postAllOnlyPhoto(@RequestBody List<Product> products) {
 		List<Product> serverProducts = new ArrayList<>();
 		for (Product product : products) {
-			Product serverProduct = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
-			if (serverProduct != null) {
-				serverProduct.setImage(product.getImage());
-				serverProduct.setPhoto(true);
-				serverProduct.setShow(false);
-				if(serverProduct.getQty() > 20) {
-					serverProduct.setShow(true);
-				} 
-				
-				serverProducts.add(serverProduct);
+			Product findedProduct = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
+			if (findedProduct != null) {
+				findedProduct.setImage(product.getImage());
+				findedProduct.setPhoto(true);
+				if(findedProduct.isPhoto() && findedProduct.getStock() > 20) {
+					findedProduct.setShow(true);
+				}	
+				serverProducts.add(findedProduct);
 			}
 		}
 		return productRepository.saveAll(serverProducts);
