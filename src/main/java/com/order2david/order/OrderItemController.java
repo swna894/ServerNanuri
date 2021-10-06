@@ -1,10 +1,10 @@
 package com.order2david.order;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+
 
 import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,25 +45,16 @@ public class OrderItemController {
 	@PostMapping("/orderItems/migration")
 	@Transactional
 	public List<OrderItem> migration(@RequestBody List<OrderItem> orderItems) {
-	
-		for (OrderItem orderItem : orderItems) {
-			String invoice = orderItem.getInvoice();
-			// String abbr = invoice.substring(0, 4);
-			Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
+		String invoice = orderItems.get(0).getInvoice();
+		Order order = orderRepository.findByInvoice(invoice).get();
 
-			// Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), abbr);
-			Order order = null;
-			if (orderOptional.isPresent()) {
-				order = orderOptional.get();
-				order.getOrderItems().add(orderItem);
-				orderItem.setOrder(order);
-			}
-			orderRepository.save(order);
-			// orderItem.setProduct(product);
-			// System.err.println(orderItem);
+		for (OrderItem orderItem : orderItems) {
+			order.getOrderItems().add(orderItem);
+			orderItem.setOrder(order);
 		}
-		return null;
-		//return orderItemRepository.saveAll(orderItems);
+		orderRepository.save(order);
+		return new ArrayList<OrderItem>();
+		// return orderItemRepository.saveAll(orderItems);
 	}
 
 	@PostMapping("/orderItems")
@@ -82,7 +73,7 @@ public class OrderItemController {
 	public void deleteAll(@RequestBody List<OrderItem> items) {
 		Order order = orderRepository.findByInvoice(items.get(0).getInvoice()).get();
 		for (OrderItem orderItem : items) {
-			order.deleteOrderItem(orderItem);		
+			order.deleteOrderItem(orderItem);
 		}
 
 	}
