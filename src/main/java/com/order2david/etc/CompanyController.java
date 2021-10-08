@@ -11,18 +11,18 @@ import com.order2david.etc.model.Company;
 import com.order2david.etc.repository.CompanyRepository;
 
 @RestController
-@RequestMapping("api/")
+@RequestMapping("api/company")
 public class CompanyController {
 
 	@Autowired
 	CompanyRepository companyRepository;
 	
-	@GetMapping("/etc/company")
+	@GetMapping("/")
 	public Company findOne() {
-		return companyRepository.findAll().get(0);
+		return companyRepository.findFirstByOrderById();
 	}
 	
-	@PutMapping("company")
+	@PutMapping("/")
 	public Company put(@RequestBody Company company) {
 		return companyRepository.save(company);
 	}
