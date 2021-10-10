@@ -43,5 +43,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
 	Long countByInvoiceContainsAndStatusOrderByOrderDateDesc(String string, OrderType order);
 
+	Long countByInvoiceContains(String invoice);
+
  
 }

@@ -70,6 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/pos/*").permitAll()
                 .antMatchers("/signin").permitAll()
                 .antMatchers("/signup").permitAll()
+                .antMatchers("/sync/newvista").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated()
                 //.anyRequest().permitAll()
