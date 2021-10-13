@@ -91,9 +91,9 @@ public class ShopController {
 	}
 
 	@GetMapping("company")
-	public Shop findShop(@RequestParam Map<String, String> param) {
-		
-		return shopRepository.findByCompany(param.get("company"));
+	public Shop findShop(@RequestParam Map<String, String> param) {	
+		Shop shop = shopRepository.findByCompany(param.get("company"));
+		return shop;
 		
 	}
 

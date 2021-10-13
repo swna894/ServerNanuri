@@ -63,7 +63,8 @@ public class ProductController {
 	static String SEARCH = "SEARCH";
 	static String ORDERED = "ORDERED";
 	static String ALL = "All";
-
+	private int minStock = 11;
+	
 	@Autowired
 	ProductRepository productRepository;
 
@@ -133,7 +134,7 @@ public class ProductController {
 				product.setPhoto(true);			
 			} 
 			//System.err.println(product.getQty());
-			if(product.getImage() != null && product.getStock() > 20) {
+			if(product.getImage() != null && product.getStock() > minStock) {
 				product.setShow(true);
 			}
 		}
@@ -155,7 +156,7 @@ public class ProductController {
 				product.setPhoto(true);			
 			} 
 			
-			if(product.getImage() != null && product.getStock() > 20) {
+			if(product.getImage() != null && product.getStock() > minStock) {
 				product.setShow(true);
 			}
 		}
@@ -171,13 +172,15 @@ public class ProductController {
 			if (findedProduct != null) {
 				findedProduct.setImage(product.getImage());
 				findedProduct.setPhoto(true);
-				if(findedProduct.isPhoto() && findedProduct.getStock() > 20) {
+				if(findedProduct.isPhoto() && findedProduct.getStock() > minStock) {
 					findedProduct.setShow(true);
 				}	
 				serverProducts.add(findedProduct);
 			}
 		}
-		return productRepository.saveAll(serverProducts);
+		serverProducts = productRepository.saveAll(serverProducts);
+		System.err.println(serverProducts);
+		return serverProducts;
 	}
 
 	@PutMapping("/products")
