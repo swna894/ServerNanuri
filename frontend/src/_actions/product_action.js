@@ -32,7 +32,10 @@ export function getCategoriesAction(params) {
 export function getProductsAction(abbr, category, params) {
   const request = axiosInstance
     .get(`/api/products/${abbr}/${category}`, params)
-    .then((response) => response.data)
+    .then((response) => {
+         return response.data
+     }
+    )
     .catch((error) => {
       console.log("Problem !!! Get Products", error);
     });

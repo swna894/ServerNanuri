@@ -281,7 +281,7 @@ function OrderHeader(props) {
   };
 
   const styleSupplier = { width: "100%", fontSize:"24px", fontWeight: "bold" };
-  const styleCategory = { width: "100%", fontSize:"20px", fontWeight: "bold"};
+  const styleCategory = { width: "300px", fontSize:"20px", fontWeight: "bold"};
 
   const styleKeySupplier = 
   {  position: "fixed",

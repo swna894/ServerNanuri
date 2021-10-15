@@ -179,7 +179,7 @@ public class ProductController {
 			}
 		}
 		serverProducts = productRepository.saveAll(serverProducts);
-		System.err.println(serverProducts);
+		//System.err.println(serverProducts);
 		return serverProducts;
 	}
 
