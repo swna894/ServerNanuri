@@ -7,6 +7,7 @@ import {
   SET_ORDERING_REQUEST,
   GET_CHECKOUT_REQUEST,
   SET_CART_INIT,
+  ACTION_ISPRODUCTS,
 } from "../service/types";
 
 //import axios from "axios";
@@ -95,6 +96,13 @@ export const setInitCartInform = () => {
   return {
     type: SET_CART_INIT,
     payload: "",
+  };
+};
+
+export const actionIsProducts = () => {
+  return {
+    type: ACTION_ISPRODUCTS,
+    payload: false,
   };
 };
 

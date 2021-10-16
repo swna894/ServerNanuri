@@ -42,6 +42,7 @@ import {
   setOrderRequest,
   getCheckout,
   setInitCartInform,
+  actionIsProducts,
 } from "../../_actions/product_action";
 
 import { signoutUser } from "../../_actions/signin_action";
@@ -122,6 +123,7 @@ function OrderHeader(props) {
   //const category = useSelector((state) => state.supplier.category);
   const page = useSelector((state) => state.product.products.number);
   const size = useSelector((state) => state.product.products.size);
+  const isProducts = useSelector((state) => state.product.isProducts);
   const totalPages = useSelector((state) => state.product.products.totalPages);
   const cartInform = useSelector((state) => state.product.cart);
   const error = useSelector((state) => state.product.error);
@@ -316,6 +318,9 @@ function OrderHeader(props) {
     onClose();
 
   };
+
+
+
 
   const listSupplierSelect = (
     <Select
@@ -633,7 +638,10 @@ function OrderHeader(props) {
     </a>
   );
 
- 
+  const handleIsProducts = () => {
+    setInputValue("");
+    dispatch(actionIsProducts());
+  };
 
   // function success() {
   //   Modal.success({
@@ -785,6 +793,23 @@ function OrderHeader(props) {
           fontSize: "24px",
         }}>Thanks for your order ...</p>
       </Modal>
+      <Modal
+          visible={isProducts}
+          title="Search Information"
+          onOk={handleIsProducts}
+          onCancel={handleIsProducts}
+          footer={[
+            <Button key="back" onClick={handleIsProducts}>
+              OK
+            </Button>,
+          ]}
+        >
+          <p style={{
+            fontWeight: "bold",
+            fontStyle: "italic",
+            fontSize: "24px",
+         }}>There's no product you searched for.</p>
+        </Modal>
     </div>
   );
 }
