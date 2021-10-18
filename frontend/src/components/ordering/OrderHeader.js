@@ -187,12 +187,13 @@ function OrderHeader(props) {
   }
 
   function onChangeCategory(category) {
+    // alert(category + " abbr = " + abbr + " page = " + page + " size =" + size);
     setCategoryPrompt(category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, page, size);
     onClose();
-    setInputValue("");
+    setInputValue('');
   }
 
   function onChangeButton(category) { 
@@ -201,7 +202,7 @@ function OrderHeader(props) {
     dispatch(actionChangeTitle(supplier + " / " + category));
     pageProducts(abbr, category, 0, size);
     onClose();
-    setInputValue("");
+    setInputValue('');
   }
 
 
@@ -630,7 +631,7 @@ function OrderHeader(props) {
   }
 
   const headH2 = (
-    <a href="#" onClick={onClickHead}>
+    <a href={() => false} onClick={onClickHead}>
       <Space>
         <FaHome size={40} style={{ color: "#000", paddingTop:'10px' }} />
         {/* <h2 style={{ display: "inline-block", color: "#000" }}>{headTitle}</h2> */}
@@ -639,7 +640,9 @@ function OrderHeader(props) {
   );
 
   const handleIsProducts = () => {
-    setInputValue("");
+    dispatch(actionChangeCategory(''));
+    setCategoryPrompt('Select category');
+    setInputValue('');
     dispatch(actionIsProducts());
   };
 
@@ -808,7 +811,7 @@ function OrderHeader(props) {
             fontWeight: "bold",
             fontStyle: "italic",
             fontSize: "24px",
-         }}>There's no product you searched for.</p>
+         }}>Sorry, no results wore fonund.</p>
         </Modal>
     </div>
   );

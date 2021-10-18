@@ -268,7 +268,7 @@ public class ProductController {
 
 		} else {
 			category = category.replaceAll("_", "/");
-			page = productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, category, pageable);
+			page = productRepository.findByAbbrAndIsShowAndCategory(abbr, true, category, pageable);
 		}
 
 		if (!page.getContent().isEmpty()) {

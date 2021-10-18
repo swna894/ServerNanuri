@@ -70,7 +70,7 @@ function SignPagePage(props) {
           backgroundColor: '#333',
         }}
       >
-        <h2 style={{  color: "#fff", textAlign: "center" }}>Welcome to David Na's Ordering System</h2>
+        <h2 style={{  color: "#fff", textAlign: "center" }}>The place your Dollar Shop Business starts!</h2>
       </Header>
       <Row
         type="flex"
@@ -157,7 +157,7 @@ function SignPagePage(props) {
         }}
       >
         <h2 style={{ color: "#fff", textAlign: "center" }}>
-          Enquiry ? Please Contact : David Na 027-652-1111
+          If you have any enquiries, Please Contact David Na 027-652-1111, davidna@xtra.co.nz
         </h2>
       </Header>
     </div>

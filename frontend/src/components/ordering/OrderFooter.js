@@ -1,5 +1,5 @@
 import * as config from "../../Config";
-import React, { useState } from "react";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Pagination } from "antd";
 import { getProductsAction } from "../../_actions/product_action";
@@ -104,7 +104,7 @@ function OrderFooter() {
           <Pagination simple 
             current={current + 1}
             defaultCurrent={1} 
-            defaultCurrent={config.PAGE_SIZE} 
+            // defaultCurrent={config.PAGE_SIZE} 
             total={totalElements}     
             onChange={onChange}
           />
