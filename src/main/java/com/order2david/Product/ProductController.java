@@ -62,6 +62,7 @@ public class ProductController {
 	static String CART = "CART";
 	static String SEARCH = "SEARCH";
 	static String ORDERED = "ORDERED";
+	static String HISTORY = "HISTORY";
 	static String ALL = "All";
 	private int minStock = 11;
 	
@@ -240,7 +241,7 @@ public class ProductController {
 			Page<OrderItem> orderItems = cartRepostory(abbr, principal, pageable);
 			page = convertProduct(orderItems);
 
-		} else if (category.equals(ORDERED)) {
+		} else if (category.equals(HISTORY)) {
 			Shop shop = shopRepository.findByEmail(principal.getName());
 			String supplier = abbr;
 
@@ -267,7 +268,7 @@ public class ProductController {
 			}
 
 		} else {
-			category = category.replaceAll("_", "/");
+			category = category.replaceAll("_", "/").trim();
 			page = productRepository.findByAbbrAndIsShowAndCategory(abbr, true, category, pageable);
 		}
 

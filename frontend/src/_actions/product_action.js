@@ -8,6 +8,7 @@ import {
   GET_CHECKOUT_REQUEST,
   SET_CART_INIT,
   ACTION_ISPRODUCTS,
+  SET_ROUTER_PARAM,
 } from "../service/types";
 
 //import axios from "axios";
@@ -96,6 +97,13 @@ export const setInitCartInform = () => {
   return {
     type: SET_CART_INIT,
     payload: "",
+  };
+};
+
+export const setRouterParam = (param) => {
+  return {
+    type: SET_ROUTER_PARAM,
+    payload: param,
   };
 };
 

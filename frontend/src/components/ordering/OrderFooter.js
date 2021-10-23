@@ -2,7 +2,9 @@ import * as config from "../../Config";
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Layout, Pagination } from "antd";
-import { getProductsAction } from "../../_actions/product_action";
+import { getProductsAction,
+          setRouterParam
+        } from "../../_actions/product_action";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import "./OrderPage.css";
 
@@ -42,11 +44,14 @@ function OrderFooter() {
           condition:condition
         },
       };
+       dispatch(setRouterParam(param));
        dispatch(getProductsAction(abbr, category, param));
     } else {
       let param = {
         params: { page: pageNumber - 1, size: pageSize, sort: "seq" },
       };
+      if(category !== "NEW")
+        dispatch(setRouterParam(param));
       category
         ? dispatch(getProductsAction(abbr, category, param))
         : dispatch(getProductsAction(abbr, "", param));

@@ -1,6 +1,5 @@
 package com.order2david.mail;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -11,6 +10,9 @@ import com.order2david.order.model.OrderItem;
 
 @Component
 public class EmailMessage{
+	
+	private LocalDateTime localDate;
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	
 	public String myMessage(Order order) {
 		String shop = order.getShop().getCompany();
@@ -28,8 +30,7 @@ public class EmailMessage{
 	}
 
 	public String shopMessage(Order order) {
-		LocalDate localDate = LocalDate.now();
-		
+		localDate = LocalDateTime.now();
 		String shop = order.getShop().getCompany();
 		String supplier = order.getSupplier().getCompany();
 		String invoice = order.getInvoice();
@@ -40,7 +41,7 @@ public class EmailMessage{
 		message = message + "<p><strong><i> - Shop Name : </i>" + shop + "</strong></p>";
 		message = message + "<p><strong><em> - Your order to : </em>" + supplier + "</strong></p>";
 		message = message + "<p><strong><em> - Order No : </em>" + invoice + "</strong></p>";
-		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "</strong></p>";
+		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(formatter) + "</strong></p>";
 		message = message + "<br>";
 		message = message + "<p><strong><em> Order Details </em></strong></p>";
 		message = message + "<p><strong> Amount (exclude GST) : $" + String.format("%.2f", amount)  + "</strong></p>";
@@ -81,8 +82,7 @@ public class EmailMessage{
 	}
 	
 	public String supplyMessage(Order order) {
-		LocalDateTime localDate = LocalDateTime.now();
-		
+		localDate = LocalDateTime.now();
 		String shop = order.getShop().getCompany();
 		String invoice = order.getInvoice();
 		Double amount = order.getAmount();
@@ -95,7 +95,7 @@ public class EmailMessage{
 		message = message + "<br>";
 		message = message + "<p><strong><em> - Shop Name : </em>" + shop + "</strong></p>";
 		message = message + "<p><strong><em> - Order No : </em>" + invoice + "</strong></p>";
-		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) + "</strong></p>";
+		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(formatter) + "</strong></p>";
 		message = message + "<br>";
 		message = message + "<p><strong><em> Order Details </em></strong></p>";
 		message = message + "<p><strong> Amount (exclude GST) : $" + String.format("%.2f", amount)  + "</strong></p>";

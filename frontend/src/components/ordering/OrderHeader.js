@@ -11,6 +11,7 @@ import history from "../../images/history2_16.ico";
 import cart from "../../images/cart1_16.ico";
 import report from "../../images/report_16.ico";
 import logout from "../../images/exit_16.ico";
+import order from "../../images/order.ico";
 import checkout from "../../images/checkout_24.ico";
 
 import {
@@ -22,6 +23,7 @@ import {
   FaGifts,
   FaCalendarCheck,
   FaChartLine,
+  FaKeyboard,
 } from "react-icons/fa";
 
 import {
@@ -129,6 +131,7 @@ function OrderHeader(props) {
   const error = useSelector((state) => state.product.error);
   const userData = useSelector((state) => state.user.userData);
   const isHitory = useSelector((state) => state.history.history);
+  const param = useSelector((state) => state.product.param);
 
   const dispatch = useDispatch();
   const formRef = React.useRef();
@@ -187,20 +190,21 @@ function OrderHeader(props) {
   }
 
   function onChangeCategory(category) {
-    // alert(category + " abbr = " + abbr + " page = " + page + " size =" + size);
+    //alert(category + " abbr = " + abbr + " page = " + page + " size =" + size);
     setCategoryPrompt(category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
-    pageProducts(abbr, category, page, size);
+    pageProducts(abbr, category, 0, size);
     onClose();
     setInputValue('');
   }
 
   function onChangeButton(category) { 
-    setCategoryPrompt(category === "ORDERED" ? 'HISTORY' : category);
+    setCategoryPrompt(category === "CLICKBTTON" ? 'Select category' : category);
     dispatch(actionChangeCategory(category));
     dispatch(actionChangeTitle(supplier + " / " + category));
-    pageProducts(abbr, category, 0, size);
+    if(category !== "CLICKBTTON")
+      pageProducts(abbr, category, 0, size);
     onClose();
     setInputValue('');
   }
@@ -244,7 +248,7 @@ function OrderHeader(props) {
         },
       };
       dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
-    } else {
+    } else {     
       let param = { params: { page: page, size: size, sort: "seq" } };
       dispatch(getProductsAction(abbr, category.replace("/", "_"), param));
     }
@@ -438,6 +442,16 @@ function OrderHeader(props) {
 
   };
 
+  const onClickOrder = () => {
+    onChangeButton("CLICKBTTON");
+    dispatch(actionChangeCategory(""))
+    dispatch(changeIsCartRequest(false));
+    dispatch(getProductsAction(abbr, "", param));
+    dispatch(getInitCartInform(abbr))
+    onClose();
+
+  };
+
   const onClickSpecial = () => {
     onChangeButton("SPECIAL");
     onClose();
@@ -445,7 +459,8 @@ function OrderHeader(props) {
   };
 
   const onClickHistory = () => {
-    onChangeButton("ORDERED");
+    setCategoryPrompt("");
+    onChangeButton("HISTORY");
     onClose();
     dispatch(getInitCartInform());
 
@@ -545,13 +560,34 @@ function OrderHeader(props) {
         <Button
             type="primary"
             style={ stylesHanbger }
-            onClick={onClickHistory}
+            // onClick={onClickHistory}
           >
             <FaChartLine size={16} style={{ marginBottom: "-4px" }} />
             &nbsp; REPORT
         </Button>
       </Link>
       
+  );
+
+  const buttonOrder = (
+    width > config.WIDTH_BIG  ?
+      <Tooltip placement="top" title= 'Order'>
+        <Button
+          type="primary"
+          style={ stylesButton(order)}
+          onClick={onClickOrder}
+        > &nbsp; </Button>
+      </Tooltip>
+    :
+      <Button
+        type="primary"
+        style={ stylesHanbger }
+        onClick={onClickOrder}
+      >
+        <FaKeyboard size={16} style={{ marginBottom: "-4px" }} />
+        &nbsp; ORDER
+      </Button>
+
   );
 
   const buttonIsNew = 
@@ -641,7 +677,7 @@ function OrderHeader(props) {
 
   const handleIsProducts = () => {
     dispatch(actionChangeCategory(''));
-    setCategoryPrompt('Select category');
+    setCategoryPrompt(config.SELECT_CATEGORY);
     setInputValue('');
     dispatch(actionIsProducts());
   };
@@ -667,6 +703,7 @@ function OrderHeader(props) {
             <Space style={{ float: "right", color: "#fff", marginTop: "3px" }}>
               {searchInput}
               <div>
+                {buttonOrder}
                 {buttonIsNew}
                 {buttonIsSpecial}
                 {buttonHistory}
@@ -699,6 +736,7 @@ function OrderHeader(props) {
             >
               <div style={{ display: "block", color: "#fff", marginTop:"20px" }}>
                 {searchInput}
+                {buttonOrder}
                 {buttonIsNew}
                 {buttonIsSpecial}
                 {buttonHistory}
@@ -729,6 +767,7 @@ function OrderHeader(props) {
                 {listSupplierSelect}
                 {listCategorySelect}
                 {searchInput}
+                {buttonOrder}
                 {buttonIsNew}
                 {buttonIsSpecial}
                 {buttonHistory}
@@ -775,18 +814,18 @@ function OrderHeader(props) {
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>,
-            <Button type="primary"  onClick={gotoCart}>
-              Checkout, Another Cart
-            </Button>,     
+            // <Button type="primary"  onClick={gotoCart}>
+            //   Checkout, Another Cart
+            // </Button>,     
             <Button type="primary" onClick={gotoOrder}>
-             Checkout, GoTo Order
+              OK
             </Button>,
           ] : [
             <Button key="back" onClick={handleCancel}>
               Cancel
             </Button>,   
             <Button type="primary" onClick={gotoOrder}>
-              Checkout, GoTo Order
+               OK
             </Button>,
           ]}
         >
@@ -794,7 +833,9 @@ function OrderHeader(props) {
           fontWeight: "bold",
           fontStyle: "italic",
           fontSize: "24px",
-        }}>Thanks for your order ...</p>
+        }}>Thanks a lot. <br/>
+           Please click "OK" to checkout your order.
+        </p>
       </Modal>
       <Modal
           visible={isProducts}

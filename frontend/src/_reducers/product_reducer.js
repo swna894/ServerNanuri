@@ -7,13 +7,15 @@ import {
   SET_ORDERING_REQUEST,
   GET_CHECKOUT_REQUEST,
   SET_CART_INIT,
-  ACTION_ISPRODUCTS
+  ACTION_ISPRODUCTS,
+  SET_ROUTER_PARAM,
 } from "../service/types";
 
 const initialState = {
   categories: [],
   products: [],
   isProducts : false,
+  param : '',
 };
 
 export default function reducerProduct(state = initialState, action) {
@@ -48,6 +50,8 @@ export default function reducerProduct(state = initialState, action) {
       return { ...state, products: action.payload };
     case SET_CART_INIT:
         return { ...state, cart: "" };
+    case SET_ROUTER_PARAM:
+        return { ...state, param: action.payload };
     default:
       return state;
   }
