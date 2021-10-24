@@ -5,13 +5,13 @@ import { Button, Layout, Select, Space, Input, Drawer, Modal, Tooltip, } from "a
 import { withRouter, Link } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { MenuOutlined } from "@ant-design/icons";
-import newProduct from "../../images/new1_24.ico";
+import newProduct from "../../images/New_na.ico";
 import sales from "../../images/sale_24.ico";
-import history from "../../images/history2_16.ico";
-import cart from "../../images/cart1_16.ico";
-import report from "../../images/report_16.ico";
-import logout from "../../images/exit_16.ico";
-import order from "../../images/order.ico";
+import history from "../../images/History_na.ico";
+import cart from "../../images/Cart_na.ico";
+import report from "../../images/Report_na.ico";
+import logout from "../../images/Logout_na.ico";
+import order from "../../images/Return-to-order.ico";
 import checkout from "../../images/checkout_24.ico";
 
 import {
@@ -485,7 +485,7 @@ function OrderHeader(props) {
 
   const buttonCart = (
     width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Cart'>
+      <Tooltip placement="top" title= 'Go to Cart'>
         <Button
           type="primary"
           style={ isCart || !cartInform? { display: "none" } : stylesButton(cart) }
@@ -548,7 +548,7 @@ function OrderHeader(props) {
   const buttonReport = (
     width > config.WIDTH_BIG ?
       <Link to="/history">
-        <Tooltip placement="top" title= 'Rreport'>
+        <Tooltip placement="top" title= 'Report'>
           <Button
             type="primary"
             style={ stylesButton(report) }
@@ -571,7 +571,7 @@ function OrderHeader(props) {
 
   const buttonOrder = (
     width > config.WIDTH_BIG  ?
-      <Tooltip placement="top" title= 'Order'>
+      <Tooltip placement="top" title= 'Return To Order'>
         <Button
           type="primary"
           style={ stylesButton(order)}
@@ -585,7 +585,7 @@ function OrderHeader(props) {
         onClick={onClickOrder}
       >
         <FaKeyboard size={16} style={{ marginBottom: "-4px" }} />
-        &nbsp; ORDER
+        &nbsp; Return To Order
       </Button>
 
   );
@@ -593,7 +593,7 @@ function OrderHeader(props) {
   const buttonIsNew = 
     isNew ? (
         width > config.WIDTH_BIG ?
-        <Tooltip placement="top" title= 'New'>
+        <Tooltip placement="top" title= 'Only New Products'>
           <Button
             type="primary"
             style={ isCart ? { display: "none" } : stylesButton(newProduct)  }
@@ -616,7 +616,7 @@ function OrderHeader(props) {
   const buttonIsSpecial = 
     isSpecial ? (
       width > config.WIDTH_BIG ?
-      <Tooltip placement="top" title= 'Sales'>
+      <Tooltip placement="top" title= 'Only Sales Products'>
         <Button
           type="primary"
           style={ isCart ? { display: "none" } :  stylesButton(sales) }
