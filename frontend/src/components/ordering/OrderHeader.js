@@ -6,7 +6,7 @@ import { withRouter, Link } from "react-router-dom";
 import { useWindowWidthAndHeight } from "../../utils/CustomHooks";
 import { MenuOutlined } from "@ant-design/icons";
 import newProduct from "../../images/New_na.ico";
-import sales from "../../images/sale_24.ico";
+import sales from "../../images/Sale_na.ico";
 import history from "../../images/History_na.ico";
 import cart from "../../images/Cart_na.ico";
 import report from "../../images/Report_na.ico";
@@ -106,6 +106,7 @@ function OrderHeader(props) {
   const { Option } = Select;
   const { Search } = Input;
 
+  const [visibleOrder, setVisibleOrder] = useState(false);
   const [visible, setVisible] = useState(false);
   const [visibleCart, setVisibleCart] = useState(false);
   const [categoryPrompt, setCategoryPrompt] = useState(config.SELECT_CATEGORY);
@@ -317,6 +318,7 @@ function OrderHeader(props) {
   };
 
   const onClickCart = () => {
+    setVisibleOrder(true);
     onChangeButton(config.CART);
     dispatch(actionGetSuppliers("cart"));
     dispatch(changeIsCartRequest(true));
@@ -437,12 +439,14 @@ function OrderHeader(props) {
   };
 
   const onClickNew = () => {
+    setVisibleOrder(true);
     onChangeButton("NEW");
     onClose();
 
   };
 
   const onClickOrder = () => {
+    setVisibleOrder(false);
     onChangeButton("CLICKBTTON");
     dispatch(actionChangeCategory(""))
     dispatch(changeIsCartRequest(false));
@@ -453,12 +457,14 @@ function OrderHeader(props) {
   };
 
   const onClickSpecial = () => {
+    setVisibleOrder(true);
     onChangeButton("SPECIAL");
     onClose();
 
   };
 
   const onClickHistory = () => {
+    setVisibleOrder(true);
     setCategoryPrompt("");
     onChangeButton("HISTORY");
     onClose();
@@ -574,7 +580,7 @@ function OrderHeader(props) {
       <Tooltip placement="top" title= 'Return To Order'>
         <Button
           type="primary"
-          style={ stylesButton(order)}
+          style={ visibleOrder ?  stylesButton(order) : { display: "none" }}
           onClick={onClickOrder}
         > &nbsp; </Button>
       </Tooltip>
@@ -584,10 +590,9 @@ function OrderHeader(props) {
         style={ stylesHanbger }
         onClick={onClickOrder}
       >
-        <FaKeyboard size={16} style={{ marginBottom: "-4px" }} />
+      <FaKeyboard size={16} style={{ marginBottom: "-4px" }} />
         &nbsp; Return To Order
       </Button>
-
   );
 
   const buttonIsNew = 

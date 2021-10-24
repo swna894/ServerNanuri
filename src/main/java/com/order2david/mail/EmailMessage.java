@@ -12,7 +12,7 @@ import com.order2david.order.model.OrderItem;
 public class EmailMessage{
 	
 	private LocalDateTime localDate;
-	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
 	public String myMessage(Order order) {
 		String shop = order.getShop().getCompany();
