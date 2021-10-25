@@ -153,6 +153,7 @@ function OrderHeader(props) {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr) {
+    setVisibleOrder(false);
     dispatch(actionChangeSupplier(abbr));
     setCategoryPrompt(config.SELECT_CATEGORY);
       //dispatch(actionChangeTitle(searchValue.children)); 
@@ -450,6 +451,7 @@ function OrderHeader(props) {
     onChangeButton("CLICKBTTON");
     dispatch(actionChangeCategory(""))
     dispatch(changeIsCartRequest(false));
+    dispatch(actionGetSuppliers());
     dispatch(getProductsAction(abbr, "", param));
     dispatch(getInitCartInform(abbr))
     onClose();
@@ -587,7 +589,7 @@ function OrderHeader(props) {
     :
       <Button
         type="primary"
-        style={ stylesHanbger }
+        style={ visibleOrder ? stylesHanbger : { display: "none" }}
         onClick={onClickOrder}
       >
       <FaKeyboard size={16} style={{ marginBottom: "-4px" }} />

@@ -41,7 +41,7 @@ public class EmailMessage{
 		message = message + "<p><strong><i> - Shop Name : </i>" + shop + "</strong></p>";
 		message = message + "<p><strong><em> - Your order to : </em>" + supplier + "</strong></p>";
 		message = message + "<p><strong><em> - Order No : </em>" + invoice + "</strong></p>";
-		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(formatter) + "</strong></p>";
+		message = message + "<p><strong><em> - Ordered Date : </em>" + localDate.format(formatter) + "</strong></p>";
 		message = message + "<br>";
 		message = message + "<p><strong><em> Order Details </em></strong></p>";
 		message = message + "<p><strong> Amount (exclude GST) : $" + String.format("%.2f", amount)  + "</strong></p>";
@@ -95,7 +95,7 @@ public class EmailMessage{
 		message = message + "<br>";
 		message = message + "<p><strong><em> - Shop Name : </em>" + shop + "</strong></p>";
 		message = message + "<p><strong><em> - Order No : </em>" + invoice + "</strong></p>";
-		message = message + "<p><strong><em> - Date & Time Ordered : </em>" + localDate.format(formatter) + "</strong></p>";
+		message = message + "<p><strong><em> - Ordered Date : </em>" + localDate.format(formatter) + "</strong></p>";
 		message = message + "<br>";
 		message = message + "<p><strong><em> Order Details </em></strong></p>";
 		message = message + "<p><strong> Amount (exclude GST) : $" + String.format("%.2f", amount)  + "</strong></p>";

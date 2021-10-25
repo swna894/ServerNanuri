@@ -65,6 +65,7 @@ public class ProductController {
 	static String HISTORY = "HISTORY";
 	static String ALL = "All";
 	private int minStock = 11;
+	private Pageable pageable;
 	
 	@Autowired
 	ProductRepository productRepository;
@@ -218,8 +219,8 @@ public class ProductController {
 	@GetMapping("/products/init")
 	public Page<Product> getInit(Principal principal) {
 		Supplier supplier = supplierRepository.findFirstByOrderBySeqAsc();
-		Pageable sortedBySeq = PageRequest.of(0, 36, Sort.by("seq"));
-		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, sortedBySeq);
+		pageable = PageRequest.of(0, 36, Sort.by("seq"));
+		Page<Product> page = productRepository.findByAbbrAndIsShow(supplier.getAbbr(), true, pageable);
 
 		updateCartQty(page, principal);
 		updateCartHistory(page, principal);
@@ -410,7 +411,10 @@ public class ProductController {
 	@GetMapping("/products/{abbr}")
 	public Page<Product> findProdutsByPagable(@PathVariable String abbr, Pageable pageable, Boolean newp,
 			Principal principal) {
-		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable);
+		if(pageable.getSort() == Sort.unsorted()) {
+			pageable = this.pageable;
+		}
+		Page<Product> page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, false, true, pageable);
 		updateCartQty(page, principal);
 		updateCartHistory(page, principal);
 		return page;
