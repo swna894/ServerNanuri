@@ -148,8 +148,8 @@ function OrderHeader(props) {
     dispatch(getCategoriesAction(parm));
     dispatch(changeSearchCondition("Co"));
     dispatch(changeIsCartRequest(false));
-    dispatch(getIsHistory(abbr));
     dispatch(getInitCartInform());
+    dispatch(getIsHistory('init'));
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function onChangeSuppiler(abbr) {
@@ -454,6 +454,7 @@ function OrderHeader(props) {
     dispatch(actionGetSuppliers());
     dispatch(getProductsAction(abbr, "", param));
     dispatch(getInitCartInform(abbr))
+    dispatch(getIsHistory(abbr));
     onClose();
 
   };
