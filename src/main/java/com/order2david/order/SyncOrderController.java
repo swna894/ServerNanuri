@@ -68,6 +68,7 @@ public class SyncOrderController {
 				order.setShopAbbr(shop.getAbbr());
 				order.setShop(shop);
 				order.setSupplier(supplier);
+				order.setComment("NewVista");
 				order.getOrderItems().forEach(item -> {
 					item.setAbbr(shop.getAbbr());
 					item.setInvoice(invoice + "N");

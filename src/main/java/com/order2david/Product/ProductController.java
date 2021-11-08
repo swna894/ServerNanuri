@@ -414,7 +414,7 @@ public class ProductController {
 		if(pageable.getSort() == Sort.unsorted()) {
 			pageable = this.pageable;
 		}
-		Page<Product> page = productRepository.findByAbbrAndIsNewAndIsShow(abbr, false, true, pageable);
+		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable);
 		updateCartQty(page, principal);
 		updateCartHistory(page, principal);
 		return page;
