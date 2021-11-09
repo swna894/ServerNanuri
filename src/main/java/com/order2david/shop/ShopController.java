@@ -80,17 +80,7 @@ public class ShopController {
 		return shopRepository.saveAll(shops);
 	}
 
-	@PutMapping("/shops/sync")
-	public List<Shop> sync(@RequestBody List<Shop> shops) {
-		for (Shop shop : shops) {
-			shop.setPassword(passwordEncoder.encode(shop.getPass()));
-			Shop findShop = shopRepository.findByAbbr(shop.getAbbr());
-			if(findShop != null)
-				shop.setId(findShop.getId());
-		} 
-		shopJdbcRepository.postColumns(shops);	
-		return shopRepository.saveAll(shops);
-	}
+
 	
 	@GetMapping("/shops")
 	public List<Shop> findAll() {

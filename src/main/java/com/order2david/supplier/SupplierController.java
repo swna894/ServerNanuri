@@ -71,6 +71,16 @@ public class SupplierController {
 		return supplierRepository.saveAll(suppliers);
 	}
 
+	@PutMapping("/suppliers/sync")
+	public List<Supplier> sync(@RequestBody List<Supplier> suppliers) {
+		for (Supplier supplier : suppliers) {
+			Supplier findShop = supplierRepository.findByAbbr(supplier.getAbbr());
+			if(findShop != null)
+				supplier.setId(findShop.getId());
+		} 	
+		return supplierRepository.saveAll(suppliers);
+	}
+	
 	@DeleteMapping("/suppliers")
 	public void deleteAll(@RequestBody List<Supplier> suppliers) {
 		// shop column 삭제
