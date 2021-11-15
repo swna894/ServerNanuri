@@ -114,7 +114,17 @@ public class ShopController {
 		//shopRepository.deleteAll(shops);
 	}
 
-
-
-
+	@PutMapping("/shops/sync")
+	public List<Shop> postSync(@RequestBody List<Shop> shops) {
+		
+		for (Shop shop : shops) {
+			Shop findShop = shopRepository.findByAbbr(shop.getAbbr());
+			if(findShop != null) {
+				shop.setId(findShop.getId());
+			}
+			shopRepository.save(shop);
+		}
+		
+		return shops;
+	}
 }

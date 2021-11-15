@@ -3,7 +3,7 @@ import { Button, Input, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 
-import newProduct from "../../images/new.png";
+import newProduct from "../../images/new 1.png";
 import discount from "../../images/discount.png";
 
 import { changeCart, } from "../../_actions/product_action";

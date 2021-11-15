@@ -43,6 +43,9 @@ public class SyncOrderController {
 				String shopAbbr = order.getShopAbbr();
 				Supplier supplier = supplierRepository.findByAbbr(abbr);
 				Shop shop = shopRepository.findByAbbr(shopAbbr);
+				if(shop == null) {
+					return null;
+				}
 				order.setShop(shop);
 				order.setSupplier(supplier);
 				saveOrder.add(order);
