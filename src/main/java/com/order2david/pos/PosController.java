@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,7 +30,7 @@ import com.order2david.supplier.repository.SupplierRepository;
 @RequestMapping("/pos")
 public class PosController {
 
-	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	SupplierRepository supplierRepository;
@@ -52,6 +54,7 @@ public class PosController {
 
 	@PostMapping("/orderItems")
 	public List<OrderItem> postOrderItems(@RequestBody List<OrderItem> posItems) {
+		logger.info(posItems.toString());
 		String abbr = posItems.get(0).getAbbr();
 		String shopId = posItems.get(0).getShopId();
 		String invoice = abbr + shopId + "_CART";
@@ -59,15 +62,16 @@ public class PosController {
 			
 		Shop shop = shopRepository.findByAbbr(shopId);
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
-
+		//logger.info("1. findBy supplier"+supplier);
 		posItems = checkIsStock(posItems, invoice);
+		//logger.info("2. checkIsStock"+ posItems);
 		if (posItems.isEmpty()) {
 			return null;
 		}
-
+		//logger.info("3. check");
 		Optional<Order> orderOptional = orderRepository.findByInvoice(invoice);
 		if (!orderOptional.isPresent()) { // order가 없으면
-			
+			//logger.info("4. check");	
 			order = new Order(shop, supplier);
 			order.setInvoice(invoice);
 	
@@ -82,6 +86,7 @@ public class PosController {
 			order.setAmount(sum);
 
 		} else {		
+			//logger.info("5. check");	
 			order = orderOptional.get();
 			List<OrderItem> serveredList = orderOptional.get().getOrderItems();
 
@@ -95,11 +100,14 @@ public class PosController {
 					order.addOrderItem(posItem);
 				}
 			}
+			//logger.info("6. check");
 			order.setOrderDate(LocalDateTime.now());
 			Double sum = posItems.stream().mapToDouble(item -> item.getTotalPrice()).sum();
 			order.setAmount(sum);
-		}		
+		}
+		//logger.info("7. save order "+order);
 		Order tmp = orderRepository.save(order);
+		//logger.info("==================\n"+tmp.getOrderItems());
 		return tmp.getOrderItems();
 
 	}
@@ -109,8 +117,9 @@ public class PosController {
 	private List<OrderItem> checkIsStock(List<OrderItem> orderItem, String invoice) {
 		List<OrderItem> chekedList = new ArrayList<OrderItem>();
 		for (OrderItem item : orderItem) {
-			Product product = productRepository.findByCodeAndAbbr(item.getCode(), item.getAbbr().toLowerCase());
-			
+			//logger.info("in checkIsStock "+ item.getBarcode() + " ----- " + item.getAbbr().toLowerCase());
+			Product product = productRepository.findByBarcodeAndAbbr(item.getBarcode(), item.getAbbr().toLowerCase());
+			//logger.info("product --> "+ product);
 			if (product != null && product.getStock() > 12) {
 				item.setStatus(OrderType.CART);
 				item.setInvoice(invoice);
@@ -118,6 +127,7 @@ public class PosController {
 				chekedList.add(item);
 			}
 		}
+		//logger.info("4-4 ===================== "+ chekedList);
 		return chekedList;
 	}
 

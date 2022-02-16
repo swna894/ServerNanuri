@@ -11,6 +11,7 @@ public class Cart {
 	String invoice;
 	String abbr;
 	String code;
+	String barcode;
 	String decription;
 	Double price;
 	Long id;

@@ -64,6 +64,7 @@ public class OrderItem {
 	private OrderType status; // 주문상태
 	private String invoice;
 	private String code;
+	private String barcode;
 	private String description;
 	private double price; // 주문 가격
 	private double amount;
@@ -99,6 +100,7 @@ public class OrderItem {
 	
 	public OrderItem(Cart cart) {
 		this.code = cart.getCode();
+		this.barcode = cart.getBarcode();
 		this.qty = cart.getQty();
 		this.price = cart.getPrice();
 		this.description = cart.getDecription();
