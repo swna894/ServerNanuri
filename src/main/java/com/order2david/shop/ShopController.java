@@ -24,6 +24,7 @@ import com.order2david.order.repository.OrderRepository;
 import com.order2david.shop.model.IsShow;
 import com.order2david.shop.model.Roles;
 import com.order2david.shop.model.Shop;
+import com.order2david.shop.repository.RefreshTokenRepository;
 import com.order2david.shop.repository.ShopJdbcRepository;
 import com.order2david.shop.repository.ShopRepository;
 
@@ -39,6 +40,9 @@ public class ShopController {
 	
 	@Autowired
 	OrderRepository orderRepository;
+	
+	@Autowired
+	RefreshTokenRepository refreshTokenRepository;
 	
 	@Autowired
 	ShopJdbcRepository shopJdbcRepository;
@@ -109,6 +113,7 @@ public class ShopController {
 				Shop dummyshop = shopRepository.findByCompany("Deleted shop");
 				orders.forEach(item -> item.setShop(dummyshop));
 			}
+			refreshTokenRepository.deleteByShopId(shop.getId());
 			shopRepository.deleteById(shop.getId());
 		}
 		
