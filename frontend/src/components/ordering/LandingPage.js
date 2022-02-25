@@ -97,8 +97,8 @@ function LandingPage() {
               <Image
                 style={imageStyel}
                 alt={item.code}
-                //src={`/images/${item.abbr}/${item.code}.jpg`}
-                src={"data:image/jpg;base64," + item.image}
+                src={`static/images/${item.abbr}/${item.code}.jpg`}
+                 //src={"data:image/jpg;base64," + item.image}
               />
           
           }

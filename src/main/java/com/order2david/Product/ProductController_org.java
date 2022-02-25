@@ -1,11 +1,5 @@
 package com.order2david.Product;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -26,8 +20,6 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.qlrm.mapper.JpaResultMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -40,9 +32,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.order2david.Product.model.Product;
 import com.order2david.Product.model.ProductManage;
@@ -59,16 +49,12 @@ import com.order2david.shop.repository.ShopRepository;
 import com.order2david.supplier.model.Supplier;
 import com.order2david.supplier.repository.SupplierRepository;
 import com.order2david.util.MyDate;
-import com.order2david.util.PathUtil;
 
-@RestController
-@RequestMapping("api")
-public class ProductController {
+//@RestController
+//@RequestMapping("api")
+public class ProductController_org {
 
-     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	String IMAGE_FOLDER = "/nanuri7788/tomcat/webapps/ROOT/WEB-INF/classes/public/static/images/";
-	//String IMAGE_FOLDER = "frontend/public/images/";
-		
+	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	static String NEW = "NEW";
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
@@ -76,21 +62,32 @@ public class ProductController {
 	static String ORDERED = "ORDERED";
 	static String HISTORY = "HISTORY";
 	static String ALL = "All";
-	
-	private int minOrderQty = 11;
+	private int minStock = 11;
 	private Pageable pageable;
-
-	@Autowired	ProductRepository productRepository;
-	@Autowired	OrderRepository orderRepository;
-	@Autowired	ShopRepository shopRepository;
-	@Autowired	ProductStatusRepository productStatusRepository;
-	@Autowired	SupplierRepository supplierRepository;
-	@Autowired	OrderItemRepository orderItemRepository;
 	
-	@PersistenceContext	EntityManager em;
+	@Autowired
+	ProductRepository productRepository;
 
-	@PostMapping("/products")
-	@Transactional
+	@Autowired
+	OrderRepository orderRepository;
+
+	@Autowired
+	ShopRepository shopRepository;
+
+	@Autowired
+	ProductStatusRepository productStatusRepository;
+
+	@Autowired
+	SupplierRepository supplierRepository;
+
+	@Autowired
+	OrderItemRepository orderItemRepository;
+
+	@PersistenceContext
+	EntityManager em;
+
+	//@PostMapping("/products")
+	//@Transactional
 	public List<Product> postAll(@RequestBody List<Product> products) {
 		String abbr = products.get(0).getAbbr();
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
@@ -116,29 +113,28 @@ public class ProductController {
 		String company = supplierRepository.findByAbbr(abbr).getCompany();
 
 		for (Product product : products) {
-			String PHOTO_PATH = IMAGE_FOLDER + product.getAbbr() + "/";
-			String file = PHOTO_PATH + product.getCode() + ".jpg";
 			product.setCompany(company);
 			product.setAbbr(abbr);
 			if (product.getId() != null) {
 				Optional<Product> server = productRepository.findById(product.getId());
 				if (server.isPresent()) {
-					product.setImage(null);
+					product.setImage(server.get().getImage());
 				}
 			} else {
 				Product server = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
 				if (server != null) {
-					product.setImage(null);
+					product.setImage(server.getImage());
 					product.setId(server.getId());
 				}
 			}
 			product.setShow(false);
 			product.setPhoto(false);
-
-			if (PathUtil.isFile(file)) {
-				product.setPhoto(true);;
-			}
-			if (product.isPhoto() && product.getStock() > minOrderQty) {
+						
+			if (product.getImage() != null) {
+				product.setPhoto(true);			
+			} 
+			//System.err.println(product.getQty());
+			if(product.getImage() != null && product.getStock() > minStock) {
 				product.setShow(true);
 			}
 		}
@@ -157,35 +153,14 @@ public class ProductController {
 			product.setShow(false);
 			product.setPhoto(false);
 			if (product.getImage() != null) {
-				product.setPhoto(true);
-			}
-
-			if (product.getImage() != null && product.getStock() > minOrderQty) {
+				product.setPhoto(true);			
+			} 
+			
+			if(product.getImage() != null && product.getStock() > minStock) {
 				product.setShow(true);
 			}
-			createImage(product);
 		}
 		return productRepository.saveAll(products);
-	}
-
-	private void createImage(Product product) {
-		String PHOTO_PATH = IMAGE_FOLDER + product.getAbbr() + "/";
-		String file = PHOTO_PATH + product.getCode() + ".jpg";
-		logger.info("make dir ==> " + PHOTO_PATH);
-		logger.info("make dir ==> " + PathUtil.isExist(PHOTO_PATH));
-		try {
-			byte[] data = product.getImage();
-			if (data != null) {	
-				logger.info("copy" + file);
-				ByteArrayInputStream bis = new ByteArrayInputStream(data);
-				Path targetPth = Paths.get(file);
-				Files.copy(bis, targetPth, StandardCopyOption.REPLACE_EXISTING);
-			}
-			product.setImage(null);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	@PostMapping("products/onlyphoto")
@@ -195,17 +170,16 @@ public class ProductController {
 		for (Product product : products) {
 			Product findedProduct = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
 			if (findedProduct != null) {
-				//findedProduct.setImage(product.getImage());
-				findedProduct.setImage(null);
+				findedProduct.setImage(product.getImage());
 				findedProduct.setPhoto(true);
-				if (findedProduct.getStock() > minOrderQty) {
+				if(findedProduct.isPhoto() && findedProduct.getStock() > minStock) {
 					findedProduct.setShow(true);
-				}
+				}	
 				serverProducts.add(findedProduct);
-				createImage(product);
 			}
 		}
 		serverProducts = productRepository.saveAll(serverProducts);
+		//System.err.println(serverProducts);
 		return serverProducts;
 	}
 
@@ -252,7 +226,8 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/{abbr}/{category}")
-	public Page<Product> findProdutsByPagable(@PathVariable String abbr, @PathVariable String category, Pageable pageable, @RequestParam(required = false) String search,
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr, @PathVariable String category,
+			Pageable pageable, @RequestParam(required = false) String search,
 			@RequestParam(required = false) String condition, Boolean noCheckCart, Principal principal) {
 		Page<Product> page = null;
 		if (category.equals(NEW)) {
@@ -269,7 +244,8 @@ public class ProductController {
 			Shop shop = shopRepository.findByEmail(principal.getName());
 			String supplier = abbr;
 
-			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType.ORDER, supplier, shop.getAbbr());
+			List<Order> orders = orderRepository.findByStatusAndInvoiceStartsWithAndShopAbbr(OrderType.ORDER, supplier,
+					shop.getAbbr());
 			List<String> invoices = orders.stream().map(item -> item.getInvoice()).collect(Collectors.toList());
 			List<String> codes = orderItemRepository.findByInvoiceInOrderByCodeAsc(invoices);
 			page = productRepository.findByAbbrAndIsShowAndCodeIn(abbr, true, codes, pageable);
@@ -277,12 +253,17 @@ public class ProductController {
 		} else if (category.equals(SEARCH)) {
 			search = search.replaceAll("_", "/");
 			if (condition.equals(ALL)) {
-				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("company").ascending().and(Sort.by("seq")));
-				page = productRepository.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShowOrTagContainsAndIsShow(search, true, search, true, search, true, pageable);
+				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+						Sort.by("company").ascending().and(Sort.by("seq")));
+				page = productRepository
+						.findByDescriptionContainsAndIsShowOrCodeContainsAndIsShowOrTagContainsAndIsShow(
+								search, true, search,true, search,true, pageable);
 			} else {
-				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("company").ascending().and(Sort.by("seq")));
-				page = productRepository.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShowOrAbbrAndTagContainsAndIsShow(abbr, search, true, abbr, search,
-						true, abbr, search, true, pageable);
+				pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+						Sort.by("company").ascending().and(Sort.by("seq")));
+				page = productRepository
+						.findByAbbrAndDescriptionContainsAndIsShowOrAbbrAndCodeContainsAndIsShowOrAbbrAndTagContainsAndIsShow(
+								abbr,search, true, abbr, search, true, abbr, search, true, pageable);
 			}
 
 		} else {
@@ -324,8 +305,9 @@ public class ProductController {
 			// =
 			// orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithOrderByCreatedDesc(product.getCode(),OrderType.ORDER,invoice);
 
-			OrderItem orderItem = orderItemRepository.findTopByCodeAndStatusAndInvoiceStartsWithAndAbbrOrderByCreatedDesc(product.getCode(), OrderType.ORDER, supplier,
-					shop.getAbbr());
+			OrderItem orderItem = orderItemRepository
+					.findTopByCodeAndStatusAndInvoiceStartsWithAndAbbrOrderByCreatedDesc(product.getCode(),
+							OrderType.ORDER, supplier, shop.getAbbr());
 
 			if (orderItem != null) {
 				LocalDateTime orderDate = orderItem.getOrder().getOrderDate();
@@ -342,7 +324,8 @@ public class ProductController {
 	private Page<Product> convertProduct(Page<OrderItem> orderItems) {
 		List<Product> products = new ArrayList<>();
 		for (OrderItem orderItem : orderItems) {
-			Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), orderItem.getInvoice().substring(0, 4));
+			Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(),
+					orderItem.getInvoice().substring(0, 4));
 			product.setQty(orderItem.getQty());
 			products.add(product);
 		}
@@ -406,14 +389,16 @@ public class ProductController {
 
 		// List<Product> products =
 		// productRepository.findByAbbrAndIsShowAndCategoryContains(abbr, true, search);
-		List<Product> products = productRepository.findByAbbrAndCategoryContainsOrAbbrAndDescriptionContainsOrAbbrAndCodeContainsOrAbbrAndBarcodeContains(abbr, search, abbr,
-				search, abbr, search, abbr, search);
+		List<Product> products = productRepository
+				.findByAbbrAndCategoryContainsOrAbbrAndDescriptionContainsOrAbbrAndCodeContainsOrAbbrAndBarcodeContains(
+						abbr, search, abbr, search, abbr, search, abbr, search);
 		products.forEach(item -> item.setImage(null));
 		return products;
 	}
 
 	@GetMapping("/products/pageable/{abbr}/{number}/{size}")
-	public List<Product> findByAbbrPagable(@PathVariable String abbr, @PathVariable String number, @PathVariable String size) {
+	public List<Product> findByAbbrPagable(@PathVariable String abbr, @PathVariable String number,
+			@PathVariable String size) {
 		Pageable paging = PageRequest.of(Integer.valueOf(number), Integer.valueOf(size), Sort.by("code"));
 		List<Product> products = productRepository.findByAbbr(abbr, paging).getContent();
 		products.forEach(item -> item.setImage(null));
@@ -422,8 +407,9 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/{abbr}")
-	public Page<Product> findProdutsByPagable(@PathVariable String abbr, Pageable pageable, Boolean newp, Principal principal) {
-		if (pageable.getSort() == Sort.unsorted()) {
+	public Page<Product> findProdutsByPagable(@PathVariable String abbr, Pageable pageable, Boolean newp,
+			Principal principal) {
+		if(pageable.getSort() == Sort.unsorted()) {
 			pageable = this.pageable;
 		}
 		Page<Product> page = productRepository.findByAbbrAndIsShow(abbr, true, pageable);
@@ -448,14 +434,16 @@ public class ProductController {
 		// }
 		// }
 
-		return products.stream().filter(item -> item.isShow()).map(item -> item.getCategory()).filter(item -> !item.isEmpty()).distinct().sorted().collect(Collectors.toList());
+		return products.stream().filter(item -> item.isShow()).map(item -> item.getCategory())
+				.filter(item -> !item.isEmpty()).distinct().sorted().collect(Collectors.toList());
 
 	}
 
 	@GetMapping("/products/categorys")
 	public List<Product> findCategories() {
 		List<Product> products = productRepository.findAll();
-		List<Product> sortedProducts = products.stream().filter(item -> item.isShow()).filter(item -> !item.getCategory().equals("")).filter(distinctByKey(p -> p.getCategory()))
+		List<Product> sortedProducts = products.stream().filter(item -> item.isShow())
+				.filter(item -> !item.getCategory().equals("")).filter(distinctByKey(p -> p.getCategory()))
 				.sorted(Comparator.comparing(Product::getCategory)).collect(Collectors.toList());
 		return sortedProducts;
 	}
