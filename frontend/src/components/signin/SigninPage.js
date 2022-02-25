@@ -141,7 +141,7 @@ function SignPagePage(props) {
                 >
                   Sign in
                 </Button>
-                <Link to="/signup">Or register now!</Link>
+                {/*<Link to="/signup">Or register now!</Link>*/}
               </Form.Item>
             </Form>
           </Card>
