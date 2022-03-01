@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +30,7 @@ import com.order2david.supplier.repository.SupplierRepository;
 @RequestMapping("/pos")
 public class PosController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	//private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	SupplierRepository supplierRepository;
@@ -54,7 +54,7 @@ public class PosController {
 
 	@PostMapping("/orderItems")
 	public List<OrderItem> postOrderItems(@RequestBody List<OrderItem> posItems) {
-		logger.info(posItems.toString());
+		//logger.info(posItems.toString());
 		String abbr = posItems.get(0).getAbbr();
 		String shopId = posItems.get(0).getShopId();
 		String invoice = abbr + shopId + "_CART";
@@ -123,6 +123,8 @@ public class PosController {
 			if (product != null && product.getStock() > 12) {
 				item.setStatus(OrderType.CART);
 				item.setInvoice(invoice);
+				item.setPrice(product.getPrice());
+				item.setDescription(product.getDescription());
 				item.setSeq(product.getSeq());
 				chekedList.add(item);
 			}
