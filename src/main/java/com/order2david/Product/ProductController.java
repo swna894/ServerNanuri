@@ -26,8 +26,8 @@ import javax.persistence.Query;
 import javax.transaction.Transactional;
 
 import org.qlrm.mapper.JpaResultMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -65,7 +65,7 @@ import com.order2david.util.PathUtil;
 @RequestMapping("api")
 public class ProductController {
 
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	//private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	String IMAGE_FOLDER = "/nanuri7788/tomcat/webapps/ROOT/WEB-INF/classes/public/static/images/";
 	// String IMAGE_FOLDER = "frontend/public/images/";
 
@@ -157,6 +157,10 @@ public class ProductController {
 	@PostMapping("products/withphoto")
 	@Transactional
 	public List<Product> postAllDataWithPhoto(@RequestBody List<Product> products) {
+		
+		String PHOTO_PATH = IMAGE_FOLDER + products.get(0).getAbbr() + "/";
+		PathUtil.isExist(PHOTO_PATH);
+		
 		String abbr = products.get(0).getAbbr();
 		Supplier supplier = supplierRepository.findByAbbr(abbr);
 		for (Product product : products) {
@@ -171,6 +175,7 @@ public class ProductController {
 			if (product.getImage() != null && product.getStock() > minOrderQty) {
 				product.setShow(true);
 			}
+
 			createImage(product);
 		}
 		return productRepository.saveAll(products);
@@ -179,12 +184,12 @@ public class ProductController {
 	private void createImage(Product product) {
 		String PHOTO_PATH = IMAGE_FOLDER + product.getAbbr() + "/";
 		String file = PHOTO_PATH + product.getCode() + ".jpg";
-		logger.info("make dir ==> " + PHOTO_PATH);
-		logger.info("make dir ==> " + PathUtil.isExist(PHOTO_PATH));
+		//logger.info("make dir ==> " + PHOTO_PATH);
+		//logger.info("make dir ==> " + PathUtil.isExist(PHOTO_PATH));
 		try {
 			byte[] data = product.getImage();
 			if (data != null) {
-				logger.info("copy" + file);
+				//logger.info("copy" + file);
 				ByteArrayInputStream bis = new ByteArrayInputStream(data);
 				Path targetPth = Paths.get(file);
 				Files.copy(bis, targetPth, StandardCopyOption.REPLACE_EXISTING);

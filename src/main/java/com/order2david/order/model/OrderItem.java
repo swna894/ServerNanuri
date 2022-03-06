@@ -70,8 +70,8 @@ public class OrderItem {
 	private double amount;
 	private String abbr;
 	private int qty; // 주문 수량
-	
 	private int stock; // Pos upload시 사용 shop 보유 수량  21년 09월 21일 추가
+	
 	@Column(columnDefinition="tinyint(1) default 0")
 	private boolean server; // Pos upload시
 	
