@@ -65,10 +65,10 @@ import com.order2david.util.PathUtil;
 @RequestMapping("api")
 public class ProductController {
 
-     private final Logger logger = LoggerFactory.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	String IMAGE_FOLDER = "/nanuri7788/tomcat/webapps/ROOT/WEB-INF/classes/public/static/images/";
-	//String IMAGE_FOLDER = "frontend/public/images/";
-		
+	// String IMAGE_FOLDER = "frontend/public/images/";
+
 	static String NEW = "NEW";
 	static String SPECIAL = "SPECIAL";
 	static String CART = "CART";
@@ -76,18 +76,25 @@ public class ProductController {
 	static String ORDERED = "ORDERED";
 	static String HISTORY = "HISTORY";
 	static String ALL = "All";
-	
+
 	private int minOrderQty = 11;
 	private Pageable pageable;
 
-	@Autowired	ProductRepository productRepository;
-	@Autowired	OrderRepository orderRepository;
-	@Autowired	ShopRepository shopRepository;
-	@Autowired	ProductStatusRepository productStatusRepository;
-	@Autowired	SupplierRepository supplierRepository;
-	@Autowired	OrderItemRepository orderItemRepository;
-	
-	@PersistenceContext	EntityManager em;
+	@Autowired
+	ProductRepository productRepository;
+	@Autowired
+	OrderRepository orderRepository;
+	@Autowired
+	ShopRepository shopRepository;
+	@Autowired
+	ProductStatusRepository productStatusRepository;
+	@Autowired
+	SupplierRepository supplierRepository;
+	@Autowired
+	OrderItemRepository orderItemRepository;
+
+	@PersistenceContext
+	EntityManager em;
 
 	@PostMapping("/products")
 	@Transactional
@@ -136,7 +143,8 @@ public class ProductController {
 			product.setPhoto(false);
 
 			if (PathUtil.isFile(file)) {
-				product.setPhoto(true);;
+				product.setPhoto(true);
+				;
 			}
 			if (product.isPhoto() && product.getStock() > minOrderQty) {
 				product.setShow(true);
@@ -175,7 +183,7 @@ public class ProductController {
 		logger.info("make dir ==> " + PathUtil.isExist(PHOTO_PATH));
 		try {
 			byte[] data = product.getImage();
-			if (data != null) {	
+			if (data != null) {
 				logger.info("copy" + file);
 				ByteArrayInputStream bis = new ByteArrayInputStream(data);
 				Path targetPth = Paths.get(file);
@@ -195,7 +203,7 @@ public class ProductController {
 		for (Product product : products) {
 			Product findedProduct = productRepository.findByCodeAndAbbr(product.getCode(), product.getAbbr());
 			if (findedProduct != null) {
-				//findedProduct.setImage(product.getImage());
+				// findedProduct.setImage(product.getImage());
 				findedProduct.setImage(null);
 				findedProduct.setPhoto(true);
 				if (findedProduct.getStock() > minOrderQty) {
@@ -343,8 +351,10 @@ public class ProductController {
 		List<Product> products = new ArrayList<>();
 		for (OrderItem orderItem : orderItems) {
 			Product product = productRepository.findByCodeAndAbbr(orderItem.getCode(), orderItem.getInvoice().substring(0, 4));
-			product.setQty(orderItem.getQty());
-			products.add(product);
+			if (product != null) {
+				product.setQty(orderItem.getQty());
+				products.add(product);
+			}
 		}
 
 		return new PageImpl<Product>(products, orderItems.getPageable(), orderItems.getTotalElements());
