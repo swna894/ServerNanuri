@@ -103,7 +103,7 @@ function OrderHeader(props) {
   useKey("ArrowLeft", handleEnterLeft);
 
   const { Header } = Layout;
-  const { Option, OptGroup } = Select;
+  const { Option } = Select;
   const { Search } = Input;
 
   const [visibleOrder, setVisibleOrder] = useState(false);
@@ -257,25 +257,11 @@ function OrderHeader(props) {
 
   };
 
-  const listSelectOptions = suppliers.map((item) => {
-      if(item.section === 'Key Supplier') {
-        return <Option key={item.id} value={item.abbr}>
-                 {item.company}
-             </Option>
-      } else {
-        return null;
-      }
-  });
-
-  const listParterOptions = suppliers.map((item) => {
-    if(item.section === 'ParterShips') {
-      return <Option key={item.id} value={item.abbr}>
-                 {item.company}
-             </Option>
-    } else {
-      return null;
-    }
-    });
+  const listSelectOptions = suppliers.map((item) => (
+    <Option key={item.id} value={item.abbr}>
+      {item.company}
+    </Option>
+  ));
 
   const listCategoryOptions =
     categories === undefined
@@ -303,7 +289,7 @@ function OrderHeader(props) {
 
   };
 
-  const styleSupplier = { width: "340px", fontSize:"22px", fontWeight: "bold" };
+  const styleSupplier = { width: "100%", fontSize:"24px", fontWeight: "bold" };
   const styleCategory = { width: "300px", fontSize:"20px", fontWeight: "bold"};
 
   const styleKeySupplier = 
@@ -315,7 +301,7 @@ function OrderHeader(props) {
       textAlign: "left",
       fontWeight: "bold",
       fontStyle: "italic",
-      padding: "5px 0px 0px 110px",
+      padding: "5px 0px 0px 100px",
       marginBottom: "-10px" 
   };
 
@@ -356,12 +342,7 @@ function OrderHeader(props) {
       placeholder={config.SELECT_CATEGORY}
       optionFilterProp="children"
     >
-      <OptGroup label="Key Supplier">
-        {listSelectOptions}
-      </OptGroup>
-      <OptGroup label="Parterships">
-        {listParterOptions}
-      </OptGroup>
+      {listSelectOptions}
     </Select>
   );
 
@@ -827,7 +808,7 @@ function OrderHeader(props) {
       <div xxl={6} xl={8} lg={10} md={12} sm={24} xs={24}
         style={width > config.WIDTH_SMALL ? styleKeySupplier : { display: "none" }}
       >
-        
+        Key Suppliers 
       </div>
       <div style={width > 500 ? { display: "none" } : styleKeyOrder } >
           {cartInform}

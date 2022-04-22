@@ -32,7 +32,6 @@ import lombok.ToString;
 @Table(name = "SUPPLIER")
 public class Supplier {
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -42,6 +41,7 @@ public class Supplier {
 	private String abbr;
 	
 	private Integer seq;
+	private String section;
 	private String company;
 	private String cellphone;
 	private String phone;
